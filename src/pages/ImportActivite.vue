@@ -11,14 +11,14 @@
             <div
               class="page-title-box d-sm-flex align-items-center justify-content-between"
             >
-              <h4 class="mb-sm-0">IMPORT DATA TRANSPORT CANNES</h4>
+              <h4 class="mb-sm-0">IMPORT ACTIVITE PLATEFORME</h4>
 
               <div class="page-title-right">
                 <ol class="breadcrumb m-0">
                   <li class="breadcrumb-item">
                     <a href="javascript: void(0);">Import</a>
                   </li>
-                  <li class="breadcrumb-item active">Transport</li>
+                  <li class="breadcrumb-item active">Activite</li>
                 </ol>
               </div>
             </div>
@@ -47,7 +47,7 @@
                         accept=".xls, .xlsx"
                         name="fichier"
                         multiple
-                        @change="sendFile()"
+                        @change="fileChange()"
                         ref="fichier"
                       />
                       <button
@@ -59,6 +59,13 @@
                         Upload
                       </button>
                     </div>
+                    <br /><br />
+                    <TableRapport
+                      :header="header"
+                      :data="data"
+                      title="Data plateforme tracking"
+                      filename="data_plateforme"
+                    />
                   </div>
                   <!-- end card body -->
                 </div>
@@ -80,74 +87,27 @@
 </template>
 <script>
 import * as XLSX from 'xlsx';
-import { date } from 'quasar';
-//import { useTableauStore } from 'src/stores/tableau-store';
 import { defineComponent, ref, onMounted, computed } from 'vue';
 import { useQuasar } from 'quasar';
-//import moment from 'moment';
 import { useRepportStore } from 'src/stores/repport-store';
+import TableRapport from 'src/components/tables/TableRapport.vue';
 
 export default defineComponent({
-  name: 'ImportDataTransport',
-  components: {},
+  name: 'ImportActivite',
+  components: {
+    TableRapport,
+  },
   setup() {
     const $q = useQuasar();
     let fichier = ref(null);
     let loading = ref(false);
     let datab = ref([]);
     const store = useRepportStore();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    let dataBases = ref([]);
-    const importFile = () => {
+    let data = computed(() => store.dataPlat);
+    const importFile = async () => {
       loading.value = true;
-      //let dataConvert = [];
-      if (fichier.value != undefined && fichier.value != null) {
-        for (let r = 0; r < fichier.value.files.length; r++) {
-          var filereader = new FileReader();
-          filereader.readAsArrayBuffer(fichier.value.files[r]);
-          filereader.onload = (e) => {
-            const bufferArray = e.target.result;
-            const wb = XLSX.read(bufferArray, {
-              type: 'buffer',
-              cellDates: true,
-            });
-            const wsname = wb.SheetNames[0];
-            const wsname1 = wb.SheetNames[1];
-            const ws = wb.Sheets[wsname];
-            const ws1 = wb.Sheets[wsname1];
-            //console.log(ws);
-            const datas = XLSX.utils.sheet_to_json(ws, ws1);
-            // dataConvert = [...dataBases.value, ...datas];
-            //console.log(datas);
-            //console.log(dataConvert);
-            //filereader.DONE();
-            datas.map((db) => {
-              //identifiant.value = identifiant.value + 1;
-              datab.value.push({
-                code: db.NN,
-                date: db.PD,
-                heure: db.PT,
-                event: db.EN,
-                region: db.EI,
-                compteur: db.O,
-                vitesse: db.S,
-                rpm: db.R,
-                dateHeure: db.T,
-                fuel_percent: db.FL,
-                fuel_qte: db.FQ,
-                adresse: db.address,
-              });
-            });
-            //console.log(dataTable.value);
-          };
-        }
-      }
-      setTimeout(() => {
-        store.changeTrData(datab.value);
-        //store.importCsv(datab.value);
-        //console.log(datab.value);
-      }, 2000);
-      //console.log(dataTable.value)
+      console.log(datab.value);
+      await store.uploadData(datab.value);
       $q.notify({
         message: 'Import reussie',
         color: 'teal-10',
@@ -163,13 +123,118 @@ export default defineComponent({
     const sendFile = () => {
       console.log(fichier.value.files);
     };
-
+    const header = [
+      {
+        text: 'Id',
+        value: 'id',
+        sortable: true,
+        width: 20,
+        type: 'number',
+        title: 'Id',
+        dataKey: 'id',
+      },
+      {
+        text: 'Code',
+        value: 'code',
+        sortable: true,
+        width: 40,
+        type: 'string',
+        title: 'Code',
+        dataKey: 'code',
+      },
+      {
+        text: 'event',
+        value: 'event',
+        sortable: true,
+        type: 'string',
+        title: 'event',
+        dataKey: 'event',
+      },
+      {
+        text: 'date',
+        value: 'date',
+        sortable: true,
+        type: 'date',
+        title: 'date',
+        dataKey: 'date',
+      },
+      {
+        text: 'fuel level',
+        value: 'fuellevel',
+        sortable: true,
+        type: 'number',
+        title: 'fuel level',
+        dataKey: 'fuellevel',
+      },
+      {
+        text: 'fuel qte',
+        value: 'fuelqte',
+        sortable: true,
+        type: 'string',
+        title: 'fuel qte',
+        dataKey: 'fuelqte',
+      },
+      {
+        text: 'Compteur',
+        value: 'compteur',
+        sortable: true,
+        type: 'number',
+        title: 'Compteur',
+        dataKey: 'compteur',
+      },
+      {
+        text: 'Vitesse',
+        value: 'vitesse',
+        sortable: true,
+        type: 'date',
+        title: 'Vitesse',
+        dataKey: 'vitesse',
+      },
+      {
+        text: 'rpm',
+        value: 'rpm',
+        sortable: true,
+        type: 'date',
+        title: 'rpm',
+        dataKey: 'rpm',
+      },
+    ];
     const fileChange = () => {
-      console.log(fichier);
+      if (fichier.value != undefined && fichier.value != null) {
+        for (let r = 0; r < fichier.value.files.length; r++) {
+          var filereader = new FileReader();
+          filereader.readAsArrayBuffer(fichier.value.files[r]);
+          filereader.onload = (e) => {
+            const bufferArray = e.target.result;
+            const wb = XLSX.read(bufferArray, {
+              type: 'buffer',
+              cellDates: true,
+            });
+            const wsname = wb.SheetNames[0];
+            const wsname1 = wb.SheetNames[1];
+            const ws = wb.Sheets[wsname];
+            const ws1 = wb.Sheets[wsname1];
+            const datas = XLSX.utils.sheet_to_json(ws, ws1);
+
+            datas.map(async (db) => {
+              await datab.value.push({
+                code: db.V_NICK_NAME,
+                event: db.EventName,
+                date: db.PosDateTime,
+                fuellevel: db.FuelLevel,
+                fuelqte: db.FuelQuantity,
+                compteur: db.G_CURRENT_ODOMETER,
+                vitesse: db.G_CURRENT_SPEED,
+                rpm: db.G_CURRENT_RPM,
+              });
+            });
+          };
+        }
+      }
     };
 
-    onMounted(() => {
-      console.log();
+    onMounted(async () => {
+      await store.allLastDataPlateforme();
     });
     return {
       fichier,
@@ -177,6 +242,8 @@ export default defineComponent({
       loading,
       sendFile,
       fileChange,
+      data,
+      header,
     };
   },
 });

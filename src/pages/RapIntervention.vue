@@ -9,13 +9,13 @@
               <div
                 class="page-title-box d-sm-flex align-items-center justify-content-between"
               >
-                <h4 class="mb-sm-0">RAPPORT CONSO</h4>
+                <h4 class="mb-sm-0">RAPPORT PANNES</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
                       <a href="javascript: void(0);">Rapport</a>
                     </li>
-                    <li class="breadcrumb-item active">Consommation</li>
+                    <li class="breadcrumb-item active">Immobilisation</li>
                   </ol>
                 </div>
               </div>
@@ -28,10 +28,6 @@
                 <div class="col-xl-2">
                   <div class="card card-h-80">
                     <div class="card-body">
-                      <!--button class="btn btn-primary w-100" id="btn-new-event">
-                        <i class="mdi mdi-plus"></i> Create New Event
-                      </button-->
-                      <!-- Placement Offcanvas -->
                       <PlageData
                         :typeReport="report"
                         @acquireDats="acquireDate"
@@ -52,12 +48,12 @@
                             role="tab"
                             aria-controls="pills-bill-info"
                             aria-selected="false"
-                            @click="actualReport('consoTotal')"
+                            @click="actualReport('immoTotal')"
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >Conso Totale
+                            >immobilisation
                           </div>
                           <div
                             class="external-event fc-event bg-soft-info text-info"
@@ -69,12 +65,12 @@
                             role="tab"
                             aria-controls="pills-bill-address"
                             aria-selected="false"
-                            @click="actualReport('consoMois')"
+                            @click="actualReport('immoQuart')"
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >Conso Journalière
+                            >immo Quart
                           </div>
                           <div
                             class="external-event fc-event bg-soft-warning text-warning"
@@ -86,29 +82,12 @@
                             role="tab"
                             aria-controls="pills-payment"
                             aria-selected="false"
-                            @click="actualReport('consoAn')"
+                            @click="actualReport('immoPlage')"
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >Conso Mensuelle
-                          </div>
-                          <div
-                            class="external-event fc-event bg-soft-danger text-danger"
-                            data-class="bg-soft-danger"
-                            id="pills-finish-tab"
-                            data-bs-toggle="pill"
-                            data-bs-target="#pills-finish"
-                            type="button"
-                            role="tab"
-                            aria-controls="pills-finish"
-                            aria-selected="false"
-                            @click="actualReport('consoMoy')"
-                          >
-                            <i
-                              class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
-                            ></i
-                            >Conso Moyenne
+                            >Immobilisation
                           </div>
                         </ul>
                       </div>
@@ -131,10 +110,10 @@
                             <h5 class="mb-1">{{ rpl }}</h5>
                             <TableRapport
                               :header="header"
-                              :data="data"
+                              :data="dataPanne"
                               @refreshTable="refreshTables"
                               :title="rpl"
-                              filename="export_conso"
+                              filename="export_immo"
                             />
                           </div>
                         </div>
@@ -147,11 +126,11 @@
                           <div>
                             <h5 class="mb-1">{{ rpl }}</h5>
                             <TableRapport
-                              :header="headerJour"
-                              :data="dataJour"
+                              :header="headerQuart"
+                              :data="dataQuart"
                               @refreshTable="refreshTables"
                               :title="rpl"
-                              filename="export_conso_jour"
+                              filename="export_Quart"
                             />
                           </div>
                         </div>
@@ -165,34 +144,11 @@
                             <h5 class="mb-1">{{ rpl }}</h5>
                             <TableRapport
                               :header="headerMois"
-                              :data="dataMois"
+                              :data="dataHoraire"
                               @refreshTable="refreshTables"
                               :title="rpl"
                               filename="export_conso_mois"
                             />
-                          </div>
-                        </div>
-                        <div
-                          class="tab-pane fade"
-                          id="pills-finish"
-                          role="tabpanel"
-                          aria-labelledby="pills-finish-tab"
-                        >
-                          <div class="text-center py-5">
-                            <h5>Thank you ! Your Order is Completed !</h5>
-                            <p class="text-muted">
-                              You will receive an order confirmation email with
-                              details of your order.
-                            </p>
-
-                            <h3 class="fw-semibold">
-                              Order ID:
-                              <a
-                                href="apps-ecommerce-order-details.html"
-                                class="text-decoration-underline"
-                                >VZ2451</a
-                              >
-                            </h3>
                           </div>
                         </div>
                       </div>
@@ -205,10 +161,6 @@
               <!--end row-->
             </div>
           </div>
-          <!-- end row-->
-          <!-- importHoraire/>
-            <end page title>
-            <TableReport :header="header" :data="data" title="distance" tb="distance" @refreshTable="refreshTable" cbTable="mnDts"/-->
         </div>
         <!-- container-fluid -->
       </div>
@@ -221,18 +173,24 @@ import { defineComponent, ref, computed, watch } from 'vue';
 import PlageData from '../components/Modals/PlageData.vue';
 import { useRepportStore } from '../stores/repport-store';
 import TableRapport from 'src/components/tables/TableRapport.vue';
-import { useChangeDate } from '../composable/panneReport';
+import {
+  useCalculImmoPanne,
+  useCalculImmoPanneQuart,
+} from 'src/composable/panneReport';
 import dataCons from '../types/dataCons';
 import dateConsDate from '../types/dataCons';
 export default defineComponent({
-  name: 'RapConso',
+  name: 'RapIntervention',
   components: { PlageData, TableRapport },
   setup() {
     const consStore = useRepportStore();
     let report = ref('');
-    let rapConso = computed(() => consStore.rapconso);
-    let consoJour = computed(() => consStore.consoJour);
-    let dataMois = computed(() => consStore.consMois);
+    let dataBasePanne = computed(() => consStore.immoData);
+    let dataBasePanneQuart = computed(() => consStore.immoDataQuart);
+    let dataPanne = ref([]);
+    let dataHoraireQuart = computed(() => consStore.horaires);
+    let dataTimes = ref([]);
+    let dataQuart = ref([]);
     let dataJour = ref<dateConsDate[]>([]);
     let data = ref<dataCons[]>([]);
     let rpl = ref('');
@@ -244,30 +202,29 @@ export default defineComponent({
     let choix = ref<string>('');
     const header = [
       {
-        text: 'Id',
-        value: 'id',
-        sortable: true,
-        width: 20,
-        type: 'number',
-        title: 'Id',
-        dataKey: 'id',
-      },
-      {
         text: 'Code',
         value: 'code',
         sortable: true,
         width: 40,
-        type: 'image',
+        type: 'string',
         title: 'Code',
         dataKey: 'code',
       },
       {
         text: 'Immat',
-        value: 'immat',
+        value: 'Immat',
         sortable: true,
         type: 'string',
         title: 'Immat',
-        dataKey: 'immat',
+        dataKey: 'Immat',
+      },
+      {
+        text: 'Famille',
+        value: 'famille',
+        sortable: true,
+        type: 'string',
+        title: 'Famille',
+        dataKey: 'famille',
       },
       {
         text: 'Type',
@@ -278,48 +235,39 @@ export default defineComponent({
         dataKey: 'typeVeh',
       },
       {
-        text: 'Marque',
-        value: 'marque',
+        text: 'Temps panne',
+        value: 'tpsimmo',
         sortable: true,
-        type: 'string',
-        title: 'Marque',
-        dataKey: 'marque',
-      },
-      {
-        text: 'Qte conso',
-        value: 'qte',
-        sortable: true,
-        type: 'date',
-        title: 'Qte conso',
-        dataKey: 'qte',
+        type: 'number',
+        title: 'Temps en panne',
+        dataKey: 'tpsimmo',
       },
     ];
-    const headerJour = [
-      {
-        text: 'Id',
-        value: 'id',
-        sortable: true,
-        width: 20,
-        type: 'number',
-        title: 'Id',
-        dataKey: 'id',
-      },
+    const headerQuart = [
       {
         text: 'Code',
         value: 'code',
         sortable: true,
         width: 40,
-        type: 'image',
+        type: 'string',
         title: 'Code',
         dataKey: 'code',
       },
       {
         text: 'Immat',
-        value: 'immat',
+        value: 'Immat',
         sortable: true,
         type: 'string',
         title: 'Immat',
-        dataKey: 'immat',
+        dataKey: 'Immat',
+      },
+      {
+        text: 'Famille',
+        value: 'famille',
+        sortable: true,
+        type: 'string',
+        title: 'Famille',
+        dataKey: 'famille',
       },
       {
         text: 'Type',
@@ -330,46 +278,36 @@ export default defineComponent({
         dataKey: 'typeVeh',
       },
       {
-        text: 'Marque',
-        value: 'marque',
-        sortable: true,
-        type: 'string',
-        title: 'Marque',
-        dataKey: 'marque',
-      },
-      {
-        text: 'Date Conso',
-        value: 'datej',
-        sortable: true,
-        type: 'string',
-        title: 'Date Conso',
-        dataKey: 'datej',
-      },
-      {
-        text: 'Qte conso',
-        value: 'qte',
-        sortable: true,
-        type: 'date',
-        title: 'Qte conso',
-        dataKey: 'qte',
-      },
-    ];
-    const headerMois = [
-      {
-        text: 'Mois',
-        value: 'monthConso',
-        sortable: true,
-        type: 'string',
-        title: 'Mois',
-        dataKey: 'monthConso',
-      },
-      {
-        text: 'Total conso',
-        value: 'totalconso',
+        text: 'Quart I',
+        value: 'quart1',
         sortable: true,
         type: 'number',
-        title: 'Total conso',
-        dataKey: 'totalconso',
+        title: 'Quart I',
+        dataKey: 'quart1',
+      },
+      {
+        text: 'Quart II',
+        value: 'quart2',
+        sortable: true,
+        type: 'number',
+        title: 'Quart II',
+        dataKey: 'quart2',
+      },
+      {
+        text: 'Quart III',
+        value: 'quart3',
+        sortable: true,
+        type: 'number',
+        title: 'Quart III',
+        dataKey: 'quart3',
+      },
+      {
+        text: 'Total',
+        value: 'total',
+        sortable: true,
+        type: 'number',
+        title: 'Total Immo',
+        dataKey: 'total',
       },
     ];
 
@@ -402,48 +340,25 @@ export default defineComponent({
     const actualReport = (txt: string) => {
       report.value = txt;
     };
-    watch(rapConso, (valeur) => {
-      let i = 0;
-      data.value = [];
-      if (valeur.length > 0) {
-        valeur.forEach((val) => {
-          if (val[0].totalconso != null) {
-            data.value.push({
-              id: i,
-              code: val[0].vehicule.code,
-              immat: val[0].vehicule.Immat,
-              typeVeh: val[0].vehicule.type_veh.lib_type,
-              marque: val[0].vehicule.Marque.libelle,
-              qte: val[0].totalconso,
-            });
-            i++;
-          }
-        });
-      }
+
+    watch(dataBasePanne, (val) => {
+      dataPanne.value = useCalculImmoPanne(
+        dataBasePanne.value,
+        debut.value,
+        fini.value,
+        tdebut.value,
+        tfini.value
+      );
     });
-    watch(consoJour, (valeur: Array<object>) => {
-      console.log(valeur);
-      let k = 0;
-      dataJour.value = [];
-      if (valeur.length > 0) {
-        valeur.forEach((val) => {
-          if (val.length > 0) {
-            val.forEach((v) => {
-              dataJour.value.push({
-                id: k,
-                code: v.vehicule.code,
-                immat: v.vehicule.Immat,
-                typeVeh: v.vehicule.type_veh.lib_type,
-                marque: v.vehicule.Marque.libelle,
-                datej: useChangeDate(v.DateConso) + ' ' + v.HeureConso,
-                qte: v.QteConso,
-              });
-              k++;
-            });
-          }
-        });
-      }
-      console.log(dataJour.value);
+    watch(dataBasePanneQuart, (val) => {
+      console.log(dataBasePanneQuart.value);
+      dataQuart.value = useCalculImmoPanneQuart(
+        dataBasePanneQuart.value,
+        debut.value,
+        fini.value,
+        tdebut.value,
+        tfini.value
+      );
     });
 
     return {
@@ -458,10 +373,12 @@ export default defineComponent({
       fini,
       tdebut,
       tfini,
-      headerJour,
+      headerQuart,
       dataJour,
-      headerMois,
-      dataMois,
+      dataPanne,
+      dataTimes,
+      dataQuart,
+      dataBasePanne,
     };
   },
 });

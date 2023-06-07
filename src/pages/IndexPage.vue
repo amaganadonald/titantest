@@ -316,7 +316,7 @@ import PieChart from '../components/charts/PieChart.vue';
 import ProgressBar from '../components/progressBar/ProgressBar.vue';
 import { useRepportStore } from '../stores/repport-store';
 import { useQuasar } from 'quasar';
-//import moment from 'moment';
+import moment from 'moment';
 import TableData from '../components/tables/TableData.vue';
 //import { calcul_immo_panne_active } from '../composable/panneReport.ts';
 export default defineComponent({
@@ -354,15 +354,28 @@ export default defineComponent({
     };
     const convertDayToYear = (tab) => {
       let milis = 0;
-      tab.forEach((cd) => {
-        milis = milis + cd.ageVeh;
-      });
-      if (Math.floor(milis / 31536000000) !== 0) {
-        ageVeh.value = Math.floor(milis / 31536000000 / tab.length) + ' an(s)';
-      } else if (Math.floor(milis / 2629746000) != 0) {
-        ageVeh.value = Math.floor(milis / 2629746000 / tab.length) + ' mois';
-      } else {
-        ageVeh.value = Math.floor(milis / tab.length) + ' jours';
+      if (tab.length > 0) {
+        tab.forEach((cd) => {
+          milis = milis + cd.ageVeh;
+        });
+        milis = milis / tab.length;
+        if (Math.floor(milis / 12) !== 0) {
+          let an = Math.floor(milis / 12);
+          if (milis % 12 === 0) {
+            ageVeh.value = an + 'an(s)';
+          } else {
+            ageVeh.value = an + 'an(s)' + Math.round(milis % 12) + ' Mois';
+          }
+        } else {
+          let moi = Math.trunc(milis);
+          if (milis % tab.length === 0) {
+            ageVeh.value = moi + ' Mois';
+          } else {
+            ageVeh.value =
+              moi + ' Mois ' + Math.round((milis % tab.length) * 30) + ' Jours';
+          }
+        }
+        console.log(ageVeh.value);
       }
     };
     const header = [
@@ -386,10 +399,10 @@ export default defineComponent({
         type: 'date',
       },
       {
-        text: 'HeureImmo',
-        value: 'HeureImmo',
+        text: 'Conducteur',
+        value: 'personnel',
         sortable: true,
-        type: 'time',
+        type: 'object',
       },
       {
         text: 'CausePanne',
@@ -447,6 +460,7 @@ export default defineComponent({
       });
     };
     onBeforeMount(async () => {
+      console.log(moment(firstDay).format('YYYY-MM-DD'));
       await store.analyseDashboard(firstDay, lastDay);
       if ($q.cookies.get('lang') === 'fr') {
         monthj.value = new Date().toLocaleString('fr-CA', { year: 'numeric' });

@@ -71,7 +71,11 @@
         >
           <q-card style="width: 1100px; max-width: 90vw">
             <q-card-section>
-              <panneComponent :operation="operation" />
+              <panneComponent
+                :operation="operation"
+                :data="dataForm"
+                @close-modal="closePopup"
+              />
             </q-card-section>
           </q-card>
         </q-dialog>
@@ -115,32 +119,33 @@
                           </button>
 
                           <div class="dropdown-menu dropdown-menu-end">
-                            <a
+                            <span
                               class="dropdown-item"
-                              href="apps-projects-overview.html"
+                              @click="manageItem('view', pn)"
+                              style="cursor: pointer"
                               ><i
-                                class="ri-eye-fill align-bottom me-2 text-muted"
+                                class="fa-solid fa-window-restore align-bottom me-2 text-muted"
                               ></i>
-                              View</a
+                              View</span
                             >
-                            <a
+                            <span
                               class="dropdown-item"
-                              href="apps-projects-create.html"
+                              @click="manageItem('edit', pn)"
+                              style="cursor: pointer"
                               ><i
-                                class="ri-pencil-fill align-bottom me-2 text-muted"
+                                class="fa-regular fa-pen-to-square align-bottom me-2 text-muted"
                               ></i>
-                              Edit</a
+                              Edit</span
                             >
                             <div class="dropdown-divider"></div>
-                            <a
+                            <span
                               class="dropdown-item"
-                              href="#"
-                              data-bs-toggle="modal"
-                              data-bs-target="#removeProjectModal"
+                              @click="manageItem('delete', pn)"
+                              style="cursor: pointer"
                               ><i
-                                class="ri-delete-bin-fill align-bottom me-2 text-muted"
+                                class="fa-solid fa-trash-can align-bottom me-2 text-muted"
                               ></i>
-                              Remove</a
+                              Remove</span
                             >
                           </div>
                         </div>
@@ -161,8 +166,13 @@
                     </div>
                     <div class="flex-grow-1">
                       <h5 class="mb-1 fs-15">
-                        <a href="#" class="text-dark"
-                          >{{ pn.vehicule.code }} ({{ pn.vehicule.Immat }})</a
+                        <span
+                          class="text-dark"
+                          style="cursor: pointer"
+                          @click="manageItem('view', pn)"
+                          >{{ pn.vehicule.code }} ({{
+                            pn.vehicule.Immat
+                          }})</span
                         >
                       </h5>
                       <p class="text-muted text-truncate-two-lines mb-3">
@@ -246,52 +256,63 @@
           <div class="col-sm-6">
             <div>
               <p class="mb-sm-0 text-muted">
-                Showing <span class="fw-semibold">1</span> to
-                <span class="fw-semibold">10</span> of
-                <span class="fw-semibold text-decoration-underline"
-                  >{{ pages }}]</span
-                >
+                Showing <span class="fw-semibold">{{ currPage }}</span> to
+                <span class="fw-semibold">{{ limit }}</span> of
+                <span class="fw-semibold text-decoration-underline">{{
+                  pages
+                }}</span>
                 entries
               </p>
             </div>
           </div>
           <!-- end col -->
+
           <div class="col-sm-6">
-            <q-pagination
-              v-model="currPage"
-              color="teal-10"
-              :max="pages"
-              input
-              input-class="text-orange-10"
-              @click="selectPage(currPage)"
-              class="page-item"
-            />
-            <!--ul
+            <ul
               class="pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0"
             >
+              <li class="page-item disabled" v-if="currPage === 1">
+                <span class="page-link" style="cursor: pointer">Previous</span>
+              </li>
+              <li class="page-item" v-else>
+                <span
+                  class="page-link"
+                  @click="previousPage()"
+                  style="cursor: pointer"
+                  >Previous</span
+                >
+              </li>
+              <template v-for="n in pages" :key="n">
+                <li class="page-item active" v-if="currPage === n">
+                  <span
+                    class="page-link"
+                    style="cursor: pointer"
+                    @click="selectPage(n)"
+                    >{{ n }}</span
+                  >
+                </li>
+                <li class="page-item" v-else>
+                  <span
+                    style="cursor: pointer"
+                    class="page-link"
+                    @click="selectPage(n)"
+                    >{{ n }}</span
+                  >
+                </li>
+              </template>
 
-              <li class="page-item disabled">
-                <a href="#" class="page-link">Previous</a>
+              <li class="page-item disabled" v-if="pages === currPage">
+                <span style="cursor: pointer" class="page-link">Next</span>
               </li>
-              <li class="page-item active">
-                <a href="#" class="page-link">1</a>
+              <li class="page-item" v-else>
+                <span
+                  style="cursor: pointer"
+                  class="page-link"
+                  @click="nextPage()"
+                  >Next</span
+                >
               </li>
-              <li class="page-item">
-                <a href="#" class="page-link">2</a>
-              </li>
-              <li class="page-item">
-                <a href="#" class="page-link">3</a>
-              </li>
-              <li class="page-item">
-                <a href="#" class="page-link">4</a>
-              </li>
-              <li class="page-item">
-                <a href="#" class="page-link">5</a>
-              </li>
-              <li class="page-item">
-                <a href="#" class="page-link">Next</a>
-              </li>
-            </ul-->
+            </ul>
           </div>
           <!-- end col -->
         </div>
@@ -304,7 +325,7 @@
   <!-- end main content-->
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed } from 'vue';
+import { defineComponent, ref, onMounted, computed, watch } from 'vue';
 import panneComponent from '../components/panneComponent.vue';
 import { useMaintenanceStore } from '../stores/maintenance-store';
 import moment from 'moment';
@@ -321,18 +342,38 @@ export default defineComponent({
     let operation = ref('');
     let seamless = ref(false);
     let dataShow = ref([]);
-    let currPage = ref(0);
+    let dataForm = ref([]);
+    let currPage = ref(1);
     let pages = ref(1);
     let range = ref([]);
-    let limit = ref(2);
+    let limit = ref(10);
     const addItem = () => {
       operation.value = 'add';
+      dataForm.value = [];
       seamless.value = true;
+    };
+    const manageItem = (txt, tab) => {
+      operation.value = txt;
+      dataForm.value = tab;
+      seamless.value = true;
+    };
+    const closePopup = () => {
+      seamless.value = false;
     };
     const tpGarage = (date: Date) => moment(new Date()).to(moment(date), true);
 
+    const nextPage = () => {
+      let page = currPage.value + 1;
+      selectPage(page);
+    };
+
+    const previousPage = () => {
+      let page = currPage.value - 1;
+      selectPage(page);
+    };
+
     const selectPage = (page) => {
-      const start = Number(limit.value) * page;
+      const start = Number(limit.value) * (page - 1);
       const end = start + Number(limit.value);
       dataShow.value = data.value.slice(start, end);
       currPage.value = page;
@@ -341,23 +382,31 @@ export default defineComponent({
       return date.formatDate(dbs, 'DD-MM-YYYY');
     };
     const changeInfoTable = (data) => {
+      console.log(data);
       if (limit.value !== undefined) {
         let page = Math.floor(data.length / Number(limit.value));
+        console.log(page);
+        console.log(data.length % Number(limit.value));
         pages.value = data.length % Number(limit.value) === 0 ? page : page + 1;
+        console.log(pages.value);
         range.value = [...Array(pages.value).keys()];
+        console.log(Array(pages.value));
       }
       dataShow.value =
         limit.value && data ? data.slice(0, Number(limit.value)) : data;
-      //console.log(dataShow.value);
+      console.log(dataShow.value);
     };
     const getImageUrl = (img: any) => {
       if (img != null) {
         return new URL(`http://localhost:4000${img}`, import.meta.url);
       }
     };
+    watch(data, (val) => {
+      currPage.value = 1;
+      changeInfoTable(data.value);
+    });
     onMounted(async () => {
       await store.allPannesNonLivre();
-      console.log(currPage.value);
       changeInfoTable(data.value);
     });
     return {
@@ -373,6 +422,12 @@ export default defineComponent({
       tpGarage,
       changeDate,
       getImageUrl,
+      manageItem,
+      dataForm,
+      limit,
+      nextPage,
+      previousPage,
+      closePopup,
     };
   },
 });

@@ -1298,17 +1298,35 @@
             <ul class="navbar-nav" id="navbar-nav">
               <li class="menu-title"><span data-key="t-menu">Parc</span></li>
               <li class="nav-item" v-if="menu.includes('Dashboard')">
+                <!--a
+                  class="nav-link menu-link"
+                  href="javascript:void(0);"
+                  role="button"
+                >
+                  <i class="mdi mdi-file-table-box-multiple"></i>
+                  <span data-key="t-dashboards"  to="/index">Dashboards</span>
+                </a-->
                 <router-link
                   to="/index"
-                  aria-expanded="false"
                   role="button"
                   class="nav-link menu-link"
-                  aria-controls="sidebarDashboards"
                 >
-                  <i class="fa-solid fa-laptop"></i>{{ $t('Dashboard') }}
+                  <i class="mdi mdi-file-table-box-multiple"></i
+                  >{{ $t('Dashboard') }}
                 </router-link>
               </li>
               <li class="nav-item" v-if="menu.includes('parc')">
+                <a
+                  class="nav-link menu-link"
+                  href="#sidebarDashboards"
+                  data-bs-toggle="collapse"
+                  role="button"
+                  aria-expanded="false"
+                  aria-controls="sidebarDashboards"
+                >
+                  <i class="mdi mdi-car"></i>
+                  <span data-key="t-apps">{{ $t('parc') }}</span>
+                </a>
                 <div class="collapse menu-dropdown" id="sidebarDashboards">
                   <ul class="nav nav-sm flex-column">
                     <li class="nav-item" v-if="menu.includes('parcMateriels')">
@@ -3012,8 +3030,8 @@ import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import appjs from '../assets/js/app.js';
 import {
-  isNavigationFailure,
-  NavigationFailureType,
+  //isNavigationFailure,
+  //NavigationFailureType,
   useRouter,
 } from 'vue-router/dist/vue-router';
 
@@ -3066,6 +3084,7 @@ export default defineComponent({
       ig.value = getImageUrl($q.cookies.get('phot'));
       locale.value = $q.cookies.get('lang');
       menu.value = $q.cookies.get('mem');
+      // console.log(menu.value)
       if (locale.value === 'fr') {
         chargeFr();
       } else {

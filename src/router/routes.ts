@@ -113,6 +113,22 @@ const routes: RouteRecordRaw[] = [
         path: '/rapcons',
         component: () => import('pages/RapConso.vue'),
       },
+      {
+        path: '/grapheconso',
+        component: () => import('pages/GraphConso.vue'),
+      },
+      {
+        path: '/impact',
+        component: () => import('pages/ImportActivite.vue'),
+      },
+      {
+        path: '/rapinterv',
+        component: () => import('pages/RapIntervention.vue'),
+      },
+      {
+        path: '/raphoraire',
+        component: () => import('pages/RapHoraire.vue'),
+      },
     ],
   },
 

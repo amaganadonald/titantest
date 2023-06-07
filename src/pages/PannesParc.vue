@@ -59,7 +59,7 @@ export default defineComponent({
         type: 'object',
       },
       {
-        text: 'Identifiant',
+        text: 'Bon panne',
         value: 'idpanne',
         sortable: true,
         type: 'string',
@@ -71,10 +71,10 @@ export default defineComponent({
         type: 'date',
       },
       {
-        text: 'Heure iimo',
-        value: 'HeureImmo',
+        text: 'Conducteur',
+        value: 'personnel',
         sortable: true,
-        type: 'time',
+        type: 'object',
       },
       {
         text: 'Cause',
@@ -95,10 +95,10 @@ export default defineComponent({
         type: 'date',
       },
       {
-        text: 'Heure sortie',
-        value: 'HeureMiseDisposition',
+        text: 'Temps panne',
+        value: 'tpanne',
         sortable: true,
-        type: 'time',
+        type: 'string',
       },
       {
         text: 'Status',
@@ -116,8 +116,9 @@ export default defineComponent({
     const refreshTable = () => {
       store.allPannes();
     };
-    onMounted(() => {
-      store.allPannes();
+    onMounted(async () => {
+      await store.allPannes();
+      console.log(data.value);
     });
     return {
       header,

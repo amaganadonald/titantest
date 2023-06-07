@@ -339,6 +339,25 @@
               </option>
             </select>
             <select
+              v-else-if="
+                tab.vModel === 'personnel' || tab.vModel === 'Personnel'
+              "
+              v-model="tab.vData"
+              :id="tab.vModel"
+              class="form-select mb-3"
+              @change="selectInfo(this.value)"
+              @click="openSel(tab.vModel)"
+            >
+              <option value="0" selected>{{ $t(tab.vModel) }}</option>
+              <option
+                v-for="(ite, index) in dataConducteur"
+                :key="index"
+                :value="ite.id"
+              >
+                {{ ite.nom }} * {{ ite.matricule }}
+              </option>
+            </select>
+            <select
               v-else
               v-model="tab.vData"
               :id="tab.vModel"
@@ -356,7 +375,6 @@
               </option>
             </select>
           </div>
-          <!--q-select filled  :options="dataSelects" :label="tab.vModel" dense emit-value map-options option-value="id" @filter="filterFn" @filter-abort="abortFilterFn" :option-label="optionLabel"/-->
         </div>
       </div>
       <div class="col-lg-12">
@@ -409,6 +427,8 @@ export default defineComponent({
     let dataFonction = computed(() => store.fonction);
     let dataVehicules = computed(() => store.parc);
     let dataAutorisation = computed(() => store.autorisation);
+    let dataConducteur = computed(() => store.chauffeur);
+    let conducteur = ref('');
     let dataProfil = computed(() => store.profil);
     let dataLangue = ref(['en-US', 'fr']);
     let dataSelect = ref();
@@ -416,7 +436,7 @@ export default defineComponent({
     let isFile = ref(false);
     let dFile = ref(null);
     const formData = new FormData();
-    const dataConstruct = (dataTable) => {
+    const dataConstruct = async (dataTable) => {
       tabInfo.value = [];
       if (props.operation === 'add') {
         for (let dt of dataTable) {
@@ -474,8 +494,10 @@ export default defineComponent({
               vType: 'time',
             });
           } else if (typeof dataTable[key] === 'object') {
+            console.log(dataTable[key]);
             if (dataTable[key] !== null) {
-              openSel(key);
+              //console.log(key);
+              await openSel(key);
               tabInfo.value.push({
                 vModel: key,
                 vData: dataTable[key].id,
@@ -606,6 +628,10 @@ export default defineComponent({
       } else if (dc === 'profil' || dc === 'Profil') {
         if (dataProfil.value.length === 0) {
           store.allProfil();
+        }
+      } else if (dc === 'personnel') {
+        if (dataConducteur.value.length === 0) {
+          store.allChauffeur();
         }
       }
     };
@@ -752,6 +778,7 @@ export default defineComponent({
       }
     });
     onMounted(() => {
+      console.log(props.data);
       if (props.operation === 'add') {
         dataConstruct(props.head);
       } else {
@@ -787,6 +814,8 @@ export default defineComponent({
       dataLangue,
       t,
       locale,
+      conducteur,
+      dataConducteur,
     };
   },
 });

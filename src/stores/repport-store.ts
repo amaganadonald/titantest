@@ -24,6 +24,16 @@ export const useRepportStore = defineStore('rapport', {
     conso: [],
     consoVeh: [],
     dataDash: [],
+    rapconso: [],
+    consoJour: [],
+    consMois: [],
+    consoMoy: [],
+    dataPlat: [],
+    pannes: [],
+    horaires: [],
+    horairesQuart: [],
+    immoData: [],
+    immoDataQuart: [],
   }),
   getters: {
     updateDatabase: (state) => state.databases,
@@ -107,6 +117,7 @@ export const useRepportStore = defineStore('rapport', {
             Authorization: 'Bearer ' + Cookies.get('tk'),
           },
         });
+        console.log(req.data.datatracking);
         this.horaireActivity = req.data.datatracking;
         this.loading = false;
       } catch (error) {
@@ -230,6 +241,290 @@ export const useRepportStore = defineStore('rapport', {
         );
         //console.log(req.data);
         this.dataDash = req.data.dataDash;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async analyseConso(
+      vehicule: object[],
+      firstDay: Date,
+      lastDay: Date,
+      tdeb: any,
+      tfin: any
+    ) {
+      this.loading = true;
+      const data = {
+        deb: firstDay,
+        fin: lastDay,
+        vehicle: vehicule,
+        tdeb: tdeb,
+        tfin: tfin,
+      };
+      try {
+        const req = await api.post('/api/analyseConso', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+
+        this.rapconso = req.data.conso;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async analyseConsoJour(
+      vehicule: object[],
+      firstDay: Date,
+      lastDay: Date,
+      tdeb: any,
+      tfin: any
+    ) {
+      this.loading = true;
+      const data = {
+        deb: firstDay,
+        fin: lastDay,
+        vehicle: vehicule,
+        tdeb: tdeb,
+        tfin: tfin,
+      };
+      try {
+        const req = await api.post('/api/analyseConsoJour', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        this.consoJour = req.data.conso;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async analyseConsoMois(vehicule: object[] | undefined, mois: number[]) {
+      this.loading = true;
+      const data = {
+        mois,
+        vehicle: vehicule,
+      };
+      try {
+        const req = await api.post('/api/analyseConsoMois', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        console.log(req.data.conso);
+        this.consMois = req.data.conso;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async analyseConsoMoy(
+      vehicule: object[],
+      firstDay: Date,
+      lastDay: Date,
+      tdeb: any,
+      tfin: any
+    ) {
+      this.loading = true;
+      const data = {
+        deb: firstDay,
+        fin: lastDay,
+        vehicle: vehicule,
+        tdeb: tdeb,
+        tfin: tfin,
+      };
+      try {
+        const req = await api.post('/api/analyseConsoMoy', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        console.log(req.data.conso);
+        this.consoMoy = req.data.conso;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async allLastDataPlateforme() {
+      this.loading = true;
+      try {
+        await api
+          .get('/api/lastDataPlateforme', {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          })
+          .then((response) => {
+            this.dataPlat = response.data.dataPlateforme;
+          });
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async uploadData(data: object[]) {
+      this.loading = true;
+      try {
+        await api.post('/api/addDataPlateforme', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        this.allLastDataPlateforme();
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async analyseHoraire(
+      vehicule: object[],
+      firstDay: Date,
+      lastDay: Date,
+      tdeb: any,
+      tfin: any
+    ) {
+      this.loading = true;
+      const data = {
+        deb: firstDay,
+        fin: lastDay,
+        vehicle: vehicule,
+        tdeb: tdeb,
+        tfin: tfin,
+      };
+      try {
+        const req = await api.post('/api/analyseHoraire', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        //console.log(req.data.horaire);
+        this.horaires = req.data.horaire;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async analysePanne(
+      vehicule: object[],
+      firstDay: Date,
+      lastDay: Date,
+      tdeb: any,
+      tfin: any
+    ) {
+      this.loading = true;
+      const data = {
+        deb: firstDay,
+        fin: lastDay,
+        vehicle: vehicule,
+        tdeb: tdeb,
+        tfin: tfin,
+      };
+      try {
+        const req = await api.post('/api/analysePanne', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        console.log(req.data.pannes);
+        this.pannes = req.data.pannes;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async analyseIntervention(
+      vehicule: object[],
+      firstDay: Date,
+      lastDay: Date,
+      tdeb: any,
+      tfin: any
+    ) {
+      this.loading = true;
+      const data = {
+        deb: firstDay,
+        fin: lastDay,
+        vehicle: vehicule,
+        tdeb: tdeb,
+        tfin: tfin,
+      };
+      try {
+        const req = await api.post('/api/analyseIntervention', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        //console.log(req.data.horaire);
+        this.immoData = req.data.pannes;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async analyseInterventionQuart(
+      vehicule: object[],
+      firstDay: Date,
+      lastDay: Date,
+      tdeb: any,
+      tfin: any
+    ) {
+      this.loading = true;
+      const data = {
+        deb: firstDay,
+        fin: lastDay,
+        vehicle: vehicule,
+        tdeb: tdeb,
+        tfin: tfin,
+      };
+      try {
+        const req = await api.post('/api/analyseIntervention', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        //console.log(req.data.horaire);
+        this.immoDataQuart = req.data.pannes;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async analyseHoraireQuart(
+      vehicule: object[],
+      firstDay: Date,
+      lastDay: Date,
+      tdeb: any,
+      tfin: any
+    ) {
+      this.loading = true;
+      const data = {
+        deb: firstDay,
+        fin: lastDay,
+        vehicle: vehicule,
+        tdeb: tdeb,
+        tfin: tfin,
+      };
+      try {
+        const req = await api.post('/api/analyseHoraire', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        //console.log(req.data.horaire);
+        this.horairesQuart = req.data.horaire;
         this.loading = false;
       } catch (error) {
         console.log(error);

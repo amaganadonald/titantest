@@ -208,16 +208,38 @@
                     {{ changeDate(DateService) }}
                   </template>
                   <template #item-DateSortie="{ DateSortie }">
-                    {{ changeDate(DateSortie) }}
+                    {{ changeDateTime(DateSortie) }}
                   </template>
                   <template #item-DateImmo="{ DateImmo }">
-                    {{ changeDate(DateImmo) }}
+                    {{ changeDateTime(DateImmo) }}
                   </template>
                   <template #item-DateConso="{ DateConso }">
                     {{ changeDate(DateConso) }}
                   </template>
+                  <template #item-DateDebInt="{ DateDebInt }">
+                    {{ changeDateTime(DateDebInt) }}
+                  </template>
+                  <template #item-DateFinInt="{ DateFinInt }">
+                    {{ changeDateTime(DateFinInt) }}
+                  </template>
+                  <!--template #item-[`panne.DateImmo`]="{ panne }">
+                    {{ changeDateTime(panne.DateImmo) }}
+                  </template-->
+                  <template v-slot:[`panne.DateImmo`]="{ panne }">
+                    {{ changeDateTime(panne.DateImmo) }}
+                  </template>
                   <template #item-fam_veh="{ fam_veh }">
                     <span v-if="fam_veh != null">{{ fam_veh.lib_fam }}</span>
+                  </template>
+                  <template #item-personnel="{ personnel }">
+                    <span v-if="personnel != null"
+                      >{{ personnel.nom }}-{{ personnel.matricule }}</span
+                    >
+                  </template>
+                  <template #item-type_panne="{ type_panne }">
+                    <span v-if="type_panne != null">{{
+                      type_panne.libelle
+                    }}</span>
                   </template>
                   <template #item-activiteVeh="{ activiteVeh }">
                     <span v-if="activiteVeh != null">{{
@@ -260,6 +282,18 @@
                   <template #item-Status="{ Status }">
                     <q-chip
                       v-if="Status === true"
+                      dense
+                      color="teal"
+                      text-color="white"
+                      ><i class="fa-solid fa-circle-check"></i
+                    ></q-chip>
+                    <q-chip v-else dense color="red" text-color="white"
+                      ><i class="fa-sharp fa-solid fa-xmark"></i
+                    ></q-chip>
+                  </template>
+                  <template #item-status="{ status }">
+                    <q-chip
+                      v-if="status === true"
                       dense
                       color="teal"
                       text-color="white"
@@ -511,6 +545,9 @@ export default defineComponent({
     const changeDate = (dbs: string | number | Date) => {
       return date.formatDate(dbs, 'DD-MM-YYYY');
     };
+    const changeDateTime = (dbs: string | number | Date) => {
+      return date.formatDate(dbs, 'DD-MM-YYYY HH:mm:ss');
+    };
     const goProfile = (matricule: any) => {
       router.push(`/personnel/${matricule}`);
     };
@@ -571,6 +608,7 @@ export default defineComponent({
       showLibelleFilter,
       getImageUrl,
       goToVehicle,
+      changeDateTime,
     };
   },
 });

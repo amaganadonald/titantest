@@ -1,19 +1,19 @@
 <template>
   <div>
     <v-chart
-      ondblclick="openSubGraph()"
       class="chart"
       :option="barOption"
       style="width: 800px; height: 400px"
     />
   </div>
 </template>
+
 <script>
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent, ref, computed, watch } from 'vue';
 
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
-import { BarChart } from 'echarts/charts';
+import { BarChart, LineChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -31,27 +31,29 @@ use([
   LegendComponent,
   GridComponent,
   ToolboxComponent,
+  LineChart,
 ]);
 export default defineComponent({
-  name: 'MultipleBarChart',
-  props: ['legend', 'codeBar', 'title', 'dataConso', 'legendConsoDatJr'],
+  name: 'BarChart',
   components: {
     VChart,
   },
   provide: {
-    [THEME_KEY]: 'blue', //dark, light
+    [THEME_KEY]: 'blue', //dark, light, blue
   },
+  props: ['legendConsoTot', 'dataConso', 'title'],
 
-  setup(props, context) {
-    let titres = ref(props.title);
+  setup(props) {
+    const dataLegend = computed(() => props.legendConsoTot);
+    const dataConsos = computed(() => props.dataConso);
+    const titles = computed(() => props.title);
     const barOption = ref({
       textStyle: {
         fontFamily: 'Inter, "Helvetica Neue", Arial, sans-serif',
       },
       title: {
-        text: titres.value + '\n' + 'vheicule',
+        text: titles,
         left: 'center',
-        subtext: 'vehicle',
       },
       tooltip: {
         trigger: 'axis',
@@ -59,11 +61,6 @@ export default defineComponent({
           type: 'shadow',
         },
         formatter: '{a} <br/>{b} : {c} L',
-      },
-      legend: {
-        data: props.legend,
-        orient: 'vertical',
-        bottom: 'bottom',
       },
       grid: {
         left: '3%',
@@ -87,53 +84,58 @@ export default defineComponent({
       xAxis: [
         {
           type: 'category',
-          axisTick: { show: false },
-          data: props.legendConsoDatJr,
+          data: dataLegend.value,
+          axisTick: {
+            alignWithLabel: true,
+          },
         },
       ],
       yAxis: [
         {
           type: 'value',
+          axisLine: {
+            show: false,
+          },
+          axisTick: {
+            show: true,
+          },
+          axisLabel: {
+            color: '#999',
+          },
         },
       ],
-      series: props.dataConso,
-    });
-
-    watch(props, (value) => {
-      console.log(value);
-      barOption.value.legend.data = value.legendConsoDatJr;
-      barOption.value.xAxis[0].data = value.legend;
-      barOption.value.title.text = value.title;
-      let dataFinal = [];
-      value.dataConso.forEach((dtc) => {
-        dataFinal.push({
-          name: dtc.date,
+      series: [
+        {
+          name: 'Consommation',
           type: 'bar',
-          barWidth: '30%',
-          barGap: 0,
-          emphasis: {
-            focus: 'series',
+          barWidth: '60%',
+          data: dataConsos.value,
+          showBackground: true,
+          backgroundStyle: {
+            color: 'rgba(180, 180, 180, 0.4)',
           },
-          data: dtc.data,
           label: {
             show: true,
             formatter: '{c} L',
             position: 'top',
             distance: 0,
           },
-        });
-      });
-      barOption.value.series = dataFinal;
+        },
+      ],
     });
-
-    const openSubGraph = (event) => {
-      console.log(event);
-    };
+    watch(props, (value) => {
+      //dataLegend.value = value.legendConsoTot;
+      //dataConsos.value = value.dataConso;
+      console.log(value);
+      barOption.value.xAxis[0].data = dataLegend.value;
+      barOption.value.series[0].data = dataConsos.value;
+      console.log(dataLegend.value);
+      console.log(dataConsos.value);
+    });
 
     return {
       barOption,
-      titres,
-      openSubGraph,
+      dataLegend,
     };
   },
 });

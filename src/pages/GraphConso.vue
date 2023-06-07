@@ -9,11 +9,11 @@
               <div
                 class="page-title-box d-sm-flex align-items-center justify-content-between"
               >
-                <h4 class="mb-sm-0">RAPPORT CONSO</h4>
+                <h4 class="mb-sm-0">GRAPHE CONSO</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
-                      <a href="javascript: void(0);">Rapport</a>
+                      <a href="javascript: void(0);">Graphe</a>
                     </li>
                     <li class="breadcrumb-item active">Consommation</li>
                   </ol>
@@ -103,7 +103,6 @@
                             role="tab"
                             aria-controls="pills-finish"
                             aria-selected="false"
-                            @click="actualReport('consoMoy')"
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
@@ -128,13 +127,10 @@
                           aria-labelledby="pills-bill-info-tab"
                         >
                           <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="header"
-                              :data="data"
-                              @refreshTable="refreshTables"
+                            <BarChart
+                              :legendConsoTot="legendConsoTots"
+                              :dataConso="dataCons"
                               :title="rpl"
-                              filename="export_conso"
                             />
                           </div>
                         </div>
@@ -145,13 +141,11 @@
                           aria-labelledby="pills-bill-address-tab"
                         >
                           <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="headerJour"
-                              :data="dataJour"
-                              @refreshTable="refreshTables"
+                            <MultipleBarChart
+                              :legend="legendConsoJour"
+                              :dataConso="dataConsoJour"
+                              :legendConsoDatJr="legendConsoDatJr"
                               :title="rpl"
-                              filename="export_conso_jour"
                             />
                           </div>
                         </div>
@@ -162,13 +156,10 @@
                           aria-labelledby="pills-payment-tab"
                         >
                           <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="headerMois"
-                              :data="dataMois"
-                              @refreshTable="refreshTables"
+                            <BarChart
+                              :legendConsoTot="legendConsoMois"
+                              :dataConso="dataConsoMois"
                               :title="rpl"
-                              filename="export_conso_mois"
                             />
                           </div>
                         </div>
@@ -220,159 +211,39 @@
 import { defineComponent, ref, computed, watch } from 'vue';
 import PlageData from '../components/Modals/PlageData.vue';
 import { useRepportStore } from '../stores/repport-store';
-import TableRapport from 'src/components/tables/TableRapport.vue';
-import { useChangeDate } from '../composable/panneReport';
-import dataCons from '../types/dataCons';
-import dateConsDate from '../types/dataCons';
+import BarChart from 'src/components/charts/BarChart.vue';
+import MultipleBarChart from 'src/components/charts/MultipleBarChart.vue';
+import { useRetourneMois } from '../composable/panneReport';
+import { date } from 'quasar';
 export default defineComponent({
-  name: 'RapConso',
-  components: { PlageData, TableRapport },
+  name: 'GraphConso',
+  components: { PlageData, BarChart, MultipleBarChart },
+  props: ['legendConsoTot', 'dataConso', 'title'],
   setup() {
     const consStore = useRepportStore();
     let report = ref('');
     let rapConso = computed(() => consStore.rapconso);
     let consoJour = computed(() => consStore.consoJour);
     let dataMois = computed(() => consStore.consMois);
-    let dataJour = ref<dateConsDate[]>([]);
-    let data = ref<dataCons[]>([]);
+    let data = ref([]);
     let rpl = ref('');
     let debut = ref<Date>();
     let fini = ref<Date>();
     let tdebut = ref<string>();
     let tfini = ref<string>();
     let vehs = ref<object[]>();
-    let choix = ref<string>('');
-    const header = [
-      {
-        text: 'Id',
-        value: 'id',
-        sortable: true,
-        width: 20,
-        type: 'number',
-        title: 'Id',
-        dataKey: 'id',
-      },
-      {
-        text: 'Code',
-        value: 'code',
-        sortable: true,
-        width: 40,
-        type: 'image',
-        title: 'Code',
-        dataKey: 'code',
-      },
-      {
-        text: 'Immat',
-        value: 'immat',
-        sortable: true,
-        type: 'string',
-        title: 'Immat',
-        dataKey: 'immat',
-      },
-      {
-        text: 'Type',
-        value: 'typeVeh',
-        sortable: true,
-        type: 'string',
-        title: 'Type',
-        dataKey: 'typeVeh',
-      },
-      {
-        text: 'Marque',
-        value: 'marque',
-        sortable: true,
-        type: 'string',
-        title: 'Marque',
-        dataKey: 'marque',
-      },
-      {
-        text: 'Qte conso',
-        value: 'qte',
-        sortable: true,
-        type: 'date',
-        title: 'Qte conso',
-        dataKey: 'qte',
-      },
-    ];
-    const headerJour = [
-      {
-        text: 'Id',
-        value: 'id',
-        sortable: true,
-        width: 20,
-        type: 'number',
-        title: 'Id',
-        dataKey: 'id',
-      },
-      {
-        text: 'Code',
-        value: 'code',
-        sortable: true,
-        width: 40,
-        type: 'image',
-        title: 'Code',
-        dataKey: 'code',
-      },
-      {
-        text: 'Immat',
-        value: 'immat',
-        sortable: true,
-        type: 'string',
-        title: 'Immat',
-        dataKey: 'immat',
-      },
-      {
-        text: 'Type',
-        value: 'typeVeh',
-        sortable: true,
-        type: 'string',
-        title: 'Type',
-        dataKey: 'typeVeh',
-      },
-      {
-        text: 'Marque',
-        value: 'marque',
-        sortable: true,
-        type: 'string',
-        title: 'Marque',
-        dataKey: 'marque',
-      },
-      {
-        text: 'Date Conso',
-        value: 'datej',
-        sortable: true,
-        type: 'string',
-        title: 'Date Conso',
-        dataKey: 'datej',
-      },
-      {
-        text: 'Qte conso',
-        value: 'qte',
-        sortable: true,
-        type: 'date',
-        title: 'Qte conso',
-        dataKey: 'qte',
-      },
-    ];
-    const headerMois = [
-      {
-        text: 'Mois',
-        value: 'monthConso',
-        sortable: true,
-        type: 'string',
-        title: 'Mois',
-        dataKey: 'monthConso',
-      },
-      {
-        text: 'Total conso',
-        value: 'totalconso',
-        sortable: true,
-        type: 'number',
-        title: 'Total conso',
-        dataKey: 'totalconso',
-      },
-    ];
-
+    let legendConsoTots = ref([]);
+    let legendConsoJour = ref([]);
+    let legendConsoDatJr = ref([]);
+    let legendConsoMois = ref([]);
+    let dataCons = ref([]);
+    let dataConsoJour = ref([]);
+    let dataConsoMois = ref([]);
+    let codeBar = ref('');
+    let choix = ref('');
+    const changeDate = (dbs) => {
+      return date.formatDate(dbs, 'DD-MM-YYYY');
+    };
     const acquireDate = (
       deb: Date,
       fin: Date,
@@ -403,53 +274,74 @@ export default defineComponent({
       report.value = txt;
     };
     watch(rapConso, (valeur) => {
-      let i = 0;
-      data.value = [];
+      legendConsoTots.value = [];
+      dataCons.value = [];
       if (valeur.length > 0) {
         valeur.forEach((val) => {
           if (val[0].totalconso != null) {
-            data.value.push({
-              id: i,
-              code: val[0].vehicule.code,
-              immat: val[0].vehicule.Immat,
-              typeVeh: val[0].vehicule.type_veh.lib_type,
-              marque: val[0].vehicule.Marque.libelle,
-              qte: val[0].totalconso,
-            });
-            i++;
+            legendConsoTots.value.push(val[0].vehicule.code);
+            dataCons.value.push(val[0].totalconso);
           }
         });
       }
     });
     watch(consoJour, (valeur: Array<object>) => {
-      console.log(valeur);
-      let k = 0;
-      dataJour.value = [];
+      legendConsoJour.value = [];
+      legendConsoDatJr.value = [];
       if (valeur.length > 0) {
         valeur.forEach((val) => {
           if (val.length > 0) {
             val.forEach((v) => {
-              dataJour.value.push({
-                id: k,
-                code: v.vehicule.code,
-                immat: v.vehicule.Immat,
-                typeVeh: v.vehicule.type_veh.lib_type,
-                marque: v.vehicule.Marque.libelle,
-                datej: useChangeDate(v.DateConso) + ' ' + v.HeureConso,
-                qte: v.QteConso,
-              });
-              k++;
+              legendConsoJour.value.push(v.vehicule.code);
+              legendConsoDatJr.value.push(changeDate(v.DateConso));
             });
           }
         });
+        legendConsoJour.value = [...new Set(legendConsoJour.value)];
+        legendConsoDatJr.value = [...new Set(legendConsoDatJr.value)];
+        dataConsoJour.value = [];
+        legendConsoDatJr.value.forEach((dj) => {
+          let tab = [];
+          legendConsoJour.value.forEach((lg) => {
+            let dts = 0;
+            valeur.forEach((val) => {
+              if (val.length > 0) {
+                val.forEach((v) => {
+                  if (
+                    v.vehicule.code === lg &&
+                    changeDate(v.DateConso) === dj
+                  ) {
+                    dts = 1;
+                    tab.push(v.QteConso);
+                  }
+                });
+              }
+            });
+            if (dts === 0) {
+              tab.push(0);
+            }
+          });
+          dataConsoJour.value.push({
+            date: dj,
+            data: tab,
+          });
+        });
       }
-      console.log(dataJour.value);
     });
 
+    watch(dataMois, (valeur) => {
+      legendConsoMois.value = [];
+      dataConsoMois.value = [];
+      if (valeur.length > 0) {
+        valeur.forEach((val) => {
+          legendConsoMois.value.push(useRetourneMois(val.monthConso));
+          dataConsoMois.value.push(val.totalconso);
+        });
+      }
+    });
     return {
       actualReport,
       report,
-      header,
       data,
       acquireDate,
       rpl,
@@ -458,10 +350,15 @@ export default defineComponent({
       fini,
       tdebut,
       tfini,
-      headerJour,
-      dataJour,
-      headerMois,
-      dataMois,
+      codeBar,
+      legendConsoJour,
+      dataConsoJour,
+      dataCons,
+      legendConsoTots,
+      legendConsoDatJr,
+      legendConsoMois,
+      dataConsoMois,
+      choix,
     };
   },
 });

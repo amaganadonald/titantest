@@ -9,13 +9,13 @@
               <div
                 class="page-title-box d-sm-flex align-items-center justify-content-between"
               >
-                <h4 class="mb-sm-0">RAPPORT CONSO</h4>
+                <h4 class="mb-sm-0">RAPPORT HORAIRE</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
                       <a href="javascript: void(0);">Rapport</a>
                     </li>
-                    <li class="breadcrumb-item active">Consommation</li>
+                    <li class="breadcrumb-item active">Horaire</li>
                   </ol>
                 </div>
               </div>
@@ -52,12 +52,12 @@
                             role="tab"
                             aria-controls="pills-bill-info"
                             aria-selected="false"
-                            @click="actualReport('consoTotal')"
+                            @click="actualReport('horaireTotal')"
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >Conso Totale
+                            >Temps Conduite
                           </div>
                           <div
                             class="external-event fc-event bg-soft-info text-info"
@@ -69,12 +69,12 @@
                             role="tab"
                             aria-controls="pills-bill-address"
                             aria-selected="false"
-                            @click="actualReport('consoMois')"
+                            @click="actualReport('horaireQuart')"
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >Conso Journalière
+                            >Temps conduite par Quart
                           </div>
                           <div
                             class="external-event fc-event bg-soft-warning text-warning"
@@ -131,10 +131,10 @@
                             <h5 class="mb-1">{{ rpl }}</h5>
                             <TableRapport
                               :header="header"
-                              :data="data"
+                              :data="dataTimes"
                               @refreshTable="refreshTables"
                               :title="rpl"
-                              filename="export_conso"
+                              filename="export_horaire"
                             />
                           </div>
                         </div>
@@ -147,11 +147,11 @@
                           <div>
                             <h5 class="mb-1">{{ rpl }}</h5>
                             <TableRapport
-                              :header="headerJour"
-                              :data="dataJour"
+                              :header="headerQuart"
+                              :data="dataQuart"
                               @refreshTable="refreshTables"
                               :title="rpl"
-                              filename="export_conso_jour"
+                              filename="export_Quart"
                             />
                           </div>
                         </div>
@@ -165,7 +165,7 @@
                             <h5 class="mb-1">{{ rpl }}</h5>
                             <TableRapport
                               :header="headerMois"
-                              :data="dataMois"
+                              :data="dataHoraire"
                               @refreshTable="refreshTables"
                               :title="rpl"
                               filename="export_conso_mois"
@@ -221,18 +221,22 @@ import { defineComponent, ref, computed, watch } from 'vue';
 import PlageData from '../components/Modals/PlageData.vue';
 import { useRepportStore } from '../stores/repport-store';
 import TableRapport from 'src/components/tables/TableRapport.vue';
-import { useChangeDate } from '../composable/panneReport';
+import {
+  useCalculHoraire,
+  useCalculHoraireQuart,
+} from 'src/composable/panneReport';
 import dataCons from '../types/dataCons';
 import dateConsDate from '../types/dataCons';
 export default defineComponent({
-  name: 'RapConso',
+  name: 'RapHoraire',
   components: { PlageData, TableRapport },
   setup() {
     const consStore = useRepportStore();
     let report = ref('');
-    let rapConso = computed(() => consStore.rapconso);
-    let consoJour = computed(() => consStore.consoJour);
-    let dataMois = computed(() => consStore.consMois);
+    let dataHoraire = computed(() => consStore.horaires);
+    let dataHoraireQuart = computed(() => consStore.horairesQuart);
+    let dataTimes = ref([]);
+    let dataQuart = ref([]);
     let dataJour = ref<dateConsDate[]>([]);
     let data = ref<dataCons[]>([]);
     let rpl = ref('');
@@ -244,132 +248,97 @@ export default defineComponent({
     let choix = ref<string>('');
     const header = [
       {
-        text: 'Id',
-        value: 'id',
+        text: 'Code',
+        value: 'code',
         sortable: true,
-        width: 20,
-        type: 'number',
-        title: 'Id',
-        dataKey: 'id',
+        width: 40,
+        type: 'string',
+        title: 'Code',
+        dataKey: 'code',
       },
+      {
+        text: 'Temps conduite',
+        value: 'eon',
+        sortable: true,
+        type: 'string',
+        title: 'Eon',
+        dataKey: 'eon',
+      },
+      {
+        text: 'Temps ralenti',
+        value: 'idle',
+        sortable: true,
+        type: 'string',
+        title: 'Temps ralenti',
+        dataKey: 'idle',
+      },
+      {
+        text: 'Temps Arrêt',
+        value: 'eoff',
+        sortable: true,
+        type: 'string',
+        title: 'Temps Arrêt',
+        dataKey: 'eoff',
+      },
+      {
+        text: 'Kilométrage',
+        value: 'km',
+        sortable: true,
+        type: 'number',
+        title: 'Kilométrage',
+        dataKey: 'km',
+      },
+    ];
+    const headerQuart = [
       {
         text: 'Code',
         value: 'code',
         sortable: true,
         width: 40,
-        type: 'image',
+        type: 'string',
         title: 'Code',
         dataKey: 'code',
       },
       {
-        text: 'Immat',
-        value: 'immat',
-        sortable: true,
-        type: 'string',
-        title: 'Immat',
-        dataKey: 'immat',
-      },
-      {
-        text: 'Type',
-        value: 'typeVeh',
-        sortable: true,
-        type: 'string',
-        title: 'Type',
-        dataKey: 'typeVeh',
-      },
-      {
-        text: 'Marque',
-        value: 'marque',
-        sortable: true,
-        type: 'string',
-        title: 'Marque',
-        dataKey: 'marque',
-      },
-      {
-        text: 'Qte conso',
-        value: 'qte',
-        sortable: true,
-        type: 'date',
-        title: 'Qte conso',
-        dataKey: 'qte',
-      },
-    ];
-    const headerJour = [
-      {
-        text: 'Id',
-        value: 'id',
-        sortable: true,
-        width: 20,
-        type: 'number',
-        title: 'Id',
-        dataKey: 'id',
-      },
-      {
-        text: 'Code',
-        value: 'code',
+        text: 'Quart',
+        value: 'quart',
         sortable: true,
         width: 40,
-        type: 'image',
-        title: 'Code',
-        dataKey: 'code',
+        type: 'string',
+        title: 'Quart',
+        dataKey: 'quart',
       },
       {
-        text: 'Immat',
-        value: 'immat',
+        text: 'Temps conduite',
+        value: 'eon',
         sortable: true,
         type: 'string',
-        title: 'Immat',
-        dataKey: 'immat',
+        title: 'Eon',
+        dataKey: 'eon',
       },
       {
-        text: 'Type',
-        value: 'typeVeh',
+        text: 'Temps ralenti',
+        value: 'idle',
         sortable: true,
         type: 'string',
-        title: 'Type',
-        dataKey: 'typeVeh',
+        title: 'Temps ralenti',
+        dataKey: 'idle',
       },
       {
-        text: 'Marque',
-        value: 'marque',
+        text: 'Temps Arrêt',
+        value: 'eoff',
         sortable: true,
         type: 'string',
-        title: 'Marque',
-        dataKey: 'marque',
+        title: 'Temps Arrêt',
+        dataKey: 'eoff',
       },
       {
-        text: 'Date Conso',
-        value: 'datej',
-        sortable: true,
-        type: 'string',
-        title: 'Date Conso',
-        dataKey: 'datej',
-      },
-      {
-        text: 'Qte conso',
-        value: 'qte',
-        sortable: true,
-        type: 'date',
-        title: 'Qte conso',
-        dataKey: 'qte',
-      },
-    ];
-    const headerMois = [
-      {
-        text: 'Mois',
-        value: 'monthConso',
-        sortable: true,
-        type: 'string',
-        title: 'Mois',
-        dataKey: 'monthConso',
-      },
-      {
-        text: 'Total conso',
-        value: 'totalconso',
+        text: 'Kilométrage',
+        value: 'km',
         sortable: true,
         type: 'number',
-        title: 'Total conso',
-        dataKey: 'totalconso',
+        title: 'Kilométrage',
+        dataKey: 'km',
       },
     ];
 
@@ -402,48 +371,24 @@ export default defineComponent({
     const actualReport = (txt: string) => {
       report.value = txt;
     };
-    watch(rapConso, (valeur) => {
-      let i = 0;
-      data.value = [];
-      if (valeur.length > 0) {
-        valeur.forEach((val) => {
-          if (val[0].totalconso != null) {
-            data.value.push({
-              id: i,
-              code: val[0].vehicule.code,
-              immat: val[0].vehicule.Immat,
-              typeVeh: val[0].vehicule.type_veh.lib_type,
-              marque: val[0].vehicule.Marque.libelle,
-              qte: val[0].totalconso,
-            });
-            i++;
-          }
-        });
-      }
+
+    watch(dataHoraire, (val) => {
+      dataTimes.value = useCalculHoraire(
+        val,
+        debut.value,
+        fini.value,
+        tdebut.value,
+        tfini.value
+      );
     });
-    watch(consoJour, (valeur: Array<object>) => {
-      console.log(valeur);
-      let k = 0;
-      dataJour.value = [];
-      if (valeur.length > 0) {
-        valeur.forEach((val) => {
-          if (val.length > 0) {
-            val.forEach((v) => {
-              dataJour.value.push({
-                id: k,
-                code: v.vehicule.code,
-                immat: v.vehicule.Immat,
-                typeVeh: v.vehicule.type_veh.lib_type,
-                marque: v.vehicule.Marque.libelle,
-                datej: useChangeDate(v.DateConso) + ' ' + v.HeureConso,
-                qte: v.QteConso,
-              });
-              k++;
-            });
-          }
-        });
-      }
-      console.log(dataJour.value);
+    watch(dataHoraireQuart, (val) => {
+      dataQuart.value = useCalculHoraireQuart(
+        val,
+        debut.value,
+        fini.value,
+        tdebut.value,
+        tfini.value
+      );
     });
 
     return {
@@ -458,10 +403,11 @@ export default defineComponent({
       fini,
       tdebut,
       tfini,
-      headerJour,
+      headerQuart,
       dataJour,
-      headerMois,
-      dataMois,
+      dataHoraire,
+      dataTimes,
+      dataQuart,
     };
   },
 });

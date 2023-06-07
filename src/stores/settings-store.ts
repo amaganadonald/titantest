@@ -31,6 +31,7 @@ export const useSettingStore = defineStore('settings', {
     typeDocument: [],
     document: [],
     documentVeh: [],
+    chauffeur: [],
   }),
   getters: {
     //doubleCount: (state) => state.counter * 2,
@@ -55,7 +56,7 @@ export const useSettingStore = defineStore('settings', {
       }
     },
 
-    /*--------------------Famille Véhicule------------------*/
+    /*--------------------Famille Véhicule src / stores / settings - store.ts;------------------*/
     async allFamVeh() {
       this.loading = true;
       try {
@@ -267,7 +268,9 @@ export const useSettingStore = defineStore('settings', {
       if (op === 'add') {
         try {
           await api.post('/api/addActiviteVeh', data, {
-            headers: {},
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
           });
           await this.allActivites();
         } catch (error) {
@@ -1228,5 +1231,20 @@ export const useSettingStore = defineStore('settings', {
         }
       }
     } /* -----------------End Type de Documents------------------------ */,
+    async allChauffeur() {
+      this.loading = true;
+      try {
+        const req = await api.get('/api/allChauffeur', {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        this.chauffeur = req.data.personnel;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
   },
 });

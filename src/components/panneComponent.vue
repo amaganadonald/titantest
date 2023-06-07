@@ -151,7 +151,7 @@
                       :key="index"
                       :value="ite.id"
                     >
-                      {{ ite.name }}
+                      {{ ite.nom }} - {{ ite.matricule }}
                     </option>
                   </select>
                 </div>
@@ -349,15 +349,51 @@
             </div>
           </div>
           <br />
-          <!--fin row-->
           <div class="row g-3">
             <!--debut row-->
             <div class="col-12 col-sm-6">
               <div class="form-group row">
+                <label for="DateFinInt" class="col-sm-4 col-form-label"
+                  >Date Sortie</label
+                >
+                <div class="col-sm-8">
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="DateSortie"
+                    placeholder="Date fin intervention"
+                    v-model="DateSortie"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6">
+              <div class="form-group row">
+                <label for="HeureFinInt" class="col-sm-4 col-form-label"
+                  >Heure Sortie</label
+                >
+                <div class="col-sm-8">
+                  <input
+                    type="time"
+                    class="form-control"
+                    id="HeureMiseDisposition"
+                    placeholder="Heure fin intervention"
+                    v-model="HeureMiseDisposition"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <br />
+          <!--fin row-->
+          <div class="row g-6">
+            <!--debut row-->
+            <div class="col-12 col-sm-12">
+              <div class="form-group row">
                 <label for="observation" class="col-sm-4 col-form-label"
                   >Observation</label
                 >
-                <div class="col-sm-8">
+                <div class="col-sm-12">
                   <q-input
                     type="textarea"
                     class="form-control"
@@ -369,24 +405,58 @@
                 </div>
               </div>
             </div>
-            <div class="col-12 col-sm-6">
-              <div class="form-group row">
-                <label for="HeureFinInt" class="col-sm-4 col-form-label"
-                  >Heure fin</label
+          </div>
+          <br />
+          <!--fin row-->
+          <div class="row">
+            <div class="col-6">
+              <h3 class="text-muted">Liste des Employés</h3>
+              <div
+                class="overflow-scroll p-3 mb-0 bg-light"
+                style="height: 300px"
+              >
+                <draggable
+                  class="list-group"
+                  :list="listEmploye"
+                  group="people"
+                  itemKey="id"
                 >
-                <div class="col-sm-8">
-                  <input
-                    type="time"
-                    class="form-control"
-                    id="HeureFinInt"
-                    placeholder="Heure fin intervention"
-                    v-model="HeureFinInt"
-                  />
-                </div>
+                  <template #item="{ element, index }">
+                    <div class="list-group-item" style="cursor: pointer">
+                      <!-- Overflow -->
+
+                      <div class="shadow-sm p-3 bg-light rounded">
+                        #{{ index }} - {{ element.nom }} {{ element.matricule }}
+                      </div>
+                    </div>
+                  </template>
+                </draggable>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <h3 class="text-muted">Operateurs Maintenance</h3>
+              <div
+                class="overflow-scroll p-3 mb-0 bg-light"
+                style="height: 300px"
+              >
+                <draggable
+                  class="list-group"
+                  :list="choixMecano"
+                  group="people"
+                  itemKey="id"
+                >
+                  <template #item="{ element, index }">
+                    <div class="list-group-item" style="cursor: pointer">
+                      <div class="shadow-sm p-3 bg-light rounded">
+                        #{{ index }} - {{ element.nom }} {{ element.matricule }}
+                      </div>
+                    </div>
+                  </template>
+                </draggable>
               </div>
             </div>
           </div>
-          <!--fin row-->
         </div>
         <!--fin card body-->
       </div>
@@ -395,8 +465,12 @@
     <div class="col-lg-12">
       <div class="hstack gap-2 justify-content-end">
         <button type="button" class="btn btn-light" v-close-popup>Close</button>
-        <button type="submit" class="btn btn-secondary" @click="submitInfo()">
-          Submit
+        <button
+          v-if="$props.operation != 'view'"
+          class="btn btn-secondary"
+          @click="submitInfo()"
+        >
+          Envoyer
         </button>
       </div>
     </div>
@@ -406,12 +480,17 @@
 import { defineComponent, ref, onMounted, computed } from 'vue';
 import { useSettingStore } from 'src/stores/settings-store';
 import { useMaintenanceStore } from 'src/stores/maintenance-store';
+import { date } from 'quasar';
+import draggable from 'vuedraggable';
 export default defineComponent({
   name: 'panneComponent',
-  props: ['operation'],
-  setup(props) {
+  props: ['operation', 'data'],
+  emits: ['close-modal'],
+  components: { draggable },
+  setup(props, context) {
     const store = useSettingStore();
     const storeMaintenance = useMaintenanceStore();
+    let id = ref();
     let idpanne = ref();
     let vehicule = ref();
     let DateImmo = ref(null);
@@ -428,10 +507,22 @@ export default defineComponent({
     let HeureDebInt = ref(null);
     let DateFinInt = ref(null);
     let HeureFinInt = ref(null);
+    let DateSortie = ref(null);
+    let HeureMiseDisposition = ref(null);
     let observation = ref('');
-    let dataConducteur = computed(() => store.personne);
+    let dataConducteur = computed(() => store.chauffeur);
     let dataVehicules = computed(() => store.parc);
     let dataTypeInt = computed(() => store.typeInt);
+    let listEmploye = ref([]);
+    let choixMecano = ref([
+      {
+        id: 0,
+        Status: true,
+        nom: 'admin Smart',
+        matricule: '0000',
+        tel: '699002998',
+      },
+    ]);
     const openSel = (dc) => {
       if (dc === 'vehicule') {
         if (dataVehicules.value.length === 0) {
@@ -439,7 +530,7 @@ export default defineComponent({
         }
       } else if (dc === 'conducteur') {
         if (dataConducteur.value.length === 0) {
-          store.allPersonnel();
+          store.allChauffeur();
         }
       } else if (dc === 'TypeInt') {
         if (dataTypeInt.value.length === 0) {
@@ -465,9 +556,22 @@ export default defineComponent({
         HeureDebInt: HeureDebInt.value,
         DateFinInt: DateFinInt.value,
         HeureFinInt: HeureFinInt.value,
+        DateSortie: DateSortie.value,
+        HeureMiseDisposition: HeureMiseDisposition.value,
         observation: observation.value,
+        choixMecano: choixMecano.value,
       };
-      await storeMaintenance.manageDataPanne(data, props.operation, '2');
+      console.log(data);
+      if (props.operation === 'add') {
+        await storeMaintenance.manageDataPanne(data, props.operation, '2');
+      } else {
+        await storeMaintenance.manageDataPanne(
+          data,
+          props.operation,
+          props.data.id
+        );
+        context.emit('close-modal');
+      }
       reset();
     };
     const reset = () => {
@@ -489,8 +593,23 @@ export default defineComponent({
       HeureFinInt.value = null;
       observation.value = '';
     };
-    onMounted(() => {
-      //console.log(props.src);
+    const changeDate = (dbs) => {
+      return date.formatDate(dbs, 'YYYY-MM-DD');
+    };
+    onMounted(async () => {
+      await store.allChauffeur();
+      if (props.operation != 'add') {
+        await store.allParc();
+        idpanne.value = props.data.idpanne;
+        vehicule.value = props.data.vehicule.id;
+        DateImmo.value = changeDate(props.data.DateImmo);
+        HeureImmo.value = props.data.HeureImmo;
+        CausePanne.value = props.data.CausePanne;
+        lieu_panne.value = props.data.lieu_panne;
+        conducteur.value = props.data.personnel;
+        Status.value = props.data.Status;
+      }
+      listEmploye.value = dataConducteur.value;
     });
     return {
       idpanne,
@@ -515,6 +634,10 @@ export default defineComponent({
       DateFinInt,
       HeureFinInt,
       observation,
+      DateSortie,
+      HeureMiseDisposition,
+      listEmploye,
+      choixMecano,
     };
   },
 });

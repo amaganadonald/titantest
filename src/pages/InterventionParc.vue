@@ -62,7 +62,7 @@ export default defineComponent({
         text: 'Code Intervention',
         value: 'idIntervention',
         sortable: true,
-        type: 'object',
+        type: 'string',
       },
       {
         text: 'Bon panne',
@@ -82,34 +82,19 @@ export default defineComponent({
         sortable: true,
         type: 'string',
       },
-      { text: 'TypeInt', value: 'TypeInt', sortable: true, type: 'object' },
-      { text: 'DetailInt', value: 'DetailInt', sortable: true, type: 'object' },
+      { text: 'TypeInt', value: 'type_panne', sortable: true, type: 'object' },
+      { text: 'DetailInt', value: 'DetailInt', sortable: true, type: 'string' },
       {
         text: 'DateImmo',
         value: 'panne.DateImmo',
         sortable: true,
         type: 'date',
       },
-      {
-        text: 'HeureImmo',
-        value: 'panne.HeureImmo',
-        sortable: true,
-        type: 'time',
-      },
+
       { text: 'DateDebInt', value: 'DateDebInt', sortable: true, type: 'date' },
-      {
-        text: 'HeureDebInt',
-        value: 'HeureDebInt',
-        sortable: true,
-        type: 'time',
-      },
+
       { text: 'DateFinInt', value: 'DateFinInt', sortable: true, type: 'date' },
-      {
-        text: 'HeureFinInt',
-        value: 'HeureFinInt',
-        sortable: true,
-        type: 'time',
-      },
+
       {
         text: 'DateSortie',
         value: 'panne.DateSortie',
@@ -117,11 +102,12 @@ export default defineComponent({
         type: 'date',
       },
       {
-        text: 'HeureMiseDisposition',
-        value: 'panne.HeureMiseDisposition',
+        text: 'Durée Intervention',
+        value: 'immo',
         sortable: true,
-        type: 'time',
+        type: 'string',
       },
+
       { text: 'ap5', value: 'ap5', sortable: true, type: 'string' },
       {
         text: 'observation',
@@ -129,14 +115,13 @@ export default defineComponent({
         sortable: true,
         type: 'string',
       },
-      { text: 'Action', value: 'operation', sortable: true, type: 'action' },
     ];
     const refreshTable = () => {
       store.allIntervention();
     };
     onMounted(() => {
       store.allIntervention();
-      console.log(data);
+      console.log(data.value);
     });
     return {
       header,

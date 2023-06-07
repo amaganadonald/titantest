@@ -58,7 +58,9 @@ export const useMaintenanceStore = defineStore('maintenance', {
       } else if (op === 'edit') {
         try {
           await api.patch(`/api/updatePannes/${id}`, data, {
-            headers: {},
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
           });
           await this.allPannes();
         } catch (error) {
@@ -85,6 +87,7 @@ export const useMaintenanceStore = defineStore('maintenance', {
             Authorization: 'Bearer ' + Cookies.get('tk'),
           },
         });
+        console.log(req.data.intervention);
         this.intervention = req.data.intervention;
         this.loading = false;
       } catch (error) {
@@ -93,6 +96,7 @@ export const useMaintenanceStore = defineStore('maintenance', {
       }
     },
     async manageIntervention(data: object, op: string, id: string | number) {
+      this.loading = true;
       if (op === 'add') {
         try {
           await api.post('/api/addIntervention', data, {
@@ -127,6 +131,7 @@ export const useMaintenanceStore = defineStore('maintenance', {
           console.log(error);
         }
       } /* -----------------End Intervention------------------------ */
+      this.loading = false;
     },
     async manageDataPanne(data: object, op: string, id: string | number) {
       if (op === 'add') {

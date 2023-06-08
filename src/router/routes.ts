@@ -129,6 +129,10 @@ const routes: RouteRecordRaw[] = [
         path: '/raphoraire',
         component: () => import('pages/RapHoraire.vue'),
       },
+      {
+        path: '/impKilo',
+        component: () => import('pages/ImportEvenement.vue'),
+      },
     ],
   },
 

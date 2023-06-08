@@ -11,14 +11,14 @@
             <div
               class="page-title-box d-sm-flex align-items-center justify-content-between"
             >
-              <h4 class="mb-sm-0">IMPORT ACTIVITE PLATEFORME</h4>
+              <h4 class="mb-sm-0">IMPORT ACTIVITE Kilométrique</h4>
 
               <div class="page-title-right">
                 <ol class="breadcrumb m-0">
                   <li class="breadcrumb-item">
                     <a href="javascript: void(0);">Import</a>
                   </li>
-                  <li class="breadcrumb-item active">Activite</li>
+                  <li class="breadcrumb-item active">Kilomètre</li>
                 </ol>
               </div>
             </div>
@@ -63,8 +63,8 @@
                     <TableRapport
                       :header="header"
                       :data="data"
-                      title="Data plateforme tracking"
-                      filename="data_plateforme"
+                      title="Data Kilométrique tracking"
+                      filename="data_kilomètre"
                     />
                   </div>
                   <!-- end card body -->
@@ -93,7 +93,7 @@ import { useRepportStore } from 'src/stores/repport-store';
 import TableRapport from 'src/components/tables/TableRapport.vue';
 
 export default defineComponent({
-  name: 'ImportActivite',
+  name: 'ImportEvenement',
   components: {
     TableRapport,
   },
@@ -103,11 +103,11 @@ export default defineComponent({
     let loading = ref(false);
     let datab = ref([]);
     const store = useRepportStore();
-    let data = computed(() => store.dataPlat);
+    let data = computed(() => store.dataKilo);
     const importFile = async () => {
       loading.value = true;
       console.log(datab.value);
-      await store.uploadData(datab.value);
+      await store.uploadKilo(datab.value);
       $q.notify({
         message: 'Import reussie',
         color: 'teal-10',
@@ -141,60 +141,36 @@ export default defineComponent({
         dataKey: 'code',
       },
       {
-        text: 'event',
-        value: 'event',
-        sortable: true,
-        type: 'string',
-        title: 'event',
-        dataKey: 'event',
-      },
-      {
-        text: 'date',
+        text: 'Date',
         value: 'date',
         sortable: true,
-        type: 'date',
-        title: 'date',
+        type: 'string',
+        title: 'Date',
         dataKey: 'date',
       },
       {
-        text: 'fuel level',
-        value: 'fuellevel',
-        sortable: true,
-        type: 'number',
-        title: 'fuel level',
-        dataKey: 'fuellevel',
-      },
-      {
-        text: 'fuel qte',
-        value: 'fuelqte',
+        text: 'Debut Compteur',
+        value: 'compteurDeb',
         sortable: true,
         type: 'string',
-        title: 'fuel qte',
-        dataKey: 'fuelqte',
+        title: 'Debut Compteur',
+        dataKey: 'compteurDeb',
       },
       {
-        text: 'Compteur',
-        value: 'compteur',
+        text: 'Fin Compteur',
+        value: 'compteurFin',
         sortable: true,
         type: 'number',
-        title: 'Compteur',
-        dataKey: 'compteur',
+        title: 'Fin Compteur',
+        dataKey: 'compteurFin',
       },
       {
-        text: 'Vitesse',
-        value: 'vitesse',
+        text: 'Distance',
+        value: 'distance',
         sortable: true,
-        type: 'date',
-        title: 'Vitesse',
-        dataKey: 'vitesse',
-      },
-      {
-        text: 'rpm',
-        value: 'rpm',
-        sortable: true,
-        type: 'date',
-        title: 'rpm',
-        dataKey: 'rpm',
+        type: 'string',
+        title: 'Distance',
+        dataKey: 'distance',
       },
     ];
     const fileChange = () => {
@@ -217,13 +193,10 @@ export default defineComponent({
             datas.map(async (db) => {
               await datab.value.push({
                 code: db.V_NICK_NAME,
-                event: db.EventName,
-                date: db.PosDateTime,
-                fuellevel: db.FuelLevel,
-                fuelqte: db.FuelQuantity,
-                compteur: db.G_CURRENT_ODOMETER,
-                vitesse: db.G_CURRENT_SPEED,
-                rpm: db.G_CURRENT_RPM,
+                date: db.DT_DRIVE_DATE,
+                compteurDeb: db.START_ODOMETER,
+                compteurFin: db.END_ODOMETER,
+                distance: db.TOTAL_DISTANCE,
               });
             });
           };
@@ -232,7 +205,7 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      await store.allLastDataPlateforme();
+      await store.allLastDataKilometre();
     });
     return {
       fichier,

@@ -31,7 +31,7 @@
                       class="d-flex align-items-lg-center flex-lg-row flex-column"
                     >
                       <div class="flex-grow-1">
-                        <h4 class="fs-16 mb-1">Good Morning, Donald!</h4>
+                        <h4 class="fs-16 mb-1">Good Morning, {{ usr }}</h4>
                         <p class="text-muted mb-0">
                           Here's what's happening with your GMAO today.
                         </p>
@@ -124,7 +124,7 @@
                       :year="yearj"
                       :month="monthj"
                       unity=""
-                      :tot="dataDash.totalkm"
+                      :tot="arrond(dataDash.totalkm)"
                       img="impoert_fichier.gif"
                     />
                     <!-- end card -->
@@ -318,7 +318,7 @@ import { useRepportStore } from '../stores/repport-store';
 import { useQuasar } from 'quasar';
 import moment from 'moment';
 import TableData from '../components/tables/TableData.vue';
-//import { calcul_immo_panne_active } from '../composable/panneReport.ts';
+
 export default defineComponent({
   name: 'IndexPage',
   components: {
@@ -343,6 +343,7 @@ export default defineComponent({
     const monthj = ref('');
     const yearj = ref('');
     let ageVeh = ref('');
+    let usr = ref('');
     let dataPieGraph = ref([]);
     let legendMultibar = ref(['Eon', 'Idle', 'Eoff']);
     let titleMultibar = ref('Efficience Conduite 6 derniers mois');
@@ -459,8 +460,13 @@ export default defineComponent({
         i = i + 1;
       });
     };
+    const arrond = (km) => {
+      if (km != 0 && km != null && km != undefined) {
+        return km.toFixed(2);
+      }
+    };
     onBeforeMount(async () => {
-      console.log(moment(firstDay).format('YYYY-MM-DD'));
+      usr.value = $q.cookies.get('log');
       await store.analyseDashboard(firstDay, lastDay);
       if ($q.cookies.get('lang') === 'fr') {
         monthj.value = new Date().toLocaleString('fr-CA', { year: 'numeric' });
@@ -497,6 +503,8 @@ export default defineComponent({
       data,
       header,
       refreshTable,
+      usr,
+      arrond,
     };
   },
 });

@@ -55,50 +55,50 @@ export default defineComponent({
         text: 'Code Ana',
         value: 'vehicule',
         sortable: true,
-        width: 300,
         type: 'object',
       },
       {
         text: 'Date',
         value: 'DateConso',
         sortable: true,
-        width: 150,
         type: 'date',
       },
       {
         text: 'Heure',
         value: 'HeureConso',
         sortable: true,
-        width: 200,
         type: 'time',
       },
       {
         text: 'Quantité',
         value: 'QteConso',
         sortable: true,
-        width: 100,
-        type: 'string',
+        type: 'number',
       },
       {
         text: 'Carburant',
-        value: 'carburt',
+        value: 'carburant',
         sortable: true,
-        width: 200,
-        type: 'string',
+        type: 'object',
+      },
+      {
+        text: 'Chauffeur',
+        value: 'personnel',
+        sortable: true,
+        type: 'object',
       },
       {
         text: 'Action',
         value: 'operation',
         sortable: true,
-        width: 80,
         type: 'action',
       },
     ];
     const refreshTable = async () => {
       await store.allConso();
     };
-    onMounted(() => {
-      store.allConso();
+    onMounted(async () => {
+      await store.allConso();
       console.log(data.value);
     });
     return {

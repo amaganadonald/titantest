@@ -86,128 +86,91 @@ const useCalculImmoPanneQuart = (
     const debpanne = panne[0].DateImmo;
     const findebpanne = panne[panne.length - 1].DateImmo;
     const finPanne = panne[panne.length - 1].DateSortie;
-    console.log(panne);
     const panneEncours = panne.filter((pb) => pb.DateSortie === null);
-    const panneoff = panne.filter((pf) => pf.DateSortie != null);
-    console.log(panneEncours);
-    console.log(panneoff);
-    panne.forEach((pd) => {
-      console.log(pd);
-
-      if (pd.DateSortie === null) {
-        if (new Date(findebpanne) < new Date(debQuart1)) {
-          allImmoQuart1 =
-            allImmoQuart1 + soustraireDatetime(debQuart2, debQuart1);
-        } else if (
-          new Date(findebpanne) < new Date(debQuart2) &&
-          new Date(findebpanne) > new Date(debQuart1)
-        ) {
-          allImmoQuart1 =
-            allImmoQuart1 + soustraireDatetime(debQuart2, findebpanne);
-        }
-        if (new Date(findebpanne) < new Date(debQuart2)) {
-          allImmoQuart2 =
-            allImmoQuart2 + soustraireDatetime(finQuart2, debQuart2);
-        } else if (
-          new Date(findebpanne) < new Date(finQuart2) &&
-          new Date(findebpanne) > new Date(debQuart2)
-        ) {
-          allImmoQuart2 =
-            allImmoQuart2 + soustraireDatetime(finQuart2, findebpanne);
-        }
-        if (new Date(findebpanne) < new Date(finQuart2)) {
-          allImmoQuart3 =
-            allImmoQuart3 + soustraireDatetime(finQuart3, finQuart2);
-        } else if (
-          new Date(findebpanne) < new Date(finQuart3) &&
-          new Date(findebpanne) > new Date(finQuart2)
-        ) {
-          allImmoQuart3 =
-            allImmoQuart3 + soustraireDatetime(finQuart3, findebpanne);
-        }
-      } else {
-        console.log(tab);
-      }
-      /* const dbQuart1 = panne.filter(
-        (ds) =>
-          moment(new Date(debQuart1)).isBefore(
-            moment(new Date(ds.DateSortie))
-          ) &&
-          moment(new Date(debQuart2)).isAfter(moment(new Date(ds.DateImmo))) &&
-          ds.vehicule.code === pd.vehicule.code
-      );
-      console.log(debQuart1);
-      if (dbQuart1.length > 0) {
+    if (panneEncours.length > 0) {
+      veh = panneEncours[0];
+      if (new Date(findebpanne) < new Date(debQuart1)) {
         allImmoQuart1 =
-          allImmoQuart1 + calculImmo(dbQuart1, debQuart1, debQuart2);
+          allImmoQuart1 + soustraireDatetime(debQuart2, debQuart1);
+      } else if (
+        new Date(findebpanne) < new Date(debQuart2) &&
+        new Date(findebpanne) > new Date(debQuart1)
+      ) {
+        allImmoQuart1 =
+          allImmoQuart1 + soustraireDatetime(debQuart2, findebpanne);
       }
-
-      if (finPanne === null) {
-        if (
-          moment(new Date(findebpanne)).isBefore(moment(new Date(debQuart1)))
-        ) {
-          allImmoQuart1 =
-            allImmoQuart1 + soustraireDatetime(debQuart2, debQuart1);
-        } else if (moment(new Date(findebpanne)).isBefore(debQuart2)) {
-          allImmoQuart1 =
-            allImmoQuart1 + soustraireDatetime(debQuart2, findebpanne);
-        }
-      }
-
-      const dbQuart2 = panne.filter(
-        (ds) =>
-          moment(new Date(debQuart2)).isBefore(
-            moment(new Date(ds.DateSortie))
-          ) &&
-          moment(new Date(finQuart2)).isAfter(moment(new Date(ds.DateImmo))) &&
-          ds.vehicule.code === pd.vehicule.code
-      );
-      console.log(debQuart2);
-      if (dbQuart2.length > 0) {
+      if (new Date(findebpanne) < new Date(debQuart2)) {
         allImmoQuart2 =
-          allImmoQuart2 + calculImmo(dbQuart2, debQuart2, finQuart2);
+          allImmoQuart2 + soustraireDatetime(finQuart2, debQuart2);
+      } else if (
+        new Date(findebpanne) < new Date(finQuart2) &&
+        new Date(findebpanne) > new Date(debQuart2)
+      ) {
+        allImmoQuart2 =
+          allImmoQuart2 + soustraireDatetime(finQuart2, findebpanne);
       }
-
-      if (finPanne === null) {
-        if (
-          moment(new Date(findebpanne)).isBefore(moment(new Date(debQuart2)))
-        ) {
-          allImmoQuart2 =
-            allImmoQuart2 + soustraireDatetime(finQuart2, debQuart2);
-        } else if (moment(new Date(findebpanne)).isBefore(finQuart2)) {
-          allImmoQuart1 =
-            allImmoQuart1 + soustraireDatetime(finQuart2, findebpanne);
-        }
-      }
-
-      const dbQuart3 = panne.filter(
-        (ds) =>
-          moment(new Date(finQuart2)).isBefore(
-            moment(new Date(ds.DateSortie))
-          ) &&
-          moment(new Date(finQuart3)).isAfter(moment(new Date(ds.DateImmo))) &&
-          ds.vehicule.code === pd.vehicule.code
-      );
-      console.log(dbQuart3);
-      if (dbQuart3.length > 0) {
+      if (new Date(findebpanne) < new Date(finQuart2)) {
         allImmoQuart3 =
-          allImmoQuart3 + calculImmo(dbQuart3, finQuart2, finQuart3);
+          allImmoQuart3 + soustraireDatetime(finQuart3, finQuart2);
+      } else if (
+        new Date(findebpanne) < new Date(finQuart3) &&
+        new Date(findebpanne) > new Date(finQuart2)
+      ) {
+        allImmoQuart3 =
+          allImmoQuart3 + soustraireDatetime(finQuart3, findebpanne);
       }
-
-      if (finPanne === null) {
+    }
+    const panneoff = panne.filter((pf) => pf.DateSortie != null);
+    if (panneoff.length > 0) {
+      veh = panneoff[0];
+      panneoff.forEach((pan) => {
         if (
-          moment(new Date(findebpanne)).isBefore(moment(new Date(finQuart2)))
+          new Date(pan.DateImmo) < new Date(debQuart2) &&
+          new Date(pan.DateSortie) > new Date(debQuart1)
         ) {
-          allImmoQuart2 =
-            allImmoQuart2 + soustraireDatetime(finQuart3, finQuart2);
-        } else if (moment(new Date(findebpanne)).isBefore(finQuart3)) {
-          allImmoQuart1 =
-            allImmoQuart1 + soustraireDatetime(finQuart3, findebpanne);
+          let debQt1 = pan.DateImmo;
+          let finQt1 = pan.DateSortie;
+          if (new Date(pan.DateImmo) < new Date(debQuart1)) {
+            debQt1 = debQuart1;
+          }
+          if (new Date(pan.DateSortie) > new Date(debQuart2)) {
+            finQt1 = debQuart2;
+          }
+          allImmoQuart1 = allImmoQuart1 + soustraireDatetime(finQt1, debQt1);
         }
-      }
-      ;*/
-      veh = pd;
-    });
+
+        if (
+          new Date(pan.DateImmo) < new Date(finQuart2) &&
+          new Date(pan.DateSortie) > new Date(debQuart2)
+        ) {
+          let debQt2 = pan.DateImmo;
+          let finQt2 = pan.DateSortie;
+          if (new Date(pan.DateImmo) < new Date(debQuart2)) {
+            debQt2 = debQuart2;
+          }
+          if (new Date(pan.DateSortie) > new Date(finQuart2)) {
+            finQt2 = finQuart2;
+          }
+          allImmoQuart2 = allImmoQuart2 + soustraireDatetime(finQt2, debQt2);
+        }
+
+        if (
+          new Date(pan.DateImmo) < new Date(finQuart3) &&
+          new Date(pan.DateSortie) > new Date(finQuart2)
+        ) {
+          let debQt3 = pan.DateImmo;
+          let finQt3 = pan.DateSortie;
+          if (new Date(pan.DateImmo) < new Date(finQuart2)) {
+            debQt3 = debQuart1;
+          }
+          if (new Date(pan.DateSortie) > new Date(finQuart3)) {
+            finQt3 = debQuart2;
+          }
+          allImmoQuart3 = allImmoQuart3 + soustraireDatetime(finQt3, debQt3);
+        }
+      });
+    }
+    console.log(veh);
     tabFinal.push({
       code: veh.vehicule.code,
       panneId: veh.idpanne,
@@ -224,7 +187,6 @@ const useCalculImmoPanneQuart = (
       total: secToTime(allImmoQuart1 + allImmoQuart2 + allImmoQuart3),
     });
   });
-  //console.log(tabFinal);
   return tabFinal;
 };
 

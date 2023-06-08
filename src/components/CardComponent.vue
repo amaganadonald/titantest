@@ -22,7 +22,7 @@
       </div>
       <div class="mb-4 pb-2">
         <img
-          :src="'../../src/assets/images/companies/' + img"
+          :src="'src/assets/images/companies/' + img"
           alt=""
           class="avatar-sm"
         />
@@ -71,8 +71,7 @@ export default defineComponent({
     },
 
     tot: {
-      type: Number,
-      default: 0,
+      type: String,
     },
 
     img: {

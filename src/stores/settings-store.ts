@@ -961,6 +961,31 @@ export const useSettingStore = defineStore('settings', {
         }
       }
     } /* -----------------End Utilisateur------------------------ */,
+    async manageUtilisateurImg(
+      formData: object,
+      op: string,
+      id: string | number
+    ) {
+      try {
+        if (op === 'add') {
+          await api.post('/api/addUserImg', formData, {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          });
+          await this.allUtilisateur();
+        } else if (op === 'edit') {
+          await api.patch(`/api/updateUpImg/${id}`, formData, {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          });
+        }
+        await this.allUtilisateur();
+      } catch (error) {
+        console.log(error);
+      }
+    } /* -----------------End Utilisateur------------------------ */,
     async allAutorisation() {
       this.loading = true;
       try {

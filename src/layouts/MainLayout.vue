@@ -120,8 +120,8 @@
                             alt="user-pic"
                           />
                           <div class="flex-1">
-                            <h6 class="m-0">Angela Bernier</h6>
-                            <span class="fs-11 mb-0 text-muted">Manager</span>
+                            <!--h6 class="m-0">Angela Bernier</h6>
+                            <span class="fs-11 mb-0 text-muted">Manager</span-->
                           </div>
                         </div>
                       </a>
@@ -406,9 +406,7 @@
                           </div>
                         </div>
                         <h5 class="mb-3">Your Cart is Empty!</h5>
-                        <a
-                          href="apps-ecommerce-products.html"
-                          class="btn btn-success w-md mb-3"
+                        <a href="#" class="btn btn-success w-md mb-3"
                           >Shop Now</a
                         >
                       </div>
@@ -423,9 +421,7 @@
                           />
                           <div class="flex-1">
                             <h6 class="mt-0 mb-1 fs-14">
-                              <a
-                                href="apps-ecommerce-product-details.html"
-                                class="text-reset"
+                              <a href="#" class="text-reset"
                                 >Branded T-Shirts</a
                               >
                             </h6>
@@ -460,11 +456,7 @@
                           />
                           <div class="flex-1">
                             <h6 class="mt-0 mb-1 fs-14">
-                              <a
-                                href="apps-ecommerce-product-details.html"
-                                class="text-reset"
-                                >Bentwood Chair</a
-                              >
+                              <a href="#" class="text-reset">Bentwood Chair</a>
                             </h6>
                             <p class="mb-0 fs-12 text-muted">
                               Quantity: <span>5 x $18</span>
@@ -497,10 +489,7 @@
                           />
                           <div class="flex-1">
                             <h6 class="mt-0 mb-1 fs-14">
-                              <a
-                                href="apps-ecommerce-product-details.html"
-                                class="text-reset"
-                              >
+                              <a href="#" class="text-reset">
                                 Borosil Paper Cup</a
                               >
                             </h6>
@@ -535,9 +524,7 @@
                           />
                           <div class="flex-1">
                             <h6 class="mt-0 mb-1 fs-14">
-                              <a
-                                href="apps-ecommerce-product-details.html"
-                                class="text-reset"
+                              <a href="#" class="text-reset"
                                 >Gray Styled T-Shirt</a
                               >
                             </h6>
@@ -572,9 +559,7 @@
                           />
                           <div class="flex-1">
                             <h6 class="mt-0 mb-1 fs-14">
-                              <a
-                                href="apps-ecommerce-product-details.html"
-                                class="text-reset"
+                              <a href="#" class="text-reset"
                                 >Stillbird Helmet</a
                               >
                             </h6>
@@ -612,10 +597,7 @@
                       </div>
                     </div>
 
-                    <a
-                      href="apps-ecommerce-checkout.html"
-                      class="btn btn-success text-center w-100"
-                    >
+                    <a href="#" class="btn btn-success text-center w-100">
                       Checkout
                     </a>
                   </div>
@@ -1184,7 +1166,7 @@
                   <span class="d-flex align-items-center">
                     <img
                       class="rounded-circle header-profile-user"
-                      :src="ig"
+                      :src="getImageUrl2(ig)"
                       alt="Header Avatar"
                     />
                     <span class="text-start ms-xl-2">
@@ -1672,7 +1654,7 @@
                       }}</router-link>
                     </li>
                     <li class="nav-item" v-if="menu.includes('impevent')">
-                      <router-link to="/imppanne" class="nav-link">{{
+                      <router-link to="/impKilo" class="nav-link">{{
                         $t('impevent')
                       }}</router-link>
                     </li>
@@ -3048,6 +3030,11 @@ export default defineComponent({
     const getImageUrl = (img: any) => {
       return new URL(`../assets/images/${img}`, import.meta.url);
     };
+    const getImageUrl2 = (img: any) => {
+      if (img != null) {
+        return new URL(`http://localhost:4000${img}`, import.meta.url);
+      }
+    };
     let icon = ref('');
     const { locale, t } = useI18n({ useScope: 'global' });
     const leaveApps = () => {
@@ -3081,7 +3068,7 @@ export default defineComponent({
     onBeforeMount(() => {
       usr.value = $q.cookies.get('log');
       profile.value = $q.cookies.get('profs');
-      ig.value = getImageUrl($q.cookies.get('phot'));
+      ig.value = $q.cookies.get('phot');
       locale.value = $q.cookies.get('lang');
       menu.value = $q.cookies.get('mem');
       // console.log(menu.value)
@@ -3104,6 +3091,7 @@ export default defineComponent({
       usr,
       profile,
       ig,
+      getImageUrl2,
     };
   },
 });

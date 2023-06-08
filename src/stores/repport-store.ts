@@ -34,6 +34,7 @@ export const useRepportStore = defineStore('rapport', {
     horairesQuart: [],
     immoData: [],
     immoDataQuart: [],
+    dataKilo: [],
   }),
   getters: {
     updateDatabase: (state) => state.databases,
@@ -365,6 +366,39 @@ export const useRepportStore = defineStore('rapport', {
           .then((response) => {
             this.dataPlat = response.data.dataPlateforme;
           });
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async allLastDataKilometre() {
+      this.loading = true;
+      try {
+        await api
+          .get('/api/lastDataKilometre', {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          })
+          .then((response) => {
+            this.dataKilo = response.data.distance;
+          });
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async uploadKilo(data: object[]) {
+      this.loading = true;
+      try {
+        await api.post('/api/addDataKilo', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        this.allLastDataKilometre();
         this.loading = false;
       } catch (error) {
         console.log(error);

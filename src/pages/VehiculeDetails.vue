@@ -286,278 +286,15 @@
                 <div class="tab-pane fade" id="activities" role="tabpanel">
                   <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title mb-3">Activities</h5>
-                      <div class="acitivity-timeline">
-                        <div class="acitivity-item d-flex">
-                          <div class="flex-shrink-0">
-                            <img
-                              src="assets/images/users/avatar-1.jpg"
-                              alt=""
-                              class="avatar-xs rounded-circle acitivity-avatar"
-                            />
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h6 class="mb-1">
-                              Oliver Phillips
-                              <span
-                                class="badge bg-soft-primary text-primary align-middle"
-                                >New</span
-                              >
-                            </h6>
-                            <p class="text-muted mb-2">
-                              We talked about a project on linkedin.
-                            </p>
-                            <small class="mb-0 text-muted">Today</small>
-                          </div>
-                        </div>
-                        <div class="acitivity-item py-3 d-flex">
-                          <div class="flex-shrink-0 avatar-xs acitivity-avatar">
-                            <div
-                              class="avatar-title bg-soft-success text-success rounded-circle"
-                            >
-                              N
-                            </div>
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h6 class="mb-1">
-                              Nancy Martino
-                              <span
-                                class="badge bg-soft-secondary text-secondary align-middle"
-                                >In Progress</span
-                              >
-                            </h6>
-                            <p class="text-muted mb-2">
-                              <i
-                                class="ri-file-text-line align-middle ms-2"
-                              ></i>
-                              Create new project Buildng product
-                            </p>
-                            <div class="avatar-group mb-2">
-                              <a
-                                href="javascript: void(0);"
-                                class="avatar-group-item"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                title=""
-                                data-bs-original-title="Christi"
-                              >
-                                <img
-                                  src="assets/images/users/avatar-4.jpg"
-                                  alt=""
-                                  class="rounded-circle avatar-xs"
-                                />
-                              </a>
-                              <a
-                                href="javascript: void(0);"
-                                class="avatar-group-item"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                title=""
-                                data-bs-original-title="Frank Hook"
-                              >
-                                <img
-                                  src="assets/images/users/avatar-3.jpg"
-                                  alt=""
-                                  class="rounded-circle avatar-xs"
-                                />
-                              </a>
-                              <a
-                                href="javascript: void(0);"
-                                class="avatar-group-item"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                title=""
-                                data-bs-original-title=" Ruby"
-                              >
-                                <div class="avatar-xs">
-                                  <div
-                                    class="avatar-title rounded-circle bg-light text-primary"
-                                  >
-                                    R
-                                  </div>
-                                </div>
-                              </a>
-                              <a
-                                href="javascript: void(0);"
-                                class="avatar-group-item"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                title=""
-                                data-bs-original-title="more"
-                              >
-                                <div class="avatar-xs">
-                                  <div class="avatar-title rounded-circle">
-                                    2+
-                                  </div>
-                                </div>
-                              </a>
-                            </div>
-                            <small class="mb-0 text-muted">Yesterday</small>
-                          </div>
-                        </div>
-                        <div class="acitivity-item py-3 d-flex">
-                          <div class="flex-shrink-0">
-                            <img
-                              src="assets/images/users/avatar-2.jpg"
-                              alt=""
-                              class="avatar-xs rounded-circle acitivity-avatar"
-                            />
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h6 class="mb-1">
-                              Natasha Carey
-                              <span
-                                class="badge bg-soft-success text-success align-middle"
-                                >Completed</span
-                              >
-                            </h6>
-                            <p class="text-muted mb-2">
-                              Adding a new event with attachments
-                            </p>
-                            <div class="row">
-                              <div class="col-xxl-4">
-                                <div
-                                  class="row border border-dashed gx-2 p-2 mb-2"
-                                >
-                                  <div class="col-4">
-                                    <img
-                                      src="assets/images/small/img-2.jpg"
-                                      alt=""
-                                      class="img-fluid rounded"
-                                    />
-                                  </div>
-                                  <!--end col-->
-                                  <div class="col-4">
-                                    <img
-                                      src="assets/images/small/img-3.jpg"
-                                      alt=""
-                                      class="img-fluid rounded"
-                                    />
-                                  </div>
-                                  <!--end col-->
-                                  <div class="col-4">
-                                    <img
-                                      src="assets/images/small/img-4.jpg"
-                                      alt=""
-                                      class="img-fluid rounded"
-                                    />
-                                  </div>
-                                  <!--end col-->
-                                </div>
-                                <!--end row-->
-                              </div>
-                            </div>
-                            <small class="mb-0 text-muted">25 Nov</small>
-                          </div>
-                        </div>
-                        <div class="acitivity-item py-3 d-flex">
-                          <div class="flex-shrink-0">
-                            <img
-                              src="assets/images/users/avatar-6.jpg"
-                              alt=""
-                              class="avatar-xs rounded-circle acitivity-avatar"
-                            />
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h6 class="mb-1">Bethany Johnson</h6>
-                            <p class="text-muted mb-2">
-                              added a new member to velzon dashboard
-                            </p>
-                            <small class="mb-0 text-muted">19 Nov</small>
-                          </div>
-                        </div>
-                        <div class="acitivity-item py-3 d-flex">
-                          <div class="flex-shrink-0">
-                            <div class="avatar-xs acitivity-avatar">
-                              <div
-                                class="avatar-title rounded-circle bg-soft-danger text-danger"
-                              >
-                                <i class="ri-shopping-bag-line"></i>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h6 class="mb-1">
-                              Your order is placed
-                              <span
-                                class="badge bg-soft-danger text-danger align-middle ms-1"
-                                >Out of Delivery</span
-                              >
-                            </h6>
-                            <p class="text-muted mb-2">
-                              These customers can rest assured their order has
-                              been placed.
-                            </p>
-                            <small class="mb-0 text-muted">16 Nov</small>
-                          </div>
-                        </div>
-                        <div class="acitivity-item py-3 d-flex">
-                          <div class="flex-shrink-0">
-                            <img
-                              src="assets/images/users/avatar-7.jpg"
-                              alt=""
-                              class="avatar-xs rounded-circle acitivity-avatar"
-                            />
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h6 class="mb-1">Lewis Pratt</h6>
-                            <p class="text-muted mb-2">
-                              They all have something to say beyond the words on
-                              the page. They can come across as casual or
-                              neutral, exotic or graphic.
-                            </p>
-                            <small class="mb-0 text-muted">22 Oct</small>
-                          </div>
-                        </div>
-                        <div class="acitivity-item py-3 d-flex">
-                          <div class="flex-shrink-0">
-                            <div class="avatar-xs acitivity-avatar">
-                              <div
-                                class="avatar-title rounded-circle bg-soft-info text-info"
-                              >
-                                <i class="ri-line-chart-line"></i>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h6 class="mb-1">Monthly sales report</h6>
-                            <p class="text-muted mb-2">
-                              <span class="text-danger">2 days left</span>
-                              notification to submit the monthly sales report.
-                              <a
-                                href="javascript:void(0);"
-                                class="link-warning text-decoration-underline"
-                                >Reports Builder</a
-                              >
-                            </p>
-                            <small class="mb-0 text-muted">15 Oct</small>
-                          </div>
-                        </div>
-                        <div class="acitivity-item d-flex">
-                          <div class="flex-shrink-0">
-                            <img
-                              src="assets/images/users/avatar-8.jpg"
-                              alt=""
-                              class="avatar-xs rounded-circle acitivity-avatar"
-                            />
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h6 class="mb-1">
-                              New ticket received
-                              <span
-                                class="badge bg-soft-success text-success align-middle"
-                                >Completed</span
-                              >
-                            </h6>
-                            <p class="text-muted mb-2">
-                              User
-                              <span class="text-secondary">Erica245</span>
-                              submitted a ticket.
-                            </p>
-                            <small class="mb-0 text-muted">26 Aug</small>
-                          </div>
-                        </div>
-                      </div>
+                      <h5 class="card-title mb-3">Immobilisation</h5>
+                      <TableData
+                        :header="headerpanne"
+                        :data="dataPanne"
+                        title="Panne"
+                        tb="intervention"
+                        @refreshTable="refreshTable"
+                        cbTable="mnDts"
+                      />
                     </div>
                     <!--end card-body-->
                   </div>
@@ -801,10 +538,11 @@
   <!-- end main content-->
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useSettingStore } from '../stores/settings-store';
 import { useRepportStore } from '../stores/repport-store';
+import { useMaintenanceStore } from '../stores/maintenance-store';
 import { date } from 'quasar';
 import UploadFiles from '../components/Modals/UploadFiles.vue';
 import PdfviewerVue from '../components/PdfviewerVue.vue';
@@ -820,6 +558,7 @@ export default defineComponent({
     const router = useRouter();
     const store = useSettingStore();
     const storeCons = useRepportStore();
+    const storePanne = useMaintenanceStore();
     const vehicle = computed(() => store.vehicle);
     const document = computed(() => store.documentVeh);
     let typeDoc = computed(() => store.typeDocument);
@@ -830,6 +569,8 @@ export default defineComponent({
     const op = ref('');
     let seamless = ref(false);
     let operation = ref('');
+    let dataPannes = computed(() => storePanne.dataPanneCode);
+    let dataPanne = ref([]);
     const opeData = ref<object>([]);
     const getImageUrl = (img: any) => {
       //console.log(img);
@@ -866,60 +607,154 @@ export default defineComponent({
         text: 'Code Ana',
         value: 'vehicule',
         sortable: true,
-        width: 300,
         type: 'object',
       },
       {
         text: 'Date',
         value: 'DateConso',
         sortable: true,
-        width: 150,
         type: 'date',
       },
       {
         text: 'Heure',
         value: 'HeureConso',
         sortable: true,
-        width: 200,
         type: 'time',
       },
       {
         text: 'Quantité',
         value: 'QteConso',
         sortable: true,
-        width: 100,
         type: 'string',
       },
       {
         text: 'Carburant',
-        value: 'carburt',
+        value: 'carburant',
         sortable: true,
-        width: 200,
-        type: 'string',
+        type: 'object',
+      },
+      {
+        text: 'Chauffeur',
+        value: 'personnel',
+        sortable: true,
+        type: 'object',
       },
       {
         text: 'Action',
         value: 'operation',
         sortable: true,
-        width: 80,
         type: 'action',
       },
     ];
+    const headerpanne = [
+      { text: 'Id', value: 'id', sortable: true, type: 'number' },
+      {
+        text: 'Code ana',
+        value: 'vehicule',
+        sortable: true,
+        type: 'object',
+      },
+      {
+        text: 'Code Intervention',
+        value: 'idIntervention',
+        sortable: true,
+        type: 'string',
+      },
+      {
+        text: 'Bon panne',
+        value: 'idpanne',
+        sortable: true,
+        type: 'string',
+      },
+      {
+        text: 'CausePanne',
+        value: 'CausePanne',
+        sortable: true,
+        type: 'string',
+      },
+      {
+        text: 'lieu_panne',
+        value: 'lieu_panne',
+        sortable: true,
+        type: 'string',
+      },
+      { text: 'TypeInt', value: 'type_panne', sortable: true, type: 'object' },
+      { text: 'DetailInt', value: 'DetailInt', sortable: true, type: 'string' },
+      {
+        text: 'DateImmo',
+        value: 'DateImmo',
+        sortable: true,
+        type: 'date',
+      },
+
+      { text: 'DateDebInt', value: 'DateDebInt', sortable: true, type: 'date' },
+
+      { text: 'DateFinInt', value: 'DateFinInt', sortable: true, type: 'date' },
+
+      {
+        text: 'DateSortie',
+        value: 'DateSortie',
+        sortable: true,
+        type: 'date',
+      },
+      {
+        text: 'Durée Intervention',
+        value: 'immo',
+        sortable: true,
+        type: 'string',
+      },
+
+      { text: 'ap5', value: 'ap5', sortable: true, type: 'string' },
+    ];
+    watch(dataPannes, (val) => {
+      dataPanne.value = [];
+      let idInterv = '';
+      let typepanne = '';
+      let detailPanne = '';
+      let dateDebInt = '';
+      let dateFinInt = '';
+      let ap5 = '';
+      val.forEach((elt) => {
+        console.log(elt);
+        if (elt.intervention !== null) {
+          idInterv = elt.intervention.id;
+          typepanne = elt.intervention.type_panne;
+          detailPanne = elt.intervention.DetailInt;
+          dateDebInt = elt.intervention.DateDebInt;
+          dateFinInt = elt.intervention.DateFinInt;
+          ap5 = elt.intervention.ap5;
+        }
+        dataPanne.value.push({
+          id: elt.id,
+          vehicule: elt.vehicule,
+          idIntervention: idInterv,
+          idpanne: elt.idpanne,
+          CausePanne: elt.CausePanne,
+          lieu_panne: elt.lieu_panne,
+          type_panne: typepanne,
+          DetailInt: detailPanne,
+          DateImmo: elt.DateImmo,
+          DateDebInt: dateDebInt,
+          DateFinInt: dateFinInt,
+          DateSortie: elt.DateSortie,
+          immo: elt.tpanne,
+          ap5: ap5,
+        });
+      });
+      console.log(cons.value);
+      //dataPanne.value = val;
+    });
     const refreshTable = async () => {
       await storeCons.allConsoVeh(router.currentRoute.value.params.code);
     };
     onMounted(async () => {
-      console.log(router.currentRoute.value.params.code);
       code.value = router.currentRoute.value.params.code;
       await store.vehicleByCode(code.value);
       await store.allTypeDocument();
       await store.allDocumentVeh(code.value);
       await storeCons.allConsoVeh(code.value);
+      await storePanne.allInterventionByCode(code.value);
       ig.value = getImageUrl(vehicle.value.image);
-      console.log(vehicle.value);
-      console.log(document.value);
-      console.log(typeDoc);
-      console.log(Object.entries(cons));
     });
     return {
       vehicle,
@@ -940,6 +775,8 @@ export default defineComponent({
       cons,
       header,
       refreshTable,
+      headerpanne,
+      dataPanne,
     };
   },
 });

@@ -8,6 +8,7 @@ export const useMaintenanceStore = defineStore('maintenance', {
     intervention: [],
     dataPanne: [],
     panneNlivre: [],
+    dataPanneCode: [],
   }),
   getters: {
     //doubleCount: (state) => state.counter * 2,
@@ -89,6 +90,22 @@ export const useMaintenanceStore = defineStore('maintenance', {
         });
         console.log(req.data.intervention);
         this.intervention = req.data.intervention;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async allInterventionByCode(code: string) {
+      this.loading = true;
+      try {
+        const req = await api.get(`/api/allInterventionByCode/${code}`, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        console.log(req.data.intervention);
+        this.dataPanneCode = req.data.intervention;
         this.loading = false;
       } catch (error) {
         console.log(error);

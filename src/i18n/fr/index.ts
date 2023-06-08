@@ -215,4 +215,8 @@ export default {
   enUs: 'en-US',
   image: 'Image',
   typeDocument: 'Type de documents',
+  HeureConso: 'Heure Conso',
+  DateConso: 'Date Conso',
+  parc: 'Parc',
+  QteConso: 'Quantite Conso',
 };

@@ -94,11 +94,26 @@
             />
           </div>
         </div>
-        <div v-else-if="tab.vType == 'image'" class="form-group row">
+        <div v-else-if="tab.vType == 'number'" class="form-group row">
           <label :for="tab.vModel" class="col-sm-4 col-form-label">{{
             $t(tab.vModel)
           }}</label>
           <div class="col-sm-8">
+            <input
+              type="number"
+              class="form-control"
+              :id="tab.vModel"
+              :placeholder="$t(tab.vModel)"
+              :value="tab.vData"
+              @blur="(event) => changeInput(event, index)"
+            />
+          </div>
+        </div>
+        <div v-else-if="tab.vType == 'image'" class="form-group row">
+          <label :for="tab.vModel" class="col-sm-4 col-form-label">{{
+            $t(tab.vModel)
+          }}</label>
+          <div class="col-sm-12">
             <input
               type="file"
               class="form-control"
@@ -106,6 +121,52 @@
               :placeholder="$t(tab.vModel)"
               @blur="(event) => changeInput(event, index)"
             />
+          </div>
+        </div>
+        <div v-else-if="tab.vType == 'accord'" class="form-group row">
+          <!--label :for="tab.vModel" class="col-sm-4 col-form-label">{{
+            $t(tab.vModel)
+          }}</label-->
+          <div class="col-6">
+            <h3 class="text-muted">{{ $t(tab.vModel) }}</h3>
+            <div class="overflow-scroll p-3 mb-" style="height: 250px">
+              <draggable
+                class="list-group"
+                :list="listMenus"
+                group="people"
+                itemKey="id"
+              >
+                <template #item="{ element, index }">
+                  <div class="list-group">
+                    <!-- Overflow -->
+
+                    <label class="list-group-item" style="cursor: pointer">
+                      #{{ index }} - {{ element.name }}
+                    </label>
+                  </div>
+                </template>
+              </draggable>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <h3 class="text-muted">Choix Menus</h3>
+            <div class="overflow-scroll p-3 mb-" style="height: 250px">
+              <draggable
+                class="list-group"
+                :list="choixMenus"
+                group="people"
+                itemKey="id"
+              >
+                <template #item="{ element, index }">
+                  <div class="list-group">
+                    <label class="list-group-item" style="cursor: pointer">
+                      #{{ index }} - {{ element.name }}
+                    </label>
+                  </div>
+                </template>
+              </draggable>
+            </div>
           </div>
         </div>
         <div v-else-if="tab.vType == 'object'" class="form-group row">
@@ -404,10 +465,13 @@ import { useMaintenanceStore } from 'src/stores/maintenance-store';
 import { useRepportStore } from 'src/stores/repport-store';
 import { date } from 'quasar';
 import { useI18n } from 'vue-i18n';
+import moment from 'moment';
+import draggable from 'vuedraggable';
 export default defineComponent({
   name: 'ManageData',
   props: ['head', 'data', 'operation', 'title', 'tbname'],
   emits: ['closeModal'],
+  components: { draggable },
   setup(props, context) {
     const { locale, t } = useI18n({ useScope: 'global' });
     let tabInfo = ref([]);
@@ -435,8 +499,11 @@ export default defineComponent({
     let optionLabel = ref('lib_fam');
     let isFile = ref(false);
     let dFile = ref(null);
+    let choixMenus = ref([]);
+    let listMenus = ref([]);
     const formData = new FormData();
     const dataConstruct = async (dataTable) => {
+      console.log(dataTable);
       tabInfo.value = [];
       if (props.operation === 'add') {
         for (let dt of dataTable) {
@@ -446,6 +513,18 @@ export default defineComponent({
               vData: true,
               vType: dt.type,
             });
+          } else if (dt.type === 'date' && dt.value != 'DateSortie') {
+            tabInfo.value.push({
+              vModel: dt.value,
+              vData: moment(new Date()).format('YYYY-MM-DD'),
+              vType: dt.type,
+            });
+          } else if (dt.type === 'time') {
+            tabInfo.value.push({
+              vModel: dt.value,
+              vData: moment(new Date()).format('HH:mm'),
+              vType: dt.type,
+            });
           } else {
             tabInfo.value.push({
               vModel: dt.value,
@@ -453,11 +532,11 @@ export default defineComponent({
               vType: dt.type,
             });
           }
-          console.log(tabInfo.value);
+          //console.log(tabInfo.value);
         }
       } else {
         for (let key of Object.keys(dataTable)) {
-          console.log(typeof dataTable[key]);
+          //console.log(typeof dataTable[key]);
           if (
             key === 'key' ||
             key === 'checkbox' ||
@@ -465,7 +544,8 @@ export default defineComponent({
             key === 'updatedAt' ||
             key.endsWith('Id') ||
             key === 'code' ||
-            key === 'tpanne'
+            key === 'tpanne' ||
+            key === 'carburt'
           ) {
             console.log();
           } else if (
@@ -474,27 +554,47 @@ export default defineComponent({
             key === 'DateTracking' ||
             key === 'DateService' ||
             key === 'DateSortie' ||
-            key === 'DateImmo'
+            key === 'DateImmo' ||
+            key === 'DateConso'
           ) {
             tabInfo.value.push({
               vModel: key,
               vData: changeDate(dataTable[key]),
               vType: 'date',
             });
-          } else if (key === 'image') {
+          } else if (key === 'image' || key === 'url_photo') {
             tabInfo.value.push({
               vModel: key,
               vData: '',
               vType: 'image',
             });
-          } else if (key === 'HeureImmo' || key === 'HeureMiseDisposition') {
+          } else if (key === 'menus') {
+            await store.allMenu();
+            if (dataTable[key].length === 0) {
+              choixMenus.value = [];
+
+              listMenus.value = store.menus;
+            } else {
+              choixMenus.value = dataTable[key];
+              listMenus.value = store.menus;
+            }
+            tabInfo.value.push({
+              vModel: key,
+              vData: choixMenus.value,
+              vType: 'accord',
+            });
+          } else if (
+            key === 'HeureImmo' ||
+            key === 'HeureMiseDisposition' ||
+            key === 'HeureConso'
+          ) {
             tabInfo.value.push({
               vModel: key,
               vData: dataTable[key],
               vType: 'time',
             });
           } else if (typeof dataTable[key] === 'object') {
-            console.log(dataTable[key]);
+            //console.log(dataTable[key]);
             if (dataTable[key] !== null) {
               //console.log(key);
               await openSel(key);
@@ -519,7 +619,7 @@ export default defineComponent({
           }
         }
       }
-      console.log(tabInfo.value);
+      //console.log(tabInfo.value);
     };
     const changeDate = (dbs) => {
       return date.formatDate(dbs, 'YYYY-MM-DD');
@@ -527,8 +627,11 @@ export default defineComponent({
     const changeInput = (ev, index) => {
       if (tabInfo.value[index].vType === 'boolean') {
         tabInfo.value[index].vData = ev.target.checked;
-      } else if (tabInfo.value[index].vType === 'image') {
-        console.log(ev.target.files);
+      } else if (
+        tabInfo.value[index].vType === 'image' ||
+        tabInfo.value[index].vType === 'url_photo'
+      ) {
+        //console.log(ev.target.files);
         if (tabInfo.value[index].vFile) {
           if (ev.target.files.length !== 0) {
             tabInfo.value[index].vFile = ev.target.files;
@@ -539,7 +642,7 @@ export default defineComponent({
       } else {
         tabInfo.value[index].vData = ev.target.value;
       }
-      console.log(tabInfo.value);
+      //console.log(tabInfo.value);
     };
     const appFile = (tab, file) => {
       formData.append('file', file[0]);
@@ -583,75 +686,79 @@ export default defineComponent({
     const selectInfo = (ev) => {
       console.log(ev);
     };
-    const openSel = (dc) => {
+    const openSel = async (dc) => {
       //console.log(dc)
       if (dc === 'activiteVeh') {
         if (dataActivity.value.length === 0) {
-          store.allActivites();
+          await store.allActivites();
         }
       } else if (dc === 'Site') {
         if (dataSite.value.length === 0) {
-          store.allSite();
+          await store.allSite();
         }
       } else if (dc === 'type_veh') {
         if (dataTypes.value.length === 0) {
-          store.allTypeVeh();
+          await store.allTypeVeh();
         }
       } else if (dc === 'AffectationVeh') {
         if (dataGroup.value.length === 0) {
-          store.allGroupVeh();
+          await store.allGroupVeh();
         }
       } else if (dc === 'carburant') {
         if (dataCarburant.value.length === 0) {
-          store.allCarburant();
+          await store.allCarburant();
         }
       } else if (dc === 'Marque') {
         if (dataMarque.value.length === 0) {
-          store.allMarque();
+          await store.allMarque();
         }
       } else if (dc === 'fournisseur' || dc === 'Fournisseur') {
         if (dataFournisseur.value.length === 0) {
-          store.allFournisseur();
+          await store.allFournisseur();
         }
       } else if (dc === 'Fonction' || dc === 'fonction') {
         if (dataFonction.value.length === 0) {
-          store.allFonction();
+          await store.allFonction();
         }
       } else if (dc === 'vehicule' || dc === 'Vehicule') {
         if (dataVehicules.value.length === 0) {
-          store.allParc();
+          await store.allParc();
         }
       } else if (dc === 'autorisation' || dc === 'Autorisation') {
         if (dataAutorisation.value.length === 0) {
-          store.allAutorisation();
+          await store.allAutorisation();
         }
       } else if (dc === 'profil' || dc === 'Profil') {
         if (dataProfil.value.length === 0) {
-          store.allProfil();
+          await store.allProfil();
         }
       } else if (dc === 'personnel') {
         if (dataConducteur.value.length === 0) {
-          store.allChauffeur();
+          await store.allChauffeur();
         }
       }
     };
-    const submitInfo = () => {
+    const submitInfo = async () => {
       dataFinal();
       if (props.tbname === 'fam_veh') {
-        store.manageFamVeh(
+        await store.manageFamVeh(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'type_veh') {
-        store.manageTypeVeh(
+        await store.manageTypeVeh(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'vehicule') {
         if (isFile.value) {
-          store.manageParcImg(formData, props.operation, dataModel.value.id);
+          await store.manageParcImg(
+            formData,
+            props.operation,
+            dataModel.value.id
+          );
         } else {
           store.manageParc(
             dataModel.value,
@@ -660,111 +767,132 @@ export default defineComponent({
           );
         }
       } else if (props.tbname === 'Site') {
-        store.manageSite(dataModel.value, props.operation, dataModel.value.id);
+        await store.manageSite(
+          dataModel.value,
+          props.operation,
+          dataModel.value.id
+        );
       } else if (props.tbname === 'affectation') {
-        store.manageAffectation(
+        await store.manageAffectation(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'activiteVeh') {
-        store.manageActivite(
+        await store.manageActivite(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'groupVeh') {
-        store.manageGroupVeh(
+        await store.manageGroupVeh(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'carburant') {
-        store.manageCarburant(
+        await store.manageCarburant(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'typePanne') {
-        store.manageTypeInt(
+        await store.manageTypeInt(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'marque') {
         if (isFile.value) {
-          store.manageMarqueImg(formData, props.operation, dataModel.value.id);
+          await store.manageMarqueImg(
+            formData,
+            props.operation,
+            dataModel.value.id
+          );
         } else {
-          store.manageMarque(
+          await store.manageMarque(
             dataModel.value,
             props.operation,
             dataModel.value.id
           );
         }
       } else if (props.tbname === 'fournisseur') {
-        store.manageFournisseur(
+        await store.manageFournisseur(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'personnel') {
-        store.managePersonnel(
+        await store.managePersonnel(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'fonction') {
-        store.manageFonction(
+        await store.manageFonction(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'departement') {
-        store.manageDepartement(
+        await store.manageDepartement(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'atelier') {
-        store.manageAtelier(
+        await store.manageAtelier(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'pannes') {
-        store2.managePannes(
+        await store2.managePannes(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'utilisateur') {
-        store.manageUtilisateur(
+        if (isFile.value) {
+          await store.manageUtilisateurImg(
+            formData,
+            props.operation,
+            dataModel.value.id
+          );
+        } else {
+          store.manageUtilisateur(
+            dataModel.value,
+            props.operation,
+            dataModel.value.id
+          );
+        }
+      } else if (props.tbname === 'menu') {
+        await store.manageMenu(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
-      } else if (props.tbname === 'menu') {
-        store.manageMenu(dataModel.value, props.operation, dataModel.value.id);
       } else if (props.tbname === 'profil') {
-        store.manageProfil(
+        dataModel.value.menus = choixMenus.value;
+        await store.manageProfil(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'autorisation') {
-        store.manageAutorisation(
+        await store.manageAutorisation(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'type_doc') {
-        store.manageTypeDocument(
+        await store.manageTypeDocument(
           dataModel.value,
           props.operation,
           dataModel.value.id
         );
       } else if (props.tbname === 'conso') {
-        store3.manageConso(
+        await store3.manageConso(
           dataModel.value,
           props.operation,
           dataModel.value.id
@@ -772,13 +900,15 @@ export default defineComponent({
       }
       context.emit('closeModal');
     };
-    onBeforeMount(() => {
+    onBeforeMount(async () => {
+      //await store.allMenu();
       if (props.tbname === 'type_veh') {
-        if (dataSelects.value.length === 0) store.allFamVeh();
+        if (dataSelects.value.length === 0) await store.allFamVeh();
       }
     });
-    onMounted(() => {
-      console.log(props.data);
+    onMounted(async () => {
+      await store.allMenu();
+      choixMenus.value = store.menus;
       if (props.operation === 'add') {
         dataConstruct(props.head);
       } else {
@@ -816,6 +946,8 @@ export default defineComponent({
       locale,
       conducteur,
       dataConducteur,
+      choixMenus,
+      listMenus,
     };
   },
 });

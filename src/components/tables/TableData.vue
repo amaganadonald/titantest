@@ -222,9 +222,6 @@
                   <template #item-DateFinInt="{ DateFinInt }">
                     {{ changeDateTime(DateFinInt) }}
                   </template>
-                  <!--template #item-[`panne.DateImmo`]="{ panne }">
-                    {{ changeDateTime(panne.DateImmo) }}
-                  </template-->
                   <template v-slot:[`panne.DateImmo`]="{ panne }">
                     {{ changeDateTime(panne.DateImmo) }}
                   </template>
@@ -235,6 +232,16 @@
                     <span v-if="personnel != null"
                       >{{ personnel.nom }}-{{ personnel.matricule }}</span
                     >
+                  </template>
+                  <template #item-menus="{ menus }">
+                    <div
+                      v-for="mn in menus"
+                      :key="mn.id"
+                      class="d-block font-weight-light text-truncate text-caption"
+                      style="max-width: 140px; white-space: wrap"
+                    >
+                      {{ mn.name }}
+                    </div>
                   </template>
                   <template #item-type_panne="{ type_panne }">
                     <span v-if="type_panne != null">{{
@@ -278,6 +285,12 @@
                   </template>
                   <template #item-image="{ image }">
                     <img :src="getImageUrl(image)" class="avatar-xxs me-2" />
+                  </template>
+                  <template #item-url_photo="{ url_photo }">
+                    <img
+                      :src="getImageUrl(url_photo)"
+                      class="avatar-xxs me-2"
+                    />
                   </template>
                   <template #item-Status="{ Status }">
                     <q-chip

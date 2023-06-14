@@ -119,10 +119,7 @@
                             class="me-3 rounded-circle avatar-xs"
                             alt="user-pic"
                           />
-                          <div class="flex-1">
-                            <!--h6 class="m-0">Angela Bernier</h6>
-                            <span class="fs-11 mb-0 text-muted">Manager</span-->
-                          </div>
+                          <div class="flex-1"></div>
                         </div>
                       </a>
                       <!-- item -->
@@ -1166,7 +1163,7 @@
                   <span class="d-flex align-items-center">
                     <img
                       class="rounded-circle header-profile-user"
-                      :src="getImageUrl2(ig)"
+                      :src="host"
                       alt="Header Avatar"
                     />
                     <span class="text-start ms-xl-2">
@@ -1280,14 +1277,6 @@
             <ul class="navbar-nav" id="navbar-nav">
               <li class="menu-title"><span data-key="t-menu">Parc</span></li>
               <li class="nav-item" v-if="menu.includes('Dashboard')">
-                <!--a
-                  class="nav-link menu-link"
-                  href="javascript:void(0);"
-                  role="button"
-                >
-                  <i class="mdi mdi-file-table-box-multiple"></i>
-                  <span data-key="t-dashboards"  to="/index">Dashboards</span>
-                </a-->
                 <router-link
                   to="/index"
                   role="button"
@@ -2914,7 +2903,6 @@
                             </span>
                           </span>
                         </span>
-                        <!-- <div id="preloader"> -->
                         <div
                           id="status"
                           class="d-flex align-items-center justify-content-center"
@@ -2926,7 +2914,6 @@
                             <span class="visually-hidden">Loading...</span>
                           </div>
                         </div>
-                        <!-- </div> -->
                       </label>
                     </div>
                     <h5 class="fs-13 text-center mt-2">Enable</h5>
@@ -3011,11 +2998,7 @@ import { defineComponent, onBeforeMount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import appjs from '../assets/js/app.js';
-import {
-  //isNavigationFailure,
-  //NavigationFailureType,
-  useRouter,
-} from 'vue-router/dist/vue-router';
+import { useRouter } from 'vue-router/dist/vue-router';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -3027,14 +3010,16 @@ export default defineComponent({
     let usr = ref('');
     let profile = ref('');
     let ig = ref('');
+    let host = ref('');
     const getImageUrl = (img: any) => {
       return new URL(`../assets/images/${img}`, import.meta.url);
     };
-    const getImageUrl2 = (img: any) => {
+    /*const getImageUrl2 = (img: any) => {
       if (img != null) {
-        return new URL(`http://localhost:4000${img}`, import.meta.url);
+        //return new URL(`http://localhost:4000${img}`, import.meta.url);
+        return new URL(`${img}`, import.meta.url);
       }
-    };
+    };*/
     let icon = ref('');
     const { locale, t } = useI18n({ useScope: 'global' });
     const leaveApps = () => {
@@ -3049,6 +3034,7 @@ export default defineComponent({
       $q.cookies.set('profs', '');
       $q.cookies.set('uidt988', '');
       $q.cookies.set('log', '');
+      $q.cookies.set('ht', '');
       router.push('/').catch(() => {
         console.log('erreur navigation');
       });
@@ -3071,15 +3057,15 @@ export default defineComponent({
       ig.value = $q.cookies.get('phot');
       locale.value = $q.cookies.get('lang');
       menu.value = $q.cookies.get('mem');
-      // console.log(menu.value)
+      host.value = $q.cookies.get('ht') + $q.cookies.get('phot');
       if (locale.value === 'fr') {
         chargeFr();
       } else {
         chargeEn();
       }
     });
-    onMounted(() => {
-      appjs();
+    onMounted(async () => {
+      await appjs();
     });
     return {
       chargeEn,
@@ -3091,7 +3077,7 @@ export default defineComponent({
       usr,
       profile,
       ig,
-      getImageUrl2,
+      host,
     };
   },
 });

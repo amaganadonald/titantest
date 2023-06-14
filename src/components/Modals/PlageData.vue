@@ -321,6 +321,7 @@ export default defineComponent({
     const generateReport = async () => {
       txt.value = '';
       let flt = '';
+      let familial = [];
       if (
         famille.value.length === 0 &&
         type.value.length === 0 &&
@@ -329,6 +330,11 @@ export default defineComponent({
         flt = 'All Fleet';
       } else {
         flt = 'veh';
+      }
+      if (famille.value.length === 0) {
+        familial = optionsFamille.value;
+      } else {
+        familial = famille.value;
       }
       if (report.value === '') {
         $q.notify({
@@ -589,7 +595,8 @@ export default defineComponent({
             deb.value,
             fin.value,
             tdeb.value,
-            tfin.value
+            tfin.value,
+            report.value
           );
         } else if (report.value === 'immoQuart') {
           if (flt === 'veh') {
@@ -626,12 +633,144 @@ export default defineComponent({
             txt.value,
             flt
           );
-          await consStore.analyseInterventionQuart(
+          await consStore.analyseIntervention(
             vehi,
             deb.value,
             fin.value,
             tdeb.value,
-            tfin.value
+            tfin.value,
+            report.value
+          );
+        } else if (report.value === 'dispo') {
+          if (flt === 'veh') {
+            txt.value =
+              '% Disponibilité du (' +
+              useChangeDate(deb.value) +
+              ' ' +
+              tdeb.value +
+              ' au ' +
+              useChangeDate(fin.value) +
+              ' ' +
+              tfin.value +
+              ') <-> vehicule : ' +
+              listVehicle(vehi);
+          } else {
+            txt.value =
+              '% Disponibilité du (' +
+              useChangeDate(deb.value) +
+              ' ' +
+              tdeb.value +
+              ' au ' +
+              useChangeDate(fin.value) +
+              ' ' +
+              tfin.value +
+              ') <-> vehicule : All fleet';
+          }
+          context.emit(
+            'acquireDats',
+            deb.value,
+            fin.value,
+            tdeb.value,
+            tfin.value,
+            vehi,
+            txt.value,
+            flt
+          );
+          await consStore.analyseIntervention(
+            vehi,
+            deb.value,
+            fin.value,
+            tdeb.value,
+            tfin.value,
+            report.value
+          );
+        } else if (report.value === 'dispoFamille') {
+          let vehi = optionsVeh.value;
+          if (flt === 'veh') {
+            txt.value =
+              '% Disponibilité Famille du (' +
+              useChangeDate(deb.value) +
+              ' ' +
+              tdeb.value +
+              ' au ' +
+              useChangeDate(fin.value) +
+              ' ' +
+              tfin.value +
+              ') <-> Famille : ' +
+              listVehicle(vehi);
+          } else {
+            txt.value =
+              '% Disponibilité du (' +
+              useChangeDate(deb.value) +
+              ' ' +
+              tdeb.value +
+              ' au ' +
+              useChangeDate(fin.value) +
+              ' ' +
+              tfin.value +
+              ') <-> Famille : All';
+          }
+          context.emit(
+            'acquireDats',
+            deb.value,
+            fin.value,
+            tdeb.value,
+            tfin.value,
+            vehi,
+            txt.value,
+            familial
+          );
+          await consStore.analyseIntervention(
+            vehi,
+            deb.value,
+            fin.value,
+            tdeb.value,
+            tfin.value,
+            report.value
+          );
+        } else if (report.value === 'efficience') {
+          let vehi = optionsVeh.value;
+          if (flt === 'veh') {
+            txt.value =
+              'Efficience Parc du (' +
+              useChangeDate(deb.value) +
+              ' ' +
+              tdeb.value +
+              ' au ' +
+              useChangeDate(fin.value) +
+              ' ' +
+              tfin.value +
+              ') <-> vehicule : ' +
+              listVehicle(vehi);
+          } else {
+            txt.value =
+              'Efficience Parc du (' +
+              useChangeDate(deb.value) +
+              ' ' +
+              tdeb.value +
+              ' au ' +
+              useChangeDate(fin.value) +
+              ' ' +
+              tfin.value +
+              ') <-> vehicule : All';
+          }
+          context.emit(
+            'acquireDats',
+            deb.value,
+            fin.value,
+            tdeb.value,
+            tfin.value,
+            vehi,
+            txt.value,
+            familial
+          );
+          await consStore.analyseEfficience(
+            vehi,
+            deb.value,
+            fin.value,
+            tdeb.value,
+            tfin.value,
+            report.value
           );
         }
       }

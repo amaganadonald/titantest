@@ -543,7 +543,7 @@ import { useRouter } from 'vue-router';
 import { useSettingStore } from '../stores/settings-store';
 import { useRepportStore } from '../stores/repport-store';
 import { useMaintenanceStore } from '../stores/maintenance-store';
-import { date } from 'quasar';
+import { date, useQuasar } from 'quasar';
 import UploadFiles from '../components/Modals/UploadFiles.vue';
 import PdfviewerVue from '../components/PdfviewerVue.vue';
 import TableData from '../components/tables/TableData.vue';
@@ -563,6 +563,7 @@ export default defineComponent({
     const document = computed(() => store.documentVeh);
     let typeDoc = computed(() => store.typeDocument);
     const cons = computed(() => storeCons.consoVeh);
+    const $q = useQuasar();
     const pdfModal = ref(false);
     const ulr = ref(null);
     const ig = ref('');
@@ -573,9 +574,8 @@ export default defineComponent({
     let dataPanne = ref([]);
     const opeData = ref<object>([]);
     const getImageUrl = (img: any) => {
-      //console.log(img);
       if (img != null) {
-        return new URL(`http://localhost:4000${img}`, import.meta.url);
+        return $q.cookies.get('ht') + img;
       }
     };
     let code = ref();

@@ -56,28 +56,24 @@ export default defineComponent({
         text: 'Libelle',
         value: 'code',
         sortable: true,
-        width: 400,
         type: 'string',
       },
       {
         text: 'Description',
         value: 'libelle',
         sortable: true,
-        width: 350,
         type: 'string',
       },
       {
         text: 'Status',
         value: 'Status',
         sortable: true,
-        width: 50,
         type: 'boolean',
       },
       {
         text: 'Action',
         value: 'operation',
         sortable: true,
-        width: 100,
         type: 'action',
       },
     ];

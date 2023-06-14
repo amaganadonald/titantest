@@ -212,7 +212,7 @@ export default defineComponent({
         });
       } else {
         await store.login(user.value, passwd.value);
-        console.log(store.user);
+        //console.log(store.user);
         if (store.status === 200) {
           console.log(store.user);
           retrouneMenu(store.user.user.profil.menus);
@@ -220,7 +220,7 @@ export default defineComponent({
           $q.cookies.set('nbs', store.user.user.id);
           $q.cookies.set('phot', store.user.user.url_photo);
           $q.cookies.set('log', store.user.user.login);
-          //$q.cookies.set('clrs', store.user.user.userCouleur)
+          $q.cookies.set('ht', store.user.host);
           $q.cookies.set('lang', store.user.user.langue);
           $q.cookies.set(
             'auth',

@@ -9,13 +9,13 @@
               <div
                 class="page-title-box d-sm-flex align-items-center justify-content-between"
               >
-                <h4 class="mb-sm-0">RAPPORT PANNES</h4>
+                <h4 class="mb-sm-0">RAPPORT EFFICIENCE</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
                       <a href="javascript: void(0);">Rapport</a>
                     </li>
-                    <li class="breadcrumb-item active">Immobilisation</li>
+                    <li class="breadcrumb-item active">Efficience</li>
                   </ol>
                 </div>
               </div>
@@ -28,6 +28,10 @@
                 <div class="col-xl-2">
                   <div class="card card-h-80">
                     <div class="card-body">
+                      <!--button class="btn btn-primary w-100" id="btn-new-event">
+                        <i class="mdi mdi-plus"></i> Create New Event
+                      </button-->
+                      <!-- Placement Offcanvas -->
                       <PlageData
                         :typeReport="report"
                         @acquireDats="acquireDate"
@@ -48,12 +52,12 @@
                             role="tab"
                             aria-controls="pills-bill-info"
                             aria-selected="false"
-                            @click="actualReport('immoTotal')"
+                            @click="actualReport('efficience')"
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >immobilisation
+                            >Efficience
                           </div>
                           <div
                             class="external-event fc-event bg-soft-info text-info"
@@ -65,12 +69,12 @@
                             role="tab"
                             aria-controls="pills-bill-address"
                             aria-selected="false"
-                            @click="actualReport('immoQuart')"
+                            @click="actualReport('consoMois')"
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >immo Quart
+                            >Conso Journalière
                           </div>
                           <div
                             class="external-event fc-event bg-soft-warning text-warning"
@@ -82,29 +86,29 @@
                             role="tab"
                             aria-controls="pills-payment"
                             aria-selected="false"
-                            @click="actualReport('dispo')"
+                            @click="actualReport('consoAn')"
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >Disponibilté
+                            >Conso Mensuelle
                           </div>
                           <div
-                            class="external-event fc-event bg-soft-warning text-warning"
-                            data-class="bg-soft-warning"
-                            id="pills-famille-tab"
+                            class="external-event fc-event bg-soft-danger text-danger"
+                            data-class="bg-soft-danger"
+                            id="pills-finish-tab"
                             data-bs-toggle="pill"
-                            data-bs-target="#pills-famille"
+                            data-bs-target="#pills-finish"
                             type="button"
                             role="tab"
-                            aria-controls="pills-famille"
+                            aria-controls="pills-finish"
                             aria-selected="false"
-                            @click="actualReport('dispoFamille')"
+                            @click="actualReport('consoMoy')"
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >Disponibilté Famille
+                            >Conso Moyenne
                           </div>
                         </ul>
                       </div>
@@ -127,10 +131,10 @@
                             <h5 class="mb-1">{{ rpl }}</h5>
                             <TableRapport
                               :header="header"
-                              :data="dataPanne"
+                              :data="data"
                               @refreshTable="refreshTables"
                               :title="rpl"
-                              filename="export_immo"
+                              filename="export_efficience"
                             />
                           </div>
                         </div>
@@ -143,11 +147,11 @@
                           <div>
                             <h5 class="mb-1">{{ rpl }}</h5>
                             <TableRapport
-                              :header="headerQuart"
-                              :data="dataQuart"
+                              :header="headerJour"
+                              :data="dataJour"
                               @refreshTable="refreshTables"
                               :title="rpl"
-                              filename="export_Quart"
+                              filename="export_conso_jour"
                             />
                           </div>
                         </div>
@@ -160,29 +164,35 @@
                           <div>
                             <h5 class="mb-1">{{ rpl }}</h5>
                             <TableRapport
-                              :header="headerDisponibilite"
-                              :data="dataDisponibilite"
+                              :header="headerMois"
+                              :data="dataMois"
                               @refreshTable="refreshTables"
                               :title="rpl"
-                              filename="export_sisponibilite"
+                              filename="export_conso_mois"
                             />
                           </div>
                         </div>
                         <div
                           class="tab-pane fade"
-                          id="pills-famille"
+                          id="pills-finish"
                           role="tabpanel"
-                          aria-labelledby="pills-famille-tab"
+                          aria-labelledby="pills-finish-tab"
                         >
-                          <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="headerDisponibiliteF"
-                              :data="dataDisponibiliteF"
-                              @refreshTable="refreshTables"
-                              :title="rpl"
-                              filename="export_sisponibilite"
-                            />
+                          <div class="text-center py-5">
+                            <h5>Thank you ! Your Order is Completed !</h5>
+                            <p class="text-muted">
+                              You will receive an order confirmation email with
+                              details of your order.
+                            </p>
+
+                            <h3 class="fw-semibold">
+                              Order ID:
+                              <a
+                                href="apps-ecommerce-order-details.html"
+                                class="text-decoration-underline"
+                                >VZ2451</a
+                              >
+                            </h3>
                           </div>
                         </div>
                       </div>
@@ -195,6 +205,10 @@
               <!--end row-->
             </div>
           </div>
+          <!-- end row-->
+          <!-- importHoraire/>
+            <end page title>
+            <TableReport :header="header" :data="data" title="distance" tb="distance" @refreshTable="refreshTable" cbTable="mnDts"/-->
         </div>
         <!-- container-fluid -->
       </div>
@@ -207,27 +221,18 @@ import { defineComponent, ref, computed, watch } from 'vue';
 import PlageData from '../components/Modals/PlageData.vue';
 import { useRepportStore } from '../stores/repport-store';
 import TableRapport from 'src/components/tables/TableRapport.vue';
-import {
-  useCalculImmoPanne,
-  useCalculImmoPanneQuart,
-  useCalculDispo,
-  useCalculDispoFamille,
-} from 'src/composable/panneReport';
+import { useCalculEfficience } from '../composable/panneReport';
 import dataCons from '../types/dataCons';
 import dateConsDate from '../types/dataCons';
 export default defineComponent({
-  name: 'RapIntervention',
+  name: 'RapEfficience',
   components: { PlageData, TableRapport },
   setup() {
     const consStore = useRepportStore();
     let report = ref('');
-    let dataBasePanne = computed(() => consStore.immoData);
-    let dataBasePanneQuart = computed(() => consStore.immoDataQuart);
-    let dataPanne = ref([]);
-    let databaseDispo = computed(() => consStore.dispoData);
-    let databaseDispoF = computed(() => consStore.dispoFamille);
-    let dataTimes = ref([]);
-    let dataQuart = ref([]);
+    let rapEfficience = computed(() => consStore.efficience);
+    let consoJour = computed(() => consStore.consoJour);
+    let dataMois = computed(() => consStore.consMois);
     let dataJour = ref<dateConsDate[]>([]);
     let data = ref<dataCons[]>([]);
     let rpl = ref('');
@@ -237,32 +242,32 @@ export default defineComponent({
     let tfini = ref<string>();
     let vehs = ref<object[]>();
     let choix = ref<string>('');
-    let dataDisponibilite = ref([]);
-    let dataDisponibiliteF = ref([]);
     const header = [
       {
+        text: 'Id',
+        value: 'id',
+        sortable: true,
+        width: 20,
+        type: 'number',
+        title: 'Id',
+        dataKey: 'id',
+      },
+      {
         text: 'Code',
         value: 'code',
         sortable: true,
-        type: 'string',
+        width: 40,
+        type: 'image',
         title: 'Code',
         dataKey: 'code',
       },
       {
         text: 'Immat',
-        value: 'Immat',
+        value: 'immat',
         sortable: true,
         type: 'string',
         title: 'Immat',
-        dataKey: 'Immat',
-      },
-      {
-        text: 'Famille',
-        value: 'famille',
-        sortable: true,
-        type: 'string',
-        title: 'Famille',
-        dataKey: 'famille',
+        dataKey: 'immat',
       },
       {
         text: 'Type',
@@ -273,38 +278,48 @@ export default defineComponent({
         dataKey: 'typeVeh',
       },
       {
-        text: 'Temps panne',
-        value: 'tpsimmo',
+        text: 'Marque',
+        value: 'marque',
         sortable: true,
-        type: 'number',
-        title: 'Temps en panne',
-        dataKey: 'tpsimmo',
+        type: 'string',
+        title: 'Marque',
+        dataKey: 'marque',
+      },
+      {
+        text: 'Qte conso',
+        value: 'qte',
+        sortable: true,
+        type: 'date',
+        title: 'Qte conso',
+        dataKey: 'qte',
       },
     ];
-    const headerQuart = [
+    const headerJour = [
+      {
+        text: 'Id',
+        value: 'id',
+        sortable: true,
+        width: 20,
+        type: 'number',
+        title: 'Id',
+        dataKey: 'id',
+      },
       {
         text: 'Code',
         value: 'code',
         sortable: true,
-        type: 'string',
+        width: 40,
+        type: 'image',
         title: 'Code',
         dataKey: 'code',
       },
       {
         text: 'Immat',
-        value: 'Immat',
+        value: 'immat',
         sortable: true,
         type: 'string',
         title: 'Immat',
-        dataKey: 'Immat',
-      },
-      {
-        text: 'Famille',
-        value: 'famille',
-        sortable: true,
-        type: 'string',
-        title: 'Famille',
-        dataKey: 'famille',
+        dataKey: 'immat',
       },
       {
         text: 'Type',
@@ -315,114 +330,46 @@ export default defineComponent({
         dataKey: 'typeVeh',
       },
       {
-        text: 'Quart I',
-        value: 'quart1',
+        text: 'Marque',
+        value: 'marque',
         sortable: true,
-        type: 'number',
-        title: 'Quart I',
-        dataKey: 'quart1',
+        type: 'string',
+        title: 'Marque',
+        dataKey: 'marque',
       },
       {
-        text: 'Quart II',
-        value: 'quart2',
+        text: 'Date Conso',
+        value: 'datej',
         sortable: true,
-        type: 'number',
-        title: 'Quart II',
-        dataKey: 'quart2',
+        type: 'string',
+        title: 'Date Conso',
+        dataKey: 'datej',
       },
       {
-        text: 'Quart III',
-        value: 'quart3',
+        text: 'Qte conso',
+        value: 'qte',
         sortable: true,
-        type: 'number',
-        title: 'Quart III',
-        dataKey: 'quart3',
-      },
-      {
-        text: 'Total',
-        value: 'total',
-        sortable: true,
-        type: 'number',
-        title: 'Total Immo',
-        dataKey: 'total',
+        type: 'date',
+        title: 'Qte conso',
+        dataKey: 'qte',
       },
     ];
-
-    const headerDisponibilite = [
+    const headerMois = [
       {
-        text: 'Code',
-        value: 'code',
+        text: 'Mois',
+        value: 'monthConso',
         sortable: true,
         type: 'string',
-        title: 'Code',
-        dataKey: 'code',
+        title: 'Mois',
+        dataKey: 'monthConso',
       },
       {
-        text: 'Immat',
-        value: 'Immat',
-        sortable: true,
-        type: 'string',
-        title: 'Immat',
-        dataKey: 'Immat',
-      },
-      {
-        text: 'Famille',
-        value: 'famille',
-        sortable: true,
-        type: 'string',
-        title: 'Famille',
-        dataKey: 'famille',
-      },
-      {
-        text: 'Type',
-        value: 'typeVeh',
-        sortable: true,
-        type: 'string',
-        title: 'Type',
-        dataKey: 'typeVeh',
-      },
-      {
-        text: '% disponibilte',
-        value: 'tpsdispo',
+        text: 'Total conso',
+        value: 'totalconso',
         sortable: true,
         type: 'number',
-        title: '% disponibilte',
-        dataKey: 'tpsdispo',
-      },
-      {
-        text: '% panne',
-        value: 'tpspanne',
-        sortable: true,
-        type: 'number',
-        title: '% panne',
-        dataKey: 'tpspanne',
-      },
-    ];
-
-    const headerDisponibiliteF = [
-      {
-        text: 'Famille',
-        value: 'famille',
-        sortable: true,
-        type: 'string',
-        title: 'Famille',
-        dataKey: 'famille',
-      },
-      {
-        text: '% disponibilte',
-        value: 'tpsdispo',
-        sortable: true,
-        type: 'number',
-        title: '% disponibilte',
-        dataKey: 'tpsdispo',
-      },
-      {
-        text: '% panne',
-        value: 'tpspanne',
-        sortable: true,
-        type: 'number',
-        title: '% panne',
-        dataKey: 'tpspanne',
+        title: 'Total conso',
+        dataKey: 'totalconso',
       },
     ];
 
@@ -444,7 +391,7 @@ export default defineComponent({
       choix.value = flt;
     };
     const refreshTables = async () => {
-      await consStore.analyseConso(
+      await consStore.analyseEfficience(
         vehs.value,
         debut.value,
         fini.value,
@@ -453,52 +400,14 @@ export default defineComponent({
       );
     };
     const actualReport = (txt: string) => {
-      if (txt === 'immoTotal') {
-        rpl.value = 'Immobilisation';
-      } else if (txt === 'immoQuart') {
-        rpl.value = 'Immobilisation Par Quart ';
-      } else if (txt === 'dispo') {
-        rpl.value = '% Disponibilité';
-      } else if (txt === 'dispoFamille') {
-        rpl.value = '% Disponibilité Famille';
+      if (txt === 'efficience') {
+        rpl.value = 'Efficience Parc';
       }
       report.value = txt;
     };
-
-    watch(dataBasePanne, (val) => {
-      dataPanne.value = useCalculImmoPanne(
-        dataBasePanne.value,
-        debut.value,
-        fini.value,
-        tdebut.value,
-        tfini.value
-      );
-    });
-    watch(dataBasePanneQuart, (val) => {
-      console.log(dataBasePanneQuart.value);
-      dataQuart.value = useCalculImmoPanneQuart(
-        dataBasePanneQuart.value,
-        debut.value,
-        fini.value,
-        tdebut.value,
-        tfini.value
-      );
-    });
-
-    watch(databaseDispo, (val) => {
-      dataDisponibilite.value = useCalculDispo(
-        databaseDispo.value,
-        debut.value,
-        fini.value,
-        tdebut.value,
-        tfini.value
-      );
-    });
-
-    watch(databaseDispoF, (val) => {
-      dataDisponibiliteF.value = useCalculDispoFamille(
-        databaseDispoF.value,
-        choix.value,
+    watch(rapEfficience, (valeur) => {
+      data.value = useCalculEfficience(
+        valeur,
         debut.value,
         fini.value,
         tdebut.value,
@@ -519,16 +428,10 @@ export default defineComponent({
       fini,
       tdebut,
       tfini,
-      headerQuart,
+      headerJour,
       dataJour,
-      dataPanne,
-      dataTimes,
-      dataQuart,
-      dataBasePanne,
-      headerDisponibilite,
-      dataDisponibilite,
-      headerDisponibiliteF,
-      dataDisponibiliteF,
+      headerMois,
+      dataMois,
     };
   },
 });

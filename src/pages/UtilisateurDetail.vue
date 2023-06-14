@@ -2127,7 +2127,6 @@ export default defineComponent({
     let operation = ref('');
     const opeData = ref<object>([]);
     const getImageUrl = (img: any) => {
-      console.log(img);
       if (img != null) {
         return new URL(
           `http://localhost:4000/images/user/${img}`,

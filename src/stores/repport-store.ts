@@ -35,6 +35,9 @@ export const useRepportStore = defineStore('rapport', {
     immoData: [],
     immoDataQuart: [],
     dataKilo: [],
+    dispoData: [],
+    dispoFamille: [],
+    efficience: [],
   }),
   getters: {
     updateDatabase: (state) => state.databases,
@@ -483,7 +486,8 @@ export const useRepportStore = defineStore('rapport', {
       firstDay: Date,
       lastDay: Date,
       tdeb: any,
-      tfin: any
+      tfin: any,
+      report: string
     ) {
       this.loading = true;
       const data = {
@@ -499,37 +503,16 @@ export const useRepportStore = defineStore('rapport', {
             Authorization: 'Bearer ' + Cookies.get('tk'),
           },
         });
-        //console.log(req.data.horaire);
-        this.immoData = req.data.pannes;
-        this.loading = false;
-      } catch (error) {
-        console.log(error);
-        this.loading = false;
-      }
-    },
-    async analyseInterventionQuart(
-      vehicule: object[],
-      firstDay: Date,
-      lastDay: Date,
-      tdeb: any,
-      tfin: any
-    ) {
-      this.loading = true;
-      const data = {
-        deb: firstDay,
-        fin: lastDay,
-        vehicle: vehicule,
-        tdeb: tdeb,
-        tfin: tfin,
-      };
-      try {
-        const req = await api.post('/api/analyseIntervention', data, {
-          headers: {
-            Authorization: 'Bearer ' + Cookies.get('tk'),
-          },
-        });
-        //console.log(req.data.horaire);
-        this.immoDataQuart = req.data.pannes;
+        //console.log(req.data.pannes);
+        if (report === 'immoTotal') {
+          this.immoData = req.data.pannes;
+        } else if (report === 'immoQuart') {
+          this.immoDataQuart = req.data.pannes;
+        } else if (report === 'dispo') {
+          this.dispoData = req.data.pannes;
+        } else if (report === 'dispoFamille') {
+          this.dispoFamille = req.data.pannes;
+        }
         this.loading = false;
       } catch (error) {
         console.log(error);
@@ -559,6 +542,38 @@ export const useRepportStore = defineStore('rapport', {
         });
         //console.log(req.data.horaire);
         this.horairesQuart = req.data.horaire;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async analyseEfficience(
+      vehicule: object[],
+      firstDay: Date,
+      lastDay: Date,
+      tdeb: any,
+      tfin: any,
+      report: string
+    ) {
+      this.loading = true;
+      const data = {
+        deb: firstDay,
+        fin: lastDay,
+        vehicle: vehicule,
+        tdeb: tdeb,
+        tfin: tfin,
+      };
+      try {
+        const req = await api.post('/api/analyseEfficience', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        console.log(req.data.panneHoraire);
+        if (report === 'efficience') {
+          this.efficience = req.data.panneHoraire;
+        }
         this.loading = false;
       } catch (error) {
         console.log(error);

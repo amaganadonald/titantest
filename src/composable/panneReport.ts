@@ -49,6 +49,7 @@ const useCalcul_immo_panne_active = (tab: [], datedeb: Date, datefin: Date) => {
 const calculImmo = (data: object, debutRange: Date, finRange: Date) => {
   let deb = debutRange;
   let fin = finRange;
+  console.log(data);
   if (moment(new Date(data.DateImmo)).isAfter(moment(deb))) {
     deb = data.DateImmo;
   }
@@ -209,16 +210,18 @@ const useCalculImmoPanne = (
       allImmo = allImmo + calculImmo(pd, deb, fin);
       veh = pd;
     });
-    tabFinal.push({
-      code: veh.vehicule.code,
-      panneId: veh.idpanne,
-      immo: allImmo,
-      tpsimmo: secToTime(allImmo),
-      Immat: veh.vehicule.Immat,
-      marque: veh.vehicule.Marque.libelle,
-      typeVeh: veh.vehicule.type_veh.lib_type,
-      famille: veh.vehicule.type_veh.fam_veh.lib_fam,
-    });
+    if (allImmo != 0) {
+      tabFinal.push({
+        code: veh.vehicule.code,
+        panneId: veh.idpanne,
+        immo: allImmo,
+        tpsimmo: secToTime(allImmo),
+        Immat: veh.vehicule.Immat,
+        marque: veh.vehicule.Marque.libelle,
+        typeVeh: veh.vehicule.type_veh.lib_type,
+        famille: veh.vehicule.type_veh.fam_veh.lib_fam,
+      });
+    }
   });
   console.log(tabFinal);
   return tabFinal;
@@ -549,6 +552,170 @@ const useChangeDate = (dbs) => {
   return date.formatDate(dbs, 'DD-MM-YYYY');
 };
 
+const useCalculDispo = (
+  tab: [],
+  datedeb: Date,
+  datefin: Date,
+  tdatedeb,
+  tdatefin
+) => {
+  let allImmo = 0;
+  const tabFinal = [];
+  let veh = {};
+  const timeps = soustraireDatetime(
+    new Date(datefin + ' ' + tdatefin),
+    new Date(datedeb + ' ' + tdatedeb)
+  );
+  tab.forEach((panne: object[]) => {
+    allImmo = 0;
+    veh = {};
+    panne.forEach((pd) => {
+      const deb = new Date(datedeb + ' ' + tdatedeb);
+      const fin = new Date(datefin + ' ' + tdatefin);
+      allImmo = allImmo + calculImmo(pd, deb, fin);
+      veh = pd;
+    });
+    if (allImmo != 0) {
+      tabFinal.push({
+        code: veh.vehicule.code,
+        panneId: veh.idpanne,
+        immo: allImmo,
+        tpsdispo: (100 - (allImmo * 100) / timeps).toFixed(2),
+        tpspanne: ((allImmo * 100) / timeps).toFixed(2),
+        Immat: veh.vehicule.Immat,
+        marque: veh.vehicule.Marque.libelle,
+        typeVeh: veh.vehicule.type_veh.lib_type,
+        famille: veh.vehicule.type_veh.fam_veh.lib_fam,
+      });
+    }
+  });
+  //console.log(tabFinal);
+  return tabFinal;
+};
+
+const numberOfVehicle = (famille: number, vehicules: object[]) => {
+  const fml = vehicules.filter((veh) => famille === veh.type_veh.famVehId);
+  return fml;
+};
+
+const useCalculDispoFamille = (
+  tab: [],
+  famille: [],
+  datedeb: Date,
+  datefin: Date,
+  tdatedeb,
+  tdatefin,
+  vehicules: []
+) => {
+  let allImmo = 0;
+  const tabFinal = [];
+  const tbFam = [];
+  let veh = {};
+  const timeps = soustraireDatetime(
+    new Date(datefin + ' ' + tdatefin),
+    new Date(datedeb + ' ' + tdatedeb)
+  );
+  console.log(tab);
+  tab.forEach((panne: object[]) => {
+    allImmo = 0;
+    veh = {};
+    panne.forEach((pd) => {
+      const deb = new Date(datedeb + ' ' + tdatedeb);
+      const fin = new Date(datefin + ' ' + tdatefin);
+      allImmo = allImmo + calculImmo(pd, deb, fin);
+      veh = pd;
+    });
+    if (allImmo > 0) {
+      tbFam.push({
+        code: veh.vehicule.code,
+        panneId: veh.idpanne,
+        immo: allImmo,
+        tpsdispo: (100 - (allImmo * 100) / timeps).toFixed(2),
+        tpspanne: ((allImmo * 100) / timeps).toFixed(2),
+        Immat: veh.vehicule.Immat,
+        marque: veh.vehicule.Marque.libelle,
+        typeVeh: veh.vehicule.type_veh.lib_type,
+        famille: veh.vehicule.type_veh.fam_veh.lib_fam,
+      });
+    }
+  });
+  console.log(tbFam);
+  famille.forEach((fm) => {
+    let totDispo = 0;
+    let totPanne = 0;
+    //console.log(fm.lib_fam + ' ' + numberOfVehicle(fm.id, vehicules));
+    const totvehfam = numberOfVehicle(fm.id, vehicules);
+    console.log(totvehfam);
+    if (totvehfam.length > 0) {
+      totvehfam.forEach((vehfam) => {
+        if (tbFam.filter((famfam) => famfam.code === vehfam.code).length > 0) {
+          console.log(vehfam);
+          tbFam.forEach((tbF) => {
+            if (tbF.famille === fm.lib_fam && tbF.code === vehfam.code) {
+              totDispo = totDispo + Number(tbF.tpsdispo);
+              totPanne = totPanne + Number(tbF.tpspanne);
+            }
+          });
+        } else {
+          totDispo = totDispo + 100;
+        }
+      });
+      console.log(
+        totDispo +
+          ' -' +
+          totPanne +
+          ' - ' +
+          totvehfam.length +
+          '-fm ' +
+          fm.lib_fam
+      );
+      tabFinal.push({
+        tpsdispo: (totDispo / totvehfam.length).toFixed(2),
+        tpspanne: (totPanne / totvehfam.length).toFixed(2),
+        famille: fm.lib_fam,
+        nbVeh: totvehfam.length,
+        totvehfam: totvehfam,
+      });
+    }
+  });
+  console.log(tabFinal);
+  return tabFinal;
+};
+
+const useCalculEfficience = (
+  tab: [],
+  datedeb: Date,
+  datefin: Date,
+  tdatedeb,
+  tdatefin,
+  vehicules: []
+) => {
+  let dataPannes = [];
+  let dataHoraires = [];
+  if (tab[0] != null) {
+    dataPannes = tab[0];
+  }
+  if (tab[1] != null) {
+    dataHoraires = tab[1];
+  }
+  vehicules.forEach((veh) => {
+    let vehDataP = [];
+    let vehDataH = [];
+    if (dataPannes.length > 0) {
+      vehDataP = dataPannes.filter((dp) => {
+        dp.vehicule.code === veh.code;
+      });
+    }
+    if (dataHoraires.length > 0) {
+      vehDataH = dataHoraires.filter((dps) => {
+        dps.code === veh.code;
+      });
+    }
+    console.log(vehDataP);
+    console.log(vehDataH);
+  });
+};
+
 export {
   useCalcul_immo_panne_active,
   useRetourneMois,
@@ -557,4 +724,7 @@ export {
   useCalculHoraire,
   useCalculHoraireQuart,
   useCalculImmoPanneQuart,
+  useCalculDispo,
+  useCalculDispoFamille,
+  useCalculEfficience,
 };

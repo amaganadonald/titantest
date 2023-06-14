@@ -568,6 +568,12 @@ export default defineComponent({
               vData: '',
               vType: 'image',
             });
+          } else if (key === 'passwd') {
+            tabInfo.value.push({
+              vModel: key,
+              vData: '',
+              vType: 'string',
+            });
           } else if (key === 'menus') {
             await store.allMenu();
             if (dataTable[key].length === 0) {
@@ -619,7 +625,7 @@ export default defineComponent({
           }
         }
       }
-      //console.log(tabInfo.value);
+      console.log(tabInfo.value);
     };
     const changeDate = (dbs) => {
       return date.formatDate(dbs, 'YYYY-MM-DD');
@@ -913,7 +919,7 @@ export default defineComponent({
         dataConstruct(props.head);
       } else {
         dataConstruct(props.data);
-        //console.log(props.data)
+        console.log(props.data);
       }
       // console.log(props.head)
     });

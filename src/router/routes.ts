@@ -133,6 +133,10 @@ const routes: RouteRecordRaw[] = [
         path: '/impKilo',
         component: () => import('pages/ImportEvenement.vue'),
       },
+      {
+        path: '/rapeff',
+        component: () => import('pages/RapEfficience.vue'),
+      },
     ],
   },
 

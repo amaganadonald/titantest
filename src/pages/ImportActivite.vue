@@ -34,7 +34,7 @@
                   <div class="card-header">
                     <h4 class="card-title mb-0">Files Upload</h4>
                   </div>
-                  <!-- end card header -->
+                  <!-- end card header accept=".xls, .xlsx"-->
 
                   <div class="card-body">
                     <div class="input-group">
@@ -44,10 +44,9 @@
                         id="inputGroupFile04"
                         aria-describedby="inputGroupFileAddon04"
                         aria-label="Upload"
-                        accept=".xls, .xlsx"
+                        accept=".csv"
                         name="fichier"
                         multiple
-                        @change="fileChange()"
                         ref="fichier"
                       />
                       <button
@@ -67,7 +66,7 @@
                       filename="data_plateforme"
                     />
                   </div>
-                  <!-- end card body -->
+                  <!-- end card body  @change="fileChange()"-->
                 </div>
                 <!-- end card -->
               </div>
@@ -106,8 +105,9 @@ export default defineComponent({
     let data = computed(() => store.dataPlat);
     const importFile = async () => {
       loading.value = true;
-      console.log(datab.value);
-      await store.uploadData(datab.value);
+      let formData = new FormData();
+      formData.append('file', fichier.value.files[0]);
+      await store.uploadData(formData);
       $q.notify({
         message: 'Import reussie',
         color: 'teal-10',
@@ -197,7 +197,7 @@ export default defineComponent({
         dataKey: 'rpm',
       },
     ];
-    const fileChange = () => {
+    /* const fileChange = () => {
       if (fichier.value != undefined && fichier.value != null) {
         for (let r = 0; r < fichier.value.files.length; r++) {
           var filereader = new FileReader();
@@ -229,7 +229,7 @@ export default defineComponent({
           };
         }
       }
-    };
+    };*/
 
     onMounted(async () => {
       await store.allLastDataPlateforme();
@@ -239,7 +239,7 @@ export default defineComponent({
       importFile,
       loading,
       sendFile,
-      fileChange,
+      //fileChange,
       data,
       header,
     };

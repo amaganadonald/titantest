@@ -464,7 +464,7 @@ import type {
 import ManageDataVue from '../Modals/ManageData.vue';
 import ComplexData from '../Modals/ComplexData.vue';
 import { useSettingStore } from '../../stores/settings-store';
-import { date } from 'quasar';
+import { date, useQuasar } from 'quasar';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { useRouter } from 'vue-router';
@@ -480,6 +480,7 @@ export default defineComponent({
   emits: ['refreshTable'],
   setup(props, context) {
     const router = useRouter();
+    const $q = useQuasar();
     const headers = ref<Header[]>([]);
     const items = ref<Item[]>([]);
     const searchValue = ref('');
@@ -585,7 +586,7 @@ export default defineComponent({
     const getImageUrl = (img: any) => {
       console.log(img);
       if (img != null) {
-        return new URL(`http://localhost:4000${img}`, import.meta.url);
+        return $q.cookies.get('ht') + img;
       }
     };
     watch(props, () => {

@@ -234,10 +234,10 @@ const useTpsImmo = (tabImmo, datedeb: Date, datefin: Date, tdeb, tfin) => {
   let stom = '';
   tabImmo.forEach((immo) => {
     if (dl === 0) {
-      if (immo.event === 'Début durée inactivité ') {
+      if (immo.event === 'Début durée inactivité') {
         dbi = immo.date;
         stom = 'di';
-      } else if (immo.event === 'Fin période inactivité ') {
+      } else if (immo.event === 'Fin période inactivité') {
         stom = 'fi';
         tpsIm =
           tpsIm +
@@ -248,10 +248,10 @@ const useTpsImmo = (tabImmo, datedeb: Date, datefin: Date, tdeb, tfin) => {
       }
       dl++;
     } else {
-      if (immo.event === 'Début durée inactivité ') {
+      if (immo.event === 'Début durée inactivité') {
         stom = 'di';
         dbi = immo.date;
-      } else if (immo.event === 'Fin période inactivité ') {
+      } else if (immo.event === 'Fin période inactivité') {
         stom = 'fi';
         tpsIm = tpsIm + soustraireDatetime(new Date(immo.date), new Date(dbi));
       }
@@ -339,14 +339,15 @@ const useCalculHoraire = (
   tfin
 ) => {
   const dataFinal = [];
-  console.log(tab);
+
   tab.forEach((datas) => {
     if (datas.length > 0) {
       const tbImmo = datas.filter(
         (db) =>
-          db.event === 'Début durée inactivité ' ||
-          db.event === 'Fin période inactivité '
+          db.event === 'Début durée inactivité' ||
+          db.event === 'Fin période inactivité'
       );
+      console.log(tbImmo);
       const tbWork = datas.filter(
         (db) => db.event === 'Début conduite' || db.event === 'Fin conduite'
       );
@@ -394,22 +395,22 @@ const useCalculHoraireQuart = (
     if (datas.length > 0) {
       const tbImmoQuart1 = datas.filter(
         (db) =>
-          (db.event === 'Début durée inactivité ' ||
-            db.event === 'Fin période inactivité ') &&
+          (db.event === 'Début durée inactivité' ||
+            db.event === 'Fin période inactivité') &&
           new Date(db.date) < new Date(finQuart1) &&
           new Date(db.date) > new Date(debutQuart1)
       );
       const tbImmoQuart2 = datas.filter(
         (db) =>
-          (db.event === 'Début durée inactivité ' ||
-            db.event === 'Fin période inactivité ') &&
+          (db.event === 'Début durée inactivité' ||
+            db.event === 'Fin période inactivité') &&
           new Date(db.date) < new Date(finQuart2) &&
           new Date(db.date) > new Date(debutQuart2)
       );
       const tbImmoQuart3 = datas.filter(
         (db) =>
-          (db.event === 'Début durée inactivité ' ||
-            db.event === 'Fin période inactivité ') &&
+          (db.event === 'Début durée inactivité' ||
+            db.event === 'Fin période inactivité') &&
           new Date(db.date) < new Date(debutQuart3) &&
           new Date(db.date) > new Date(finQuart3)
       );
@@ -681,6 +682,45 @@ const useCalculDispoFamille = (
   console.log(tabFinal);
   return tabFinal;
 };
+const CalculHoraire = (
+  tab: object[],
+  datedeb: Date,
+  datefin: Date,
+  tdeb,
+  tfin
+) => {
+  const dataFinal = [];
+  const tbImmo = tab.filter(
+    (db) =>
+      db.event === 'Début durée inactivité' ||
+      db.event === 'Fin période inactivité'
+  );
+  console.log(tbImmo);
+  const tbWork = tab.filter(
+    (db) => db.event === 'Début conduite' || db.event === 'Fin conduite'
+  );
+  console.log(tbWork);
+  const tkilo = tab.filter(
+    (db) =>
+      new Date(db.date) < new Date(datefin + ' ' + tfin) &&
+      new Date(db.date) > new Date(datedeb + ' ' + tdeb)
+  );
+  const idle = useTpsImmo(tbImmo, datedeb, datefin, tdeb, tfin);
+  const tpcond = useTpsHoraire(tbWork, datedeb, datefin, tdeb, tfin);
+  const tkil = useKilometrage(tkilo);
+  dataFinal.push({
+    eon: tpcond - idle,
+    idle: idle,
+    eoff:
+      soustraireDatetime(
+        new Date(datefin + ' ' + tfin),
+        new Date(datedeb + ' ' + tdeb)
+      ) - tpcond,
+    km: tkil,
+  });
+  //console.log(dataFinal);
+  return dataFinal;
+};
 
 const useCalculEfficience = (
   tab: [],
@@ -701,18 +741,27 @@ const useCalculEfficience = (
   vehicules.forEach((veh) => {
     let vehDataP = [];
     let vehDataH = [];
+    let tpCond = [];
+    let immoVeh = 0;
     if (dataPannes.length > 0) {
-      vehDataP = dataPannes.filter((dp) => {
-        dp.vehicule.code === veh.code;
-      });
+      vehDataP = dataPannes.filter((dp) => dp.vehicule.code === veh.code);
     }
     if (dataHoraires.length > 0) {
-      vehDataH = dataHoraires.filter((dps) => {
-        dps.code === veh.code;
-      });
+      vehDataH = dataHoraires.filter((dps) => dps.code === veh.code);
     }
-    console.log(vehDataP);
-    console.log(vehDataH);
+    vehDataP.forEach((pan) => {
+      immoVeh =
+        immoVeh +
+        calculImmo(
+          pan,
+          new Date(datedeb + ' ' + tdatedeb),
+          new Date(datefin + ' ' + tdatefin)
+        );
+    });
+    tpCond = CalculHoraire(vehDataH, datedeb, datefin, tdatedeb, tdatefin);
+    console.log(veh);
+    console.log(tpCond);
+    console.log(immoVeh);
   });
 };
 

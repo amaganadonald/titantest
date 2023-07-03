@@ -28,13 +28,11 @@
                 <div class="col-xl-2">
                   <div class="card card-h-80">
                     <div class="card-body">
-                      <!--button class="btn btn-primary w-100" id="btn-new-event">
-                        <i class="mdi mdi-plus"></i> Create New Event
-                      </button-->
-                      <!-- Placement Offcanvas -->
                       <PlageData
                         :typeReport="report"
                         @acquireDats="acquireDate"
+                        :titleReport="titleReport"
+                        :plage="plage"
                       />
                       <div class="step-arrow-nav mt-n3 mx-n3 mb-3">
                         <br />
@@ -52,7 +50,13 @@
                             role="tab"
                             aria-controls="pills-bill-info"
                             aria-selected="false"
-                            @click="actualReport('horaireTotal')"
+                            @click="
+                              actualReport(
+                                'horaireTotal',
+                                'Horaire période du ',
+                                'select'
+                              )
+                            "
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
@@ -69,14 +73,20 @@
                             role="tab"
                             aria-controls="pills-bill-address"
                             aria-selected="false"
-                            @click="actualReport('horaireQuart')"
+                            @click="
+                              actualReport(
+                                'horaireQuart',
+                                'Horaire par quart du ',
+                                'select'
+                              )
+                            "
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
                             >Temps conduite par Quart
                           </div>
-                          <div
+                          <!--div
                             class="external-event fc-event bg-soft-warning text-warning"
                             data-class="bg-soft-warning"
                             id="pills-payment-tab"
@@ -92,8 +102,8 @@
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
                             >Conso Mensuelle
-                          </div>
-                          <div
+                          </div-->
+                          <!--div
                             class="external-event fc-event bg-soft-danger text-danger"
                             data-class="bg-soft-danger"
                             id="pills-finish-tab"
@@ -109,7 +119,7 @@
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
                             >Conso Moyenne
-                          </div>
+                          </div--->
                         </ul>
                       </div>
                     </div>
@@ -155,7 +165,7 @@
                             />
                           </div>
                         </div>
-                        <div
+                        <!--div
                           class="tab-pane fade"
                           id="pills-payment"
                           role="tabpanel"
@@ -171,8 +181,8 @@
                               filename="export_conso_mois"
                             />
                           </div>
-                        </div>
-                        <div
+                        </div-->
+                        <!--div
                           class="tab-pane fade"
                           id="pills-finish"
                           role="tabpanel"
@@ -194,7 +204,7 @@
                               >
                             </h3>
                           </div>
-                        </div>
+                        </div-->
                       </div>
                       <!-- end tab pane -->
                     </div>
@@ -225,8 +235,8 @@ import {
   useCalculHoraire,
   useCalculHoraireQuart,
 } from 'src/composable/panneReport';
-import dataCons from '../types/dataCons';
-import dateConsDate from '../types/dataCons';
+import { dataCons } from '../types/dataCons';
+import { dataconsDate } from '../types/dataCons';
 export default defineComponent({
   name: 'RapHoraire',
   components: { PlageData, TableRapport },
@@ -237,7 +247,7 @@ export default defineComponent({
     let dataHoraireQuart = computed(() => consStore.horairesQuart);
     let dataTimes = ref([]);
     let dataQuart = ref([]);
-    let dataJour = ref<dateConsDate[]>([]);
+    let dataJour = ref<dataconsDate[]>([]);
     let data = ref<dataCons[]>([]);
     let rpl = ref('');
     let debut = ref<Date>();
@@ -246,6 +256,8 @@ export default defineComponent({
     let tfini = ref<string>();
     let vehs = ref<object[]>();
     let choix = ref<string>('');
+    let titleReport = ref<string>('');
+    let plage = ref<string>('');
     const header = [
       {
         text: 'Code',
@@ -368,8 +380,11 @@ export default defineComponent({
         tfini.value
       );
     };
-    const actualReport = (txt: string) => {
+    const actualReport = (txt: string, title: string, plages: string) => {
+      rpl.value = '';
       report.value = txt;
+      titleReport.value = title;
+      plage.value = plages;
     };
 
     watch(dataHoraire, (val) => {
@@ -380,6 +395,7 @@ export default defineComponent({
         tdebut.value,
         tfini.value
       );
+      console.log(dataTimes.value);
     });
     watch(dataHoraireQuart, (val) => {
       dataQuart.value = useCalculHoraireQuart(
@@ -408,6 +424,8 @@ export default defineComponent({
       dataHoraire,
       dataTimes,
       dataQuart,
+      titleReport,
+      plage,
     };
   },
 });

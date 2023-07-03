@@ -34,7 +34,7 @@ use([
   LineChart,
 ]);
 export default defineComponent({
-  name: 'BarChart',
+  name: 'BarChartLine',
   components: {
     VChart,
   },
@@ -48,6 +48,7 @@ export default defineComponent({
     const dataConsos = computed(() => props.dataConso);
     const titles = computed(() => props.title);
     const barOption = ref({
+      //backgroundColor: '#0f375f',
       textStyle: {
         fontFamily: 'Inter, "Helvetica Neue", Arial, sans-serif',
       },
@@ -67,6 +68,12 @@ export default defineComponent({
         right: '4%',
         bottom: '3%',
         containLabel: true,
+      },
+      legend: {
+        data: ['line', 'bar'],
+        textStyle: {
+          color: '#0f375f',
+        },
       },
       toolbox: {
         show: true,
@@ -88,14 +95,16 @@ export default defineComponent({
           axisTick: {
             alignWithLabel: true,
           },
+          axisLine: {
+            lineStyle: {
+              color: '#ccc',
+            },
+          },
         },
       ],
       yAxis: [
         {
           type: 'value',
-          axisLine: {
-            show: false,
-          },
           axisTick: {
             show: true,
           },
@@ -119,6 +128,25 @@ export default defineComponent({
             formatter: '{c} ' + props.unite,
             position: 'top',
             distance: 0,
+          },
+          markLine: {
+            symbol: 'diamond',
+            data: [
+              {
+                yAxis: 24,
+                label: {
+                  normal: {
+                    show: false,
+                  },
+                },
+                lineStyle: {
+                  normal: {
+                    type: 'dashed',
+                    color: 'green',
+                  },
+                },
+              },
+            ],
           },
         },
       ],

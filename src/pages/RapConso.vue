@@ -35,6 +35,8 @@
                       <PlageData
                         :typeReport="report"
                         @acquireDats="acquireDate"
+                        :titleReport="titleReport"
+                        :plage="plage"
                       />
                       <div class="step-arrow-nav mt-n3 mx-n3 mb-3">
                         <br />
@@ -52,7 +54,13 @@
                             role="tab"
                             aria-controls="pills-bill-info"
                             aria-selected="false"
-                            @click="actualReport('consoTotal')"
+                            @click="
+                              actualReport(
+                                'consoTotal',
+                                'Consommation Total du',
+                                'select'
+                              )
+                            "
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
@@ -69,7 +77,13 @@
                             role="tab"
                             aria-controls="pills-bill-address"
                             aria-selected="false"
-                            @click="actualReport('consoMois')"
+                            @click="
+                              actualReport(
+                                'consoMois',
+                                'Consommation Journalière période du ',
+                                'select'
+                              )
+                            "
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
@@ -86,14 +100,20 @@
                             role="tab"
                             aria-controls="pills-payment"
                             aria-selected="false"
-                            @click="actualReport('consoAn')"
+                            @click="
+                              actualReport(
+                                'consoAn',
+                                'Consommation Mensuelle',
+                                'mois'
+                              )
+                            "
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
                             >Conso Mensuelle
                           </div>
-                          <div
+                          <!--div
                             class="external-event fc-event bg-soft-danger text-danger"
                             data-class="bg-soft-danger"
                             id="pills-finish-tab"
@@ -109,7 +129,7 @@
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
                             >Conso Moyenne
-                          </div>
+                          </div-->
                         </ul>
                       </div>
                     </div>
@@ -172,29 +192,6 @@
                             />
                           </div>
                         </div>
-                        <div
-                          class="tab-pane fade"
-                          id="pills-finish"
-                          role="tabpanel"
-                          aria-labelledby="pills-finish-tab"
-                        >
-                          <div class="text-center py-5">
-                            <h5>Thank you ! Your Order is Completed !</h5>
-                            <p class="text-muted">
-                              You will receive an order confirmation email with
-                              details of your order.
-                            </p>
-
-                            <h3 class="fw-semibold">
-                              Order ID:
-                              <a
-                                href="apps-ecommerce-order-details.html"
-                                class="text-decoration-underline"
-                                >VZ2451</a
-                              >
-                            </h3>
-                          </div>
-                        </div>
                       </div>
                       <!-- end tab pane -->
                     </div>
@@ -222,8 +219,8 @@ import PlageData from '../components/Modals/PlageData.vue';
 import { useRepportStore } from '../stores/repport-store';
 import TableRapport from 'src/components/tables/TableRapport.vue';
 import { useChangeDate } from '../composable/panneReport';
-import dataCons from '../types/dataCons';
-import dateConsDate from '../types/dataCons';
+import { dataCons } from '../types/dataCons';
+import { dataconsDate } from '../types/dataCons';
 export default defineComponent({
   name: 'RapConso',
   components: { PlageData, TableRapport },
@@ -233,7 +230,7 @@ export default defineComponent({
     let rapConso = computed(() => consStore.rapconso);
     let consoJour = computed(() => consStore.consoJour);
     let dataMois = computed(() => consStore.consMois);
-    let dataJour = ref<dateConsDate[]>([]);
+    let dataJour = ref<dataconsDate[]>([]);
     let data = ref<dataCons[]>([]);
     let rpl = ref('');
     let debut = ref<Date>();
@@ -242,6 +239,8 @@ export default defineComponent({
     let tfini = ref<string>();
     let vehs = ref<object[]>();
     let choix = ref<string>('');
+    let titleReport = ref<string>('');
+    let plage = ref<string>('');
     const header = [
       {
         text: 'Id',
@@ -399,8 +398,11 @@ export default defineComponent({
         tfini.value
       );
     };
-    const actualReport = (txt: string) => {
+    const actualReport = (txt: string, title: string, plages: string) => {
+      rpl.value = '';
       report.value = txt;
+      titleReport.value = title;
+      plage.value = plages;
     };
     watch(rapConso, (valeur) => {
       let i = 0;
@@ -462,6 +464,8 @@ export default defineComponent({
       dataJour,
       headerMois,
       dataMois,
+      titleReport,
+      plage,
     };
   },
 });

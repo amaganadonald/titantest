@@ -137,6 +137,38 @@ const routes: RouteRecordRaw[] = [
         path: '/rapeff',
         component: () => import('pages/RapEfficience.vue'),
       },
+      {
+        path: '/tonnage',
+        component: () => import('pages/TonnageEngin.vue'),
+      },
+      {
+        path: '/pneumatique',
+        component: () => import('pages/PneumatiqueParc.vue'),
+      },
+      {
+        path: '/lubrifiants',
+        component: () => import('pages/LubrifiantParc.vue'),
+      },
+      {
+        path: '/bonNonLivre',
+        component: () => import('pages/BonNonLivre.vue'),
+      },
+      {
+        path: '/histoIntervention',
+        component: () => import('pages/InterventionParc.vue'),
+      },
+      {
+        path: '/entretien',
+        component: () => import('pages/EntretienParc.vue'),
+      },
+      {
+        path: '/grapheactivite',
+        component: () => import('pages/GrapheHoraire.vue'),
+      },
+      {
+        path: '/graphefrequence',
+        component: () => import('pages/GrapheIntervention.vue'),
+      },
     ],
   },
 

@@ -9,26 +9,27 @@
               <div
                 class="page-title-box d-sm-flex align-items-center justify-content-between"
               >
-                <h4 class="mb-sm-0">Activités</h4>
+                <h4 class="mb-sm-0">BON PANNE NON LIVRE</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
-                      <a href="javascript: void(0);">Vehicules</a>
+                      <a href="javascript: void(0);">Historique</a>
                     </li>
-                    <li class="breadcrumb-item active">Activités</li>
+                    <li class="breadcrumb-item active">pannes en cours</li>
                   </ol>
                 </div>
               </div>
             </div>
           </div>
           <!-- end page title-->
-          <TableData
+          <TablePanne
             :header="header"
             :data="data"
-            title="Activités"
-            tb="activiteVeh"
+            title="BonNonLivre"
+            tb="panne"
             @refreshTable="refreshTable"
             cbTable="mnDts"
+            addbtn="adds"
           />
         </div>
         <!-- container-fluid -->
@@ -39,42 +40,60 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted } from 'vue';
-import TableData from '../components/tables/TableData.vue';
-import { useSettingStore } from '../stores/settings-store';
+import TablePanne from '../components/tables/TablePanne.vue';
+import { useMaintenanceStore } from '../stores/maintenance-store';
 
 export default defineComponent({
-  name: 'ActiviteVeh',
+  name: 'BonNonLivre',
   components: {
-    TableData,
+    TablePanne,
   },
   setup() {
-    const store = useSettingStore();
-    let data = computed(() => store.activite);
+    const store = useMaintenanceStore();
+    let data = computed(() => store.panneNlivre);
     const header = [
-      { text: 'Id', value: 'id', sortable: true, type: 'number' },
-      { text: 'Code', value: 'code', sortable: true, type: 'string' },
+      { text: 'Numéro Bon', value: 'idpanne', sortable: true, type: 'number' },
+      { text: 'Code', value: 'vehicule.code', sortable: true, type: 'string' },
       {
-        text: 'Libelle',
-        value: 'activite_name',
+        text: 'Immat',
+        value: 'vehicule.Immat',
         sortable: true,
         type: 'string',
       },
-      { text: 'Creation', value: 'datej', sortable: true, type: 'date' },
       {
-        text: 'Observation',
-        value: 'observation',
+        text: 'Date panne',
+        value: 'DateImmo',
+        sortable: true,
+        type: 'date',
+      },
+      {
+        text: 'Cause Panne',
+        value: 'CausePanne',
+        sortable: true,
+        type: 'string',
+      },
+      {
+        text: 'Lieu panne',
+        value: 'lieu_panne',
+        sortable: true,
+        type: 'string',
+      },
+      {
+        text: 'Durée Garage',
+        value: 'tpanne',
         sortable: true,
         type: 'string',
       },
       { text: 'Status', value: 'Status', sortable: true, type: 'boolean' },
-      { text: 'Action', value: 'operation', sortable: true, type: 'action' },
+      //{ text: 'Action', value: 'operation', sortable: true, type: 'action' },
     ];
     const refreshTable = async () => {
-      await store.allActivites();
+      await store.allPannesNonLivre();
     };
 
     onMounted(async () => {
-      await store.allActivites();
+      await store.allPannesNonLivre();
+      console.log(data.value);
     });
     return {
       header,

@@ -38,6 +38,12 @@ export const useRepportStore = defineStore('rapport', {
     dispoData: [],
     dispoFamille: [],
     efficience: [],
+    dataTonnage: [],
+    dataPneumatique: [],
+    dataLubrifiant: [],
+    graphHoraire: [],
+    graphHoraireQuart: [],
+    totalImmo: [],
   }),
   getters: {
     updateDatabase: (state) => state.databases,
@@ -427,8 +433,9 @@ export const useRepportStore = defineStore('rapport', {
       vehicule: object[],
       firstDay: Date,
       lastDay: Date,
-      tdeb: any,
-      tfin: any
+      tdeb: string,
+      tfin: string,
+      report: string
     ) {
       this.loading = true;
       const data = {
@@ -444,8 +451,11 @@ export const useRepportStore = defineStore('rapport', {
             Authorization: 'Bearer ' + Cookies.get('tk'),
           },
         });
-        //console.log(req.data.horaire);
-        this.horaires = req.data.horaire;
+        if (report === 'horaireTotal') {
+          this.horaires = req.data.horaire;
+        } else if (report === 'graphHoraireTotal') {
+          this.graphHoraire = req.data.horaire;
+        }
         this.loading = false;
       } catch (error) {
         console.log(error);
@@ -524,7 +534,8 @@ export const useRepportStore = defineStore('rapport', {
       firstDay: Date,
       lastDay: Date,
       tdeb: any,
-      tfin: any
+      tfin: any,
+      report: string
     ) {
       this.loading = true;
       const data = {
@@ -541,7 +552,12 @@ export const useRepportStore = defineStore('rapport', {
           },
         });
         //console.log(req.data.horaire);
-        this.horairesQuart = req.data.horaire;
+        if (report === 'horaireQuart') {
+          this.horairesQuart = req.data.horaire;
+        } else if (report === 'grapheHoraireQuart') {
+          this.graphHoraireQuart = req.data.horaire;
+        }
+
         this.loading = false;
       } catch (error) {
         console.log(error);
@@ -574,6 +590,135 @@ export const useRepportStore = defineStore('rapport', {
         if (report === 'efficience') {
           this.efficience = req.data.panneHoraire;
         }
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async allDataTonnage() {
+      this.loading = true;
+      try {
+        await api
+          .get('/api/dataTonnage', {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          })
+          .then((response) => {
+            this.dataTonnage = response.data.tonnage;
+          });
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async uploadTonnage(data: object[]) {
+      this.loading = true;
+      try {
+        await api.post('/api/addDataTonnage', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        this.allDataTonnage();
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async allDataPneumatique() {
+      this.loading = true;
+      try {
+        await api
+          .get('/api/dataPneumatique', {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          })
+          .then((response) => {
+            this.dataPneumatique = response.data.pneumatique;
+          });
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async uploadPneumatique(data: object[]) {
+      this.loading = true;
+      try {
+        await api.post('/api/addDataPneumatique', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        this.allDataPneumatique();
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async allDataLubrifiant() {
+      this.loading = true;
+      try {
+        await api
+          .get('/api/dataLubrifiant', {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          })
+          .then((response) => {
+            this.dataLubrifiant = response.data.lubrifiant;
+          });
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async uploadLubrifiant(data: object[]) {
+      this.loading = true;
+      try {
+        await api.post('/api/addDataLubrifiant', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        this.allDataLubrifiant();
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async totalImmobilisation(
+      vehicule: object[],
+      firstDay: Date,
+      lastDay: Date,
+      tdeb: any,
+      tfin: any,
+      report: string
+    ) {
+      this.loading = true;
+      const data = {
+        deb: firstDay,
+        fin: lastDay,
+        vehicle: vehicule,
+        tdeb: tdeb,
+        tfin: tfin,
+      };
+      try {
+        const req = await api.post('/api/totalPanne', data, {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        console.log(req.data.pannes);
+        this.totalImmo = req.data.pannes;
         this.loading = false;
       } catch (error) {
         console.log(error);

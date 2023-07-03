@@ -9,13 +9,13 @@
               <div
                 class="page-title-box d-sm-flex align-items-center justify-content-between"
               >
-                <h4 class="mb-sm-0">RAPPORT EFFICIENCE</h4>
+                <h4 class="mb-sm-0">GRAPHE HORAIRE</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
-                      <a href="javascript: void(0);">Rapport</a>
+                      <a href="javascript: void(0);">Graphe</a>
                     </li>
-                    <li class="breadcrumb-item active">Efficience</li>
+                    <li class="breadcrumb-item active">Horaire</li>
                   </ol>
                 </div>
               </div>
@@ -28,10 +28,6 @@
                 <div class="col-xl-2">
                   <div class="card card-h-80">
                     <div class="card-body">
-                      <!--button class="btn btn-primary w-100" id="btn-new-event">
-                        <i class="mdi mdi-plus"></i> Create New Event
-                      </button-->
-                      <!-- Placement Offcanvas -->
                       <PlageData
                         :typeReport="report"
                         @acquireDats="acquireDate"
@@ -56,8 +52,8 @@
                             aria-selected="false"
                             @click="
                               actualReport(
-                                'efficience',
-                                'Efficience Parc du ',
+                                'graphHoraireTotal',
+                                'Repartition temps d\'activité',
                                 'select'
                               )
                             "
@@ -65,30 +61,7 @@
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >Efficience
-                          </div>
-                          <div
-                            class="external-event fc-event bg-soft-info text-info"
-                            data-class="bg-soft-info"
-                            id="pills-bill-address-tab"
-                            data-bs-toggle="pill"
-                            data-bs-target="#pills-bill-address"
-                            type="button"
-                            role="tab"
-                            aria-controls="pills-bill-address"
-                            aria-selected="false"
-                            @click="
-                              actualReport(
-                                'consoMois',
-                                'Efficience Parc du ',
-                                'select'
-                              )
-                            "
-                          >
-                            <i
-                              class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
-                            ></i
-                            >Conso Journalière
+                            >Temps Conduite
                           </div>
                           <div
                             class="external-event fc-event bg-soft-warning text-warning"
@@ -102,8 +75,8 @@
                             aria-selected="false"
                             @click="
                               actualReport(
-                                'consoAn',
-                                'Efficience Parc du ',
+                                'horaireQuart',
+                                'Graphe kilométrage',
                                 'select'
                               )
                             "
@@ -111,8 +84,32 @@
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >Conso Mensuelle
+                            >Kilometrage
                           </div>
+                          <div
+                            class="external-event fc-event bg-soft-info text-info"
+                            data-class="bg-soft-info"
+                            id="pills-bill-address-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#pills-bill-address"
+                            type="button"
+                            role="tab"
+                            aria-controls="pills-bill-address"
+                            aria-selected="false"
+                            @click="
+                              actualReport(
+                                'grapheHoraireQuart',
+                                'Repartition activite par quart',
+                                'select'
+                              )
+                            "
+                          >
+                            <i
+                              class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
+                            ></i
+                            >Temps conduite par Quart
+                          </div>
+
                           <div
                             class="external-event fc-event bg-soft-danger text-danger"
                             data-class="bg-soft-danger"
@@ -125,8 +122,8 @@
                             aria-selected="false"
                             @click="
                               actualReport(
-                                'consoMoy',
-                                'Efficience Parc du ',
+                                'grapheHoraireQuart',
+                                'Kilométrage par quart',
                                 'select'
                               )
                             "
@@ -134,7 +131,7 @@
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
                             ></i
-                            >Conso Moyenne
+                            >Kilometrage Quart
                           </div>
                         </ul>
                       </div>
@@ -154,30 +151,12 @@
                           aria-labelledby="pills-bill-info-tab"
                         >
                           <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="header"
-                              :data="data"
-                              @refreshTable="refreshTables"
+                            <StackedOneColumnChart
+                              :legend="legendCode"
+                              :dataConso="dataBas"
+                              :legendConsoDatJr="legendVal"
                               :title="rpl"
-                              filename="export_efficience"
-                            />
-                          </div>
-                        </div>
-                        <div
-                          class="tab-pane fade"
-                          id="pills-bill-address"
-                          role="tabpanel"
-                          aria-labelledby="pills-bill-address-tab"
-                        >
-                          <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="headerJour"
-                              :data="dataJour"
-                              @refreshTable="refreshTables"
-                              :title="rpl"
-                              filename="export_conso_jour"
+                              unite="H"
                             />
                           </div>
                         </div>
@@ -188,16 +167,31 @@
                           aria-labelledby="pills-payment-tab"
                         >
                           <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="headerMois"
-                              :data="dataMois"
-                              @refreshTable="refreshTables"
+                            <BarChart
+                              :legendConsoTot="legendCode"
+                              :dataConso="dataKm"
                               :title="rpl"
-                              filename="export_conso_mois"
+                              unite="Km"
                             />
                           </div>
                         </div>
+                        <div
+                          class="tab-pane fade"
+                          id="pills-bill-address"
+                          role="tabpanel"
+                          aria-labelledby="pills-bill-address-tab"
+                        >
+                          <div>
+                            <StackedOneColumnChart
+                              :legend="legendCodeQrt"
+                              :dataConso="dataBasQrt"
+                              :legendConsoDatJr="legendValQrt"
+                              :title="rpl"
+                              unite="H"
+                            />
+                          </div>
+                        </div>
+
                         <div
                           class="tab-pane fade"
                           id="pills-finish"
@@ -205,20 +199,12 @@
                           aria-labelledby="pills-finish-tab"
                         >
                           <div class="text-center py-5">
-                            <h5>Thank you ! Your Order is Completed !</h5>
-                            <p class="text-muted">
-                              You will receive an order confirmation email with
-                              details of your order.
-                            </p>
-
-                            <h3 class="fw-semibold">
-                              Order ID:
-                              <a
-                                href="apps-ecommerce-order-details.html"
-                                class="text-decoration-underline"
-                                >VZ2451</a
-                              >
-                            </h3>
+                            <BarChart
+                              :legendConsoTot="legendCodeQrt"
+                              :dataConso="dataKmQrt"
+                              :title="rpl"
+                              unite="Km"
+                            />
                           </div>
                         </div>
                       </div>
@@ -232,9 +218,6 @@
             </div>
           </div>
           <!-- end row-->
-          <!-- importHoraire/>
-            <end page title>
-            <TableReport :header="header" :data="data" title="distance" tb="distance" @refreshTable="refreshTable" cbTable="mnDts"/-->
         </div>
         <!-- container-fluid -->
       </div>
@@ -246,19 +229,28 @@
 import { defineComponent, ref, computed, watch } from 'vue';
 import PlageData from '../components/Modals/PlageData.vue';
 import { useRepportStore } from '../stores/repport-store';
-import TableRapport from 'src/components/tables/TableRapport.vue';
-import { useCalculEfficience } from '../composable/panneReport';
+import StackedOneColumnChart from 'src/components/charts/StackedOneColumnChart.vue';
+import BarChart from 'src/components/charts/BarChart.vue';
+import {
+  useCalculHoraire,
+  useCalculHoraireQuart,
+} from 'src/composable/panneReport';
 import { dataCons } from '../types/dataCons';
 import { dataconsDate } from '../types/dataCons';
 export default defineComponent({
-  name: 'RapEfficience',
-  components: { PlageData, TableRapport },
+  name: 'GrapheHoraire',
+  components: {
+    PlageData,
+    StackedOneColumnChart,
+    BarChart,
+  },
   setup() {
     const consStore = useRepportStore();
     let report = ref('');
-    let rapEfficience = computed(() => consStore.efficience);
-    let consoJour = computed(() => consStore.consoJour);
-    let dataMois = computed(() => consStore.consMois);
+    let dataHoraire = computed(() => consStore.graphHoraire);
+    let dataHoraireQuart = computed(() => consStore.graphHoraireQuart);
+    let dataTimes = ref([]);
+    let dataQuart = ref([]);
     let dataJour = ref<dataconsDate[]>([]);
     let data = ref<dataCons[]>([]);
     let rpl = ref('');
@@ -268,138 +260,16 @@ export default defineComponent({
     let tfini = ref<string>();
     let vehs = ref<object[]>();
     let choix = ref<string>('');
+    let legendVal = ref([]);
+    let legendCode = ref([]);
+    let dataBas = ref([]);
+    let dataKm = ref([]);
+    let legendValQrt = ref([]);
+    let legendCodeQrt = ref([]);
+    let dataBasQrt = ref([]);
+    let dataKmQrt = ref([]);
     let titleReport = ref<string>('');
     let plage = ref<string>('');
-    const header = [
-      {
-        text: 'Id',
-        value: 'id',
-        sortable: true,
-        width: 20,
-        type: 'number',
-        title: 'Id',
-        dataKey: 'id',
-      },
-      {
-        text: 'Code',
-        value: 'code',
-        sortable: true,
-        width: 40,
-        type: 'image',
-        title: 'Code',
-        dataKey: 'code',
-      },
-      {
-        text: 'Immat',
-        value: 'immat',
-        sortable: true,
-        type: 'string',
-        title: 'Immat',
-        dataKey: 'immat',
-      },
-      {
-        text: 'Type',
-        value: 'typeVeh',
-        sortable: true,
-        type: 'string',
-        title: 'Type',
-        dataKey: 'typeVeh',
-      },
-      {
-        text: 'Marque',
-        value: 'marque',
-        sortable: true,
-        type: 'string',
-        title: 'Marque',
-        dataKey: 'marque',
-      },
-      {
-        text: 'Qte conso',
-        value: 'qte',
-        sortable: true,
-        type: 'date',
-        title: 'Qte conso',
-        dataKey: 'qte',
-      },
-    ];
-    const headerJour = [
-      {
-        text: 'Id',
-        value: 'id',
-        sortable: true,
-        width: 20,
-        type: 'number',
-        title: 'Id',
-        dataKey: 'id',
-      },
-      {
-        text: 'Code',
-        value: 'code',
-        sortable: true,
-        width: 40,
-        type: 'image',
-        title: 'Code',
-        dataKey: 'code',
-      },
-      {
-        text: 'Immat',
-        value: 'immat',
-        sortable: true,
-        type: 'string',
-        title: 'Immat',
-        dataKey: 'immat',
-      },
-      {
-        text: 'Type',
-        value: 'typeVeh',
-        sortable: true,
-        type: 'string',
-        title: 'Type',
-        dataKey: 'typeVeh',
-      },
-      {
-        text: 'Marque',
-        value: 'marque',
-        sortable: true,
-        type: 'string',
-        title: 'Marque',
-        dataKey: 'marque',
-      },
-      {
-        text: 'Date Conso',
-        value: 'datej',
-        sortable: true,
-        type: 'string',
-        title: 'Date Conso',
-        dataKey: 'datej',
-      },
-      {
-        text: 'Qte conso',
-        value: 'qte',
-        sortable: true,
-        type: 'date',
-        title: 'Qte conso',
-        dataKey: 'qte',
-      },
-    ];
-    const headerMois = [
-      {
-        text: 'Mois',
-        value: 'monthConso',
-        sortable: true,
-        type: 'string',
-        title: 'Mois',
-        dataKey: 'monthConso',
-      },
-      {
-        text: 'Total conso',
-        value: 'totalconso',
-        sortable: true,
-        type: 'number',
-        title: 'Total conso',
-        dataKey: 'totalconso',
-      },
-    ];
 
     const acquireDate = (
       deb: Date,
@@ -419,7 +289,7 @@ export default defineComponent({
       choix.value = flt;
     };
     const refreshTables = async () => {
-      await consStore.analyseEfficience(
+      await consStore.analyseConso(
         vehs.value,
         debut.value,
         fini.value,
@@ -428,29 +298,97 @@ export default defineComponent({
       );
     };
     const actualReport = (txt: string, title: string, plages: string) => {
-      rpl.value = '';
-      if (txt === 'efficience') {
-        rpl.value = 'Efficience Parc';
-      }
+      rpl.value = title;
       report.value = txt;
       titleReport.value = title;
       plage.value = plages;
     };
-    watch(rapEfficience, (valeur) => {
-      data.value = useCalculEfficience(
-        valeur,
+
+    const stringToHour = (txt: string) => {
+      let str = txt.split(':');
+      let mn = Number(str[2] / 60) + Number(str[1]);
+      return (Number(str[0]) + Number(mn / 60)).toFixed(2);
+    };
+
+    watch(dataHoraire, (val) => {
+      dataTimes.value = useCalculHoraire(
+        val,
         debut.value,
         fini.value,
         tdebut.value,
-        tfini.value,
-        vehs.value
+        tfini.value
       );
+      let eon = [];
+      let eoff = [];
+      let edile = [];
+      dataKm.value = [];
+      dataTimes.value.forEach((dataVal) => {
+        legendCode.value.push(dataVal.code);
+        dataKm.value.push(dataVal.km);
+        for (let key of Object.keys(dataVal)) {
+          if (key !== 'code' && key !== 'km') legendVal.value.push(key);
+        }
+        eon.push(stringToHour(dataVal.eon));
+        eoff.push(stringToHour(dataVal.eoff));
+        edile.push(stringToHour(dataVal.idle));
+      });
+      dataBas.value.push({
+        date: 'eon',
+        data: eon,
+      });
+      dataBas.value.push({
+        date: 'eoff',
+        data: eoff,
+      });
+      dataBas.value.push({
+        date: 'idle',
+        data: edile,
+      });
+      legendVal.value = [...new Set(legendVal.value)];
+      legendCode.value = [...new Set(legendCode.value)];
+    });
+    watch(dataHoraireQuart, (val) => {
+      dataQuart.value = useCalculHoraireQuart(
+        val,
+        debut.value,
+        fini.value,
+        tdebut.value,
+        tfini.value
+      );
+      console.log(dataQuart.value);
+      let eon = [];
+      let eoff = [];
+      let edile = [];
+      dataKm.value = [];
+      dataQuart.value.forEach((dataVal) => {
+        legendCodeQrt.value.push(dataVal.code + '-' + dataVal.quart);
+        dataKmQrt.value.push(dataVal.km);
+        for (let key of Object.keys(dataVal)) {
+          if (key !== 'code' && key !== 'km') legendValQrt.value.push(key);
+        }
+        eon.push(stringToHour(dataVal.eon));
+        eoff.push(stringToHour(dataVal.eoff));
+        edile.push(stringToHour(dataVal.idle));
+      });
+      dataBasQrt.value.push({
+        date: 'eon',
+        data: eon,
+      });
+      dataBasQrt.value.push({
+        date: 'eoff',
+        data: eoff,
+      });
+      dataBasQrt.value.push({
+        date: 'idle',
+        data: edile,
+      });
+      legendValQrt.value = [...new Set(legendValQrt.value)];
+      legendCodeQrt.value = [...new Set(legendCodeQrt.value)];
     });
 
     return {
       actualReport,
       report,
-      header,
       data,
       acquireDate,
       rpl,
@@ -459,10 +397,18 @@ export default defineComponent({
       fini,
       tdebut,
       tfini,
-      headerJour,
       dataJour,
-      headerMois,
-      dataMois,
+      dataHoraire,
+      dataTimes,
+      dataQuart,
+      dataBas,
+      legendVal,
+      legendCode,
+      dataKm,
+      dataBasQrt,
+      legendValQrt,
+      legendCodeQrt,
+      dataKmQrt,
       titleReport,
       plage,
     };

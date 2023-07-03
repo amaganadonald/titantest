@@ -219,4 +219,5 @@ export default {
   DateConso: 'Date Conso',
   parc: 'Parc',
   QteConso: 'Quantite Conso',
+  grapheIntervention: 'Intervention',
 };

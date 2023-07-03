@@ -281,13 +281,14 @@
                           class="table-responsive table-card"
                           style="overflow-x: hidden"
                         >
-                          <TableData
+                          <TablePanne
                             :header="header"
                             :data="data"
                             title="Pannes en cours"
                             tb="pannes"
                             @refreshTable="refreshTable"
                             cbTable="mnDts"
+                            addbtn=""
                           />
                         </div>
                       </div>
@@ -317,14 +318,14 @@ import ProgressBar from '../components/progressBar/ProgressBar.vue';
 import { useRepportStore } from '../stores/repport-store';
 import { useQuasar } from 'quasar';
 import moment from 'moment';
-import TableData from '../components/tables/TableData.vue';
+import TablePanne from '../components/tables/TablePanne.vue';
 
 export default defineComponent({
   name: 'IndexPage',
   components: {
     CardComponent,
     PieChart,
-    TableData,
+    TablePanne,
     ProgressBar,
   },
   setup() {

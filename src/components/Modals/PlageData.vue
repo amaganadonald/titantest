@@ -170,7 +170,13 @@
                   <button type="submit" class="btn btn-secondary">
                     Exportez
                   </button>
-                  <button @click="generateReport()" class="btn btn-primary">
+                  <button
+                    @click="generateReport()"
+                    v-close-popup
+                    class="btn btn-primary"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                  >
                     visualiser
                   </button>
                 </div>
@@ -180,7 +186,7 @@
                 style="height: 6px"
               >
                 <div
-                  class="progress-bar bg-success rounded-0"
+                  class="progress-bar bg-black rounded-0"
                   role="progressbar"
                   style="width: 30%"
                   aria-valuenow="30"
@@ -219,16 +225,17 @@ import { useRepportStore } from '../../stores/repport-store';
 import { useQuasar, date } from 'quasar';
 import { useRetourneMois } from '../../composable/panneReport';
 import { useChangeDate } from '../../composable/panneReport';
+
 export default defineComponent({
   name: 'PlageData',
-  props: ['typeReport'],
+  props: ['typeReport', 'titleReport', 'plage'],
   emits: ['acquireDats'],
   setup(props, context) {
     const store = useSettingStore();
     const consStore = useRepportStore();
     const $q = useQuasar();
-    let deb = ref<Date>(new Date().toISOString().substr(0, 10));
-    let fin = ref<Date>(new Date().toISOString().substr(0, 10));
+    let deb = ref<Date | string>(date.formatDate(new Date(), 'YYYY-MM-DD'));
+    let fin = ref<Date | string>(date.formatDate(new Date(), 'YYYY-MM-DD'));
     let tdeb = ref('00:00');
     let tfin = ref('23:59');
     let famille = ref([]);
@@ -351,26 +358,62 @@ export default defineComponent({
           vehi = vehicle.value;
         }
 
+        if (props.plage === 'mois') {
+          if (flt === 'veh') {
+            txt.value =
+              props.titleReport +
+              ' (' +
+              chgMonth(mois.value) +
+              ') <-> vehicule : ' +
+              listVehicle(vehi);
+          } else {
+            txt.value =
+              props.titleReport +
+              ' (' +
+              chgMonth(mois.value) +
+              ') <-> vehicule : All fleet';
+          }
+        } else {
+          if (flt === 'veh') {
+            vehi = optionsVeh.value;
+            txt.value =
+              props.titleReport +
+              ' (' +
+              useChangeDate(deb.value) +
+              ' ' +
+              tdeb.value +
+              ' au ' +
+              useChangeDate(fin.value) +
+              ' ' +
+              tfin.value +
+              ') <-> vehicule : ' +
+              listVehicle(vehi);
+          } else {
+            txt.value =
+              props.titleReport +
+              ' (' +
+              useChangeDate(deb.value) +
+              ' ' +
+              tdeb.value +
+              ' au ' +
+              useChangeDate(fin.value) +
+              ' ' +
+              tfin.value +
+              ') <-> vehicule : All fleet';
+          }
+        }
+        context.emit(
+          'acquireDats',
+          deb.value,
+          fin.value,
+          tdeb.value,
+          tfin.value,
+          vehi,
+          txt.value,
+          familial
+        );
+
         if (report.value === 'consoTotal') {
-          txt.value =
-            'Consommation Total du ' +
-            useChangeDate(deb.value) +
-            ' ' +
-            tdeb.value +
-            ' au ' +
-            useChangeDate(fin.value) +
-            ' ' +
-            tfin.value;
-          context.emit(
-            'acquireDats',
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            vehi,
-            txt.value,
-            flt
-          );
           await consStore.analyseConso(
             vehi,
             deb.value,
@@ -379,25 +422,6 @@ export default defineComponent({
             tfin.value
           );
         } else if (report.value === 'consoMois') {
-          txt.value =
-            'Consommation Journalière période du ' +
-            useChangeDate(deb.value) +
-            ' ' +
-            tdeb.value +
-            ' au ' +
-            useChangeDate(fin.value) +
-            ' ' +
-            tfin.value;
-          context.emit(
-            'acquireDats',
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            vehi,
-            txt.value,
-            flt
-          );
           await consStore.analyseConsoJour(
             vehi,
             deb.value,
@@ -406,64 +430,8 @@ export default defineComponent({
             tfin.value
           );
         } else if (report.value === 'consoAn') {
-          if (flt === 'veh') {
-            txt.value =
-              'Consommation Mensuelle (' +
-              chgMonth(mois.value) +
-              ') <-> vehicule : ' +
-              listVehicle(vehi);
-          } else {
-            txt.value =
-              'Consommation Mensuelle (' +
-              chgMonth(mois.value) +
-              ') <-> vehicule : All fleet';
-          }
-          context.emit(
-            'acquireDats',
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            vehi,
-            txt.value,
-            flt
-          );
           await consStore.analyseConsoMois(vehi, mois.value);
         } else if (report.value === 'consoMoy') {
-          if (flt === 'veh') {
-            txt.value =
-              'Consommation période du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : ' +
-              listVehicle(vehi);
-          } else {
-            txt.value =
-              'Consommation Moyenne période du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : All fleet';
-          }
-          context.emit(
-            'acquireDats',
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            vehi,
-            txt.value,
-            flt
-          );
           await consStore.analyseConsoMoy(
             vehi,
             deb.value,
@@ -471,255 +439,36 @@ export default defineComponent({
             tdeb.value,
             tfin.value
           );
-        } else if (report.value === 'horaireTotal') {
-          if (flt === 'veh') {
-            txt.value =
-              'Horaire période du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : ' +
-              listVehicle(vehi);
-          } else {
-            txt.value =
-              'Horaire période du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : All fleet';
-          }
-          context.emit(
-            'acquireDats',
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            vehi,
-            txt.value,
-            flt
-          );
+        } else if (
+          report.value === 'horaireTotal' ||
+          report.value === 'graphHoraireTotal'
+        ) {
           await consStore.analyseHoraire(
             vehi,
             deb.value,
             fin.value,
             tdeb.value,
-            tfin.value
-          );
-        } else if (report.value === 'horaireQuart') {
-          if (flt === 'veh') {
-            txt.value =
-              'Horaire par quart du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : ' +
-              listVehicle(vehi);
-          } else {
-            txt.value =
-              'Horaire par quart du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : All fleet';
-          }
-          context.emit(
-            'acquireDats',
-            deb.value,
-            fin.value,
-            tdeb.value,
             tfin.value,
-            vehi,
-            txt.value,
-            flt
+            report.value
           );
+        } else if (
+          report.value === 'horaireQuart' ||
+          report.value === 'grapheHoraireQuart'
+        ) {
           await consStore.analyseHoraireQuart(
             vehi,
             deb.value,
             fin.value,
             tdeb.value,
-            tfin.value
-          );
-        } else if (report.value === 'immoTotal') {
-          if (flt === 'veh') {
-            txt.value =
-              'Immobilisation du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : ' +
-              listVehicle(vehi);
-          } else {
-            txt.value =
-              'Immobilisation du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : All fleet';
-          }
-          context.emit(
-            'acquireDats',
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            vehi,
-            txt.value,
-            flt
-          );
-          await consStore.analyseIntervention(
-            vehi,
-            deb.value,
-            fin.value,
-            tdeb.value,
             tfin.value,
             report.value
           );
-        } else if (report.value === 'immoQuart') {
-          if (flt === 'veh') {
-            txt.value =
-              'Immobilisation Par Quart du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : ' +
-              listVehicle(vehi);
-          } else {
-            txt.value =
-              'Immobilisation Par Quart du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : All fleet';
-          }
-          context.emit(
-            'acquireDats',
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            vehi,
-            txt.value,
-            flt
-          );
-          await consStore.analyseIntervention(
-            vehi,
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            report.value
-          );
-        } else if (report.value === 'dispo') {
-          if (flt === 'veh') {
-            txt.value =
-              '% Disponibilité du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : ' +
-              listVehicle(vehi);
-          } else {
-            txt.value =
-              '% Disponibilité du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : All fleet';
-          }
-          context.emit(
-            'acquireDats',
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            vehi,
-            txt.value,
-            flt
-          );
-          await consStore.analyseIntervention(
-            vehi,
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            report.value
-          );
-        } else if (report.value === 'dispoFamille') {
-          let vehi = optionsVeh.value;
-          if (flt === 'veh') {
-            txt.value =
-              '% Disponibilité Famille du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> Famille : ' +
-              listVehicle(vehi);
-          } else {
-            txt.value =
-              '% Disponibilité du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> Famille : All';
-          }
-          context.emit(
-            'acquireDats',
-            deb.value,
-            fin.value,
-            tdeb.value,
-            tfin.value,
-            vehi,
-            txt.value,
-            familial
-          );
+        } else if (
+          report.value === 'immoTotal' ||
+          report.value === 'immoQuart' ||
+          report.value === 'dispo' ||
+          report.value === 'dispoFamille'
+        ) {
           await consStore.analyseIntervention(
             vehi,
             deb.value,
@@ -729,42 +478,16 @@ export default defineComponent({
             report.value
           );
         } else if (report.value === 'efficience') {
-          let vehi = optionsVeh.value;
-          if (flt === 'veh') {
-            txt.value =
-              'Efficience Parc du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : ' +
-              listVehicle(vehi);
-          } else {
-            txt.value =
-              'Efficience Parc du (' +
-              useChangeDate(deb.value) +
-              ' ' +
-              tdeb.value +
-              ' au ' +
-              useChangeDate(fin.value) +
-              ' ' +
-              tfin.value +
-              ') <-> vehicule : All';
-          }
-          context.emit(
-            'acquireDats',
+          await consStore.analyseEfficience(
+            vehi,
             deb.value,
             fin.value,
             tdeb.value,
             tfin.value,
-            vehi,
-            txt.value,
-            familial
+            report.value
           );
-          await consStore.analyseEfficience(
+        } else if (report.value === 'frequenceDispo') {
+          await consStore.totalImmobilisation(
             vehi,
             deb.value,
             fin.value,
@@ -793,7 +516,6 @@ export default defineComponent({
       await store.allParc();
       dataType.value = optionsType.value;
       dataVeh.value = optionsVeh.value;
-      console.log(props.typeReport);
     });
     return {
       deb,

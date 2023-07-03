@@ -73,6 +73,15 @@
                   <template #item-date="{ date }">
                     {{ changeDateTime(date) }}
                   </template>
+                  <template #item-Datet="{ Datet }">
+                    {{ changeDateTime(Datet) }}
+                  </template>
+                  <template #item-datedeb="{ datedeb }">
+                    {{ changeDateTime(datedeb) }}
+                  </template>
+                  <template #item-datefin="{ datefin }">
+                    {{ changeDateTime(datefin) }}
+                  </template>
                 </EasyDataTable>
               </div>
             </div>
@@ -103,7 +112,15 @@ import { useRetourneMois } from '../../composable/panneReport';
 export default defineComponent({
   name: 'TableRapport',
   components: {},
-  props: ['header', 'data', 'title', 'tb', 'cbTable', 'filename'],
+  props: [
+    'header',
+    'data',
+    'title',
+    'tb',
+    'cbTable',
+    'filename',
+    'titleReport',
+  ],
   emits: ['refreshTable'],
   setup(props, context) {
     const router = useRouter();

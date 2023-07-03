@@ -459,8 +459,6 @@ export default defineComponent({
       headers.value = props.header;
       items.value = props.data;
       titre.value = props.title;
-      console.log(items.value);
-      console.log(dbq.value);
     });
     watch(props, () => {
       items.value = props.data;

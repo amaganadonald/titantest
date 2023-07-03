@@ -44,129 +44,13 @@
                     <!-- item-->
                     <div class="dropdown-header">
                       <h6 class="text-overflow text-muted mb-0 text-uppercase">
-                        Recent Searches
+                        Searches
                       </h6>
-                    </div>
-
-                    <div class="dropdown-item bg-transparent text-wrap">
-                      <a
-                        href="index-2.html"
-                        class="btn btn-soft-secondary btn-sm btn-rounded"
-                        >how to setup <i class="mdi mdi-magnify ms-1"></i
-                      ></a>
-                      <a
-                        href="index-2.html"
-                        class="btn btn-soft-secondary btn-sm btn-rounded"
-                        >buttons <i class="mdi mdi-magnify ms-1"></i
-                      ></a>
-                    </div>
-                    <!-- item-->
-                    <div class="dropdown-header mt-2">
-                      <h6 class="text-overflow text-muted mb-1 text-uppercase">
-                        Pages
-                      </h6>
-                    </div>
-
-                    <!-- item-->
-                    <a
-                      href="javascript:void(0);"
-                      class="dropdown-item notify-item"
-                    >
-                      <i
-                        class="ri-bubble-chart-line align-middle fs-18 text-muted me-2"
-                      ></i>
-                      <span>Analytics Dashboard</span>
-                    </a>
-
-                    <!-- item-->
-                    <a
-                      href="javascript:void(0);"
-                      class="dropdown-item notify-item"
-                    >
-                      <i
-                        class="ri-lifebuoy-line align-middle fs-18 text-muted me-2"
-                      ></i>
-                      <span>Help Center</span>
-                    </a>
-
-                    <!-- item-->
-                    <a
-                      href="javascript:void(0);"
-                      class="dropdown-item notify-item"
-                    >
-                      <i
-                        class="ri-user-settings-line align-middle fs-18 text-muted me-2"
-                      ></i>
-                      <span>My account settings</span>
-                    </a>
-
-                    <!-- item-->
-                    <div class="dropdown-header mt-2">
-                      <h6 class="text-overflow text-muted mb-2 text-uppercase">
-                        Members
-                      </h6>
-                    </div>
-
-                    <div class="notification-list">
-                      <!-- item -->
-                      <a
-                        href="javascript:void(0);"
-                        class="dropdown-item notify-item py-2"
-                      >
-                        <div class="d-flex">
-                          <img
-                            src="../assets/images/users/avatar-2.jpg"
-                            class="me-3 rounded-circle avatar-xs"
-                            alt="user-pic"
-                          />
-                          <div class="flex-1"></div>
-                        </div>
-                      </a>
-                      <!-- item -->
-                      <a
-                        href="javascript:void(0);"
-                        class="dropdown-item notify-item py-2"
-                      >
-                        <div class="d-flex">
-                          <img
-                            src="../assets/images/users/avatar-3.jpg"
-                            class="me-3 rounded-circle avatar-xs"
-                            alt="user-pic"
-                          />
-                          <div class="flex-1">
-                            <h6 class="m-0">David Grasso</h6>
-                            <span class="fs-11 mb-0 text-muted"
-                              >Web Designer</span
-                            >
-                          </div>
-                        </div>
-                      </a>
-                      <!-- item -->
-                      <a
-                        href="javascript:void(0);"
-                        class="dropdown-item notify-item py-2"
-                      >
-                        <div class="d-flex">
-                          <img
-                            src="../assets/images/users/avatar-5.jpg"
-                            class="me-3 rounded-circle avatar-xs"
-                            alt="user-pic"
-                          />
-                          <div class="flex-1">
-                            <h6 class="m-0">Mike Bunch</h6>
-                            <span class="fs-11 mb-0 text-muted"
-                              >React Developer</span
-                            >
-                          </div>
-                        </div>
-                      </a>
                     </div>
                   </div>
 
                   <div class="text-center pt-3 pb-1">
-                    <a
-                      href="pages-search-results.html"
-                      class="btn btn-primary btn-sm"
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm"
                       >View All Results <i class="ri-arrow-right-line ms-1"></i
                     ></a>
                   </div>
@@ -269,99 +153,6 @@
                 <button
                   type="button"
                   class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
-                  data-bs-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <i class="fa-solid fa-house"></i>
-                </button>
-                <div
-                  class="dropdown-menu dropdown-menu-lg p-0 dropdown-menu-end"
-                >
-                  <div
-                    class="p-3 border-top-0 border-start-0 border-end-0 border-dashed border"
-                  >
-                    <div class="row align-items-center">
-                      <div class="col">
-                        <h6 class="m-0 fw-semibold fs-15">Web Apps</h6>
-                      </div>
-                      <div class="col-auto">
-                        <a href="#!" class="btn btn-sm btn-soft-info">
-                          View All Apps
-                          <i class="ri-arrow-right-s-line align-middle"></i
-                        ></a>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="p-2">
-                    <div class="row g-0">
-                      <div class="col">
-                        <a class="dropdown-icon-item" href="#!">
-                          <img
-                            src="../assets/images/brands/github.png"
-                            alt="Github"
-                          />
-                          <span>GitHub</span>
-                        </a>
-                      </div>
-                      <div class="col">
-                        <a class="dropdown-icon-item" href="#!">
-                          <img
-                            src="../assets/images/brands/bitbucket.png"
-                            alt="bitbucket"
-                          />
-                          <span>Bitbucket</span>
-                        </a>
-                      </div>
-                      <div class="col">
-                        <a class="dropdown-icon-item" href="#!">
-                          <img
-                            src="../assets/images/brands/dribbble.png"
-                            alt="dribbble"
-                          />
-                          <span>Dribbble</span>
-                        </a>
-                      </div>
-                    </div>
-
-                    <div class="row g-0">
-                      <div class="col">
-                        <a class="dropdown-icon-item" href="#!">
-                          <img
-                            src="../assets/images/brands/dropbox.png"
-                            alt="dropbox"
-                          />
-                          <span>Dropbox</span>
-                        </a>
-                      </div>
-                      <div class="col">
-                        <a class="dropdown-icon-item" href="#!">
-                          <img
-                            src="../assets/images/brands/mail_chimp.png"
-                            alt="mail_chimp"
-                          />
-                          <span>Mail Chimp</span>
-                        </a>
-                      </div>
-                      <div class="col">
-                        <a class="dropdown-icon-item" href="#!">
-                          <img
-                            src="../assets/images/brands/slack.png"
-                            alt="slack"
-                          />
-                          <span>Slack</span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="dropdown topbar-head-dropdown ms-1 header-item">
-                <button
-                  type="button"
-                  class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
                   id="page-header-cart-dropdown"
                   data-bs-toggle="dropdown"
                   data-bs-auto-close="outside"
@@ -371,7 +162,7 @@
                   <i class="fa-solid fa-envelope"></i>
                   <span
                     class="position-absolute topbar-badge cartitem-badge fs-10 translate-middle badge rounded-pill bg-info"
-                    >5</span
+                    >{{ data.length }}</span
                   >
                 </button>
                 <div
@@ -383,190 +174,40 @@
                   >
                     <div class="row align-items-center">
                       <div class="col">
-                        <h6 class="m-0 fs-16 fw-semibold">My Cart</h6>
+                        <h6 class="m-0 fs-16 fw-semibold">Message</h6>
                       </div>
                       <div class="col-auto">
                         <span class="badge badge-soft-warning fs-13"
-                          ><span class="cartitem-badge">7</span> items</span
+                          ><span class="cartitem-badge">{{ data.length }}</span>
+                          items</span
                         >
                       </div>
                     </div>
                   </div>
                   <div data-simplebar style="max-height: 300px">
                     <div class="p-2">
-                      <div class="text-center empty-cart" id="empty-cart">
-                        <div class="avatar-md mx-auto my-3">
-                          <div
-                            class="avatar-title bg-soft-info text-info fs-36 rounded-circle"
-                          >
-                            <i class="bx bx-cart"></i>
-                          </div>
-                        </div>
-                        <h5 class="mb-3">Your Cart is Empty!</h5>
-                        <a href="#" class="btn btn-success w-md mb-3"
-                          >Shop Now</a
-                        >
-                      </div>
                       <div
                         class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2"
+                        v-for="dt in data"
+                        :key="dt.id"
                       >
                         <div class="d-flex align-items-center">
                           <img
-                            src="../assets/images/products/img-1.png"
+                            :src="hts + dt.vehicule.image"
                             class="me-3 rounded-circle avatar-sm p-2 bg-light"
                             alt="user-pic"
                           />
                           <div class="flex-1">
                             <h6 class="mt-0 mb-1 fs-14">
-                              <a href="#" class="text-reset"
-                                >Branded T-Shirts</a
-                              >
+                              <a href="#" class="text-reset">{{ dt.title }}</a>
                             </h6>
                             <p class="mb-0 fs-12 text-muted">
-                              Quantity: <span>10 x $32</span>
+                              {{ dt.details }}
                             </p>
                           </div>
                           <div class="px-2">
                             <h5 class="m-0 fw-normal">
-                              $<span class="cart-item-price">320</span>
-                            </h5>
-                          </div>
-                          <div class="ps-2">
-                            <button
-                              type="button"
-                              class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"
-                            >
-                              <i class="ri-close-fill fs-16"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div
-                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2"
-                      >
-                        <div class="d-flex align-items-center">
-                          <img
-                            src="../assets/images/products/img-2.png"
-                            class="me-3 rounded-circle avatar-sm p-2 bg-light"
-                            alt="user-pic"
-                          />
-                          <div class="flex-1">
-                            <h6 class="mt-0 mb-1 fs-14">
-                              <a href="#" class="text-reset">Bentwood Chair</a>
-                            </h6>
-                            <p class="mb-0 fs-12 text-muted">
-                              Quantity: <span>5 x $18</span>
-                            </p>
-                          </div>
-                          <div class="px-2">
-                            <h5 class="m-0 fw-normal">
-                              $<span class="cart-item-price">89</span>
-                            </h5>
-                          </div>
-                          <div class="ps-2">
-                            <button
-                              type="button"
-                              class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"
-                            >
-                              <i class="ri-close-fill fs-16"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div
-                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2"
-                      >
-                        <div class="d-flex align-items-center">
-                          <img
-                            src="../assets/images/products/img-3.png"
-                            class="me-3 rounded-circle avatar-sm p-2 bg-light"
-                            alt="user-pic"
-                          />
-                          <div class="flex-1">
-                            <h6 class="mt-0 mb-1 fs-14">
-                              <a href="#" class="text-reset">
-                                Borosil Paper Cup</a
-                              >
-                            </h6>
-                            <p class="mb-0 fs-12 text-muted">
-                              Quantity: <span>3 x $250</span>
-                            </p>
-                          </div>
-                          <div class="px-2">
-                            <h5 class="m-0 fw-normal">
-                              $<span class="cart-item-price">750</span>
-                            </h5>
-                          </div>
-                          <div class="ps-2">
-                            <button
-                              type="button"
-                              class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"
-                            >
-                              <i class="ri-close-fill fs-16"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div
-                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2"
-                      >
-                        <div class="d-flex align-items-center">
-                          <img
-                            src="../assets/images/products/img-6.png"
-                            class="me-3 rounded-circle avatar-sm p-2 bg-light"
-                            alt="user-pic"
-                          />
-                          <div class="flex-1">
-                            <h6 class="mt-0 mb-1 fs-14">
-                              <a href="#" class="text-reset"
-                                >Gray Styled T-Shirt</a
-                              >
-                            </h6>
-                            <p class="mb-0 fs-12 text-muted">
-                              Quantity: <span>1 x $1250</span>
-                            </p>
-                          </div>
-                          <div class="px-2">
-                            <h5 class="m-0 fw-normal">
-                              $ <span class="cart-item-price">1250</span>
-                            </h5>
-                          </div>
-                          <div class="ps-2">
-                            <button
-                              type="button"
-                              class="btn btn-icon btn-sm btn-ghost-secondary remove-item-btn"
-                            >
-                              <i class="ri-close-fill fs-16"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div
-                        class="d-block dropdown-item dropdown-item-cart text-wrap px-3 py-2"
-                      >
-                        <div class="d-flex align-items-center">
-                          <img
-                            src="../assets/images/products/img-5.png"
-                            class="me-3 rounded-circle avatar-sm p-2 bg-light"
-                            alt="user-pic"
-                          />
-                          <div class="flex-1">
-                            <h6 class="mt-0 mb-1 fs-14">
-                              <a href="#" class="text-reset"
-                                >Stillbird Helmet</a
-                              >
-                            </h6>
-                            <p class="mb-0 fs-12 text-muted">
-                              Quantity: <span>2 x $495</span>
-                            </p>
-                          </div>
-                          <div class="px-2">
-                            <h5 class="m-0 fw-normal">
-                              $<span class="cart-item-price">990</span>
+                              {{ dt.vehicule.code }}
                             </h5>
                           </div>
                           <div class="ps-2">
@@ -585,18 +226,12 @@
                     class="p-3 border-bottom-0 border-start-0 border-end-0 border-dashed border"
                     id="checkout-elem"
                   >
-                    <div
-                      class="d-flex justify-content-between align-items-center pb-3"
+                    <a
+                      class="btn btn-success text-center w-100"
+                      href="javascript:void(0);"
                     >
-                      <h5 class="m-0 text-muted">Total:</h5>
-                      <div class="px-2">
-                        <h5 class="m-0" id="cart-item-total">$1258.58</h5>
-                      </div>
-                    </div>
-
-                    <a href="#" class="btn btn-success text-center w-100">
-                      Checkout
-                    </a>
+                      <span @click="goPlanning()">Planning</span></a
+                    >
                   </div>
                 </div>
               </div>
@@ -636,7 +271,8 @@
                   <i class="fa-solid fa-bell"></i>
                   <span
                     class="position-absolute topbar-badge fs-10 translate-middle badge rounded-pill bg-danger"
-                    >3<span class="visually-hidden">unread messages</span></span
+                    >{{ docExpire.length
+                    }}<span class="visually-hidden">unread messages</span></span
                   >
                 </button>
                 <div
@@ -653,7 +289,7 @@
                         </div>
                         <div class="col-auto dropdown-tabs">
                           <span class="badge badge-soft-light fs-13">
-                            4 New</span
+                            {{ docExpire.length }} New</span
                           >
                         </div>
                       </div>
@@ -674,10 +310,10 @@
                             role="tab"
                             aria-selected="true"
                           >
-                            All (4)
+                            Expiré
                           </a>
                         </li>
-                        <li class="nav-item waves-effect waves-light">
+                        <!--li class="nav-item waves-effect waves-light">
                           <a
                             class="nav-link"
                             data-bs-toggle="tab"
@@ -685,20 +321,9 @@
                             role="tab"
                             aria-selected="false"
                           >
-                            Messages
+                            à Programmer
                           </a>
-                        </li>
-                        <li class="nav-item waves-effect waves-light">
-                          <a
-                            class="nav-link"
-                            data-bs-toggle="tab"
-                            href="#alerts-tab"
-                            role="tab"
-                            aria-selected="false"
-                          >
-                            Alerts
-                          </a>
-                        </li>
+                        </li-->
                       </ul>
                     </div>
                   </div>
@@ -719,51 +344,8 @@
                       >
                         <div
                           class="text-reset notification-item d-block dropdown-item position-relative"
-                        >
-                          <div class="d-flex">
-                            <div class="avatar-xs me-3">
-                              <span
-                                class="avatar-title bg-soft-info text-info rounded-circle fs-16"
-                              >
-                                <i class="bx bx-badge-check"></i>
-                              </span>
-                            </div>
-                            <div class="flex-1">
-                              <a href="#!" class="stretched-link">
-                                <h6 class="mt-0 mb-2 lh-base">
-                                  Your <b>Elite</b> author Graphic Optimization
-                                  <span class="text-secondary">reward</span> is
-                                  ready!
-                                </h6>
-                              </a>
-                              <p
-                                class="mb-0 fs-11 fw-medium text-uppercase text-muted"
-                              >
-                                <span
-                                  ><i class="mdi mdi-clock-outline"></i> Just 30
-                                  sec ago</span
-                                >
-                              </p>
-                            </div>
-                            <div class="px-2 fs-15">
-                              <div class="form-check notification-check">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  value=""
-                                  id="all-notification-check01"
-                                />
-                                <label
-                                  class="form-check-label"
-                                  for="all-notification-check01"
-                                ></label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div
-                          class="text-reset notification-item d-block dropdown-item position-relative"
+                          v-for="exp in docExpire"
+                          :key="exp.id"
                         >
                           <div class="d-flex">
                             <img
@@ -773,22 +355,24 @@
                             />
                             <div class="flex-1">
                               <a href="#!" class="stretched-link">
-                                <h6 class="mt-0 mb-1 fs-13 fw-semibold">
-                                  Angela Bernier
+                                <h6
+                                  class="mt-0 mb-1 fs-13 fw-semibold"
+                                  v-if="exp.vehicules.length > 0"
+                                >
+                                  {{ exp.vehicules[0].code }}
                                 </h6>
                               </a>
                               <div class="fs-13 text-muted">
                                 <p class="mb-1">
-                                  Answered to your comment on the cash flow
-                                  forecast's graph 🔔.
+                                  {{ exp.typedocument.libelle }} à renouveller
                                 </p>
                               </div>
                               <p
                                 class="mb-0 fs-11 fw-medium text-uppercase text-muted"
                               >
                                 <span
-                                  ><i class="mdi mdi-clock-outline"></i> 48 min
-                                  ago</span
+                                  ><i class="mdi mdi-clock-outline"></i
+                                  >Expiration : {{ exp.expiration }}</span
                                 >
                               </p>
                             </div>
@@ -803,97 +387,6 @@
                                 <label
                                   class="form-check-label"
                                   for="all-notification-check02"
-                                ></label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div
-                          class="text-reset notification-item d-block dropdown-item position-relative"
-                        >
-                          <div class="d-flex">
-                            <div class="avatar-xs me-3">
-                              <span
-                                class="avatar-title bg-soft-danger text-danger rounded-circle fs-16"
-                              >
-                                <i class="bx bx-message-square-dots"></i>
-                              </span>
-                            </div>
-                            <div class="flex-1">
-                              <a href="#!" class="stretched-link">
-                                <h6 class="mt-0 mb-2 fs-13 lh-base">
-                                  You have received
-                                  <b class="text-success">20</b> new messages in
-                                  the conversation
-                                </h6>
-                              </a>
-                              <p
-                                class="mb-0 fs-11 fw-medium text-uppercase text-muted"
-                              >
-                                <span
-                                  ><i class="mdi mdi-clock-outline"></i> 2 hrs
-                                  ago</span
-                                >
-                              </p>
-                            </div>
-                            <div class="px-2 fs-15">
-                              <div class="form-check notification-check">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  value=""
-                                  id="all-notification-check03"
-                                />
-                                <label
-                                  class="form-check-label"
-                                  for="all-notification-check03"
-                                ></label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div
-                          class="text-reset notification-item d-block dropdown-item position-relative"
-                        >
-                          <div class="d-flex">
-                            <img
-                              src="../assets/images/users/avatar-8.jpg"
-                              class="me-3 rounded-circle avatar-xs"
-                              alt="user-pic"
-                            />
-                            <div class="flex-1">
-                              <a href="#!" class="stretched-link">
-                                <h6 class="mt-0 mb-1 fs-13 fw-semibold">
-                                  Maureen Gibson
-                                </h6>
-                              </a>
-                              <div class="fs-13 text-muted">
-                                <p class="mb-1">
-                                  We talked about a project on linkedin.
-                                </p>
-                              </div>
-                              <p
-                                class="mb-0 fs-11 fw-medium text-uppercase text-muted"
-                              >
-                                <span
-                                  ><i class="mdi mdi-clock-outline"></i> 4 hrs
-                                  ago</span
-                                >
-                              </p>
-                            </div>
-                            <div class="px-2 fs-15">
-                              <div class="form-check notification-check">
-                                <input
-                                  class="form-check-input"
-                                  type="checkbox"
-                                  value=""
-                                  id="all-notification-check04"
-                                />
-                                <label
-                                  class="form-check-label"
-                                  for="all-notification-check04"
                                 ></label>
                               </div>
                             </div>
@@ -1528,7 +1021,7 @@
                             $t('graphefficience')
                           }}</router-link>
                         </li>
-                        <li
+                        <!--li
                           class="nav-item"
                           v-if="menu.includes('grapheDisponibilite')"
                         >
@@ -1537,23 +1030,23 @@
                             class="nav-link"
                             >{{ $t('grapheDisponibilite') }}</router-link
                           >
-                        </li>
+                        </li-->
                         <li
                           class="nav-item"
                           v-if="menu.includes('graphefrequence')"
                         >
                           <router-link to="/graphefrequence" class="nav-link">{{
-                            $t('graphefrequence')
+                            $t('grapheIntervention')
                           }}</router-link>
                         </li>
-                        <li
+                        <!--li
                           class="nav-item"
                           v-if="menu.includes('graphepercent')"
                         >
                           <router-link to="/graphepercent" class="nav-link">{{
                             $t('graphepercent')
                           }}</router-link>
-                        </li>
+                        </li-->
                       </ul>
                     </div>
                   </div>
@@ -1627,19 +1120,9 @@
                 </a>
                 <div class="collapse menu-dropdown" id="sidebarForms">
                   <ul class="nav nav-sm flex-column">
-                    <li class="nav-item" v-if="menu.includes('imppanne')">
-                      <router-link to="/imppanne" class="nav-link">{{
-                        $t('imppanne')
-                      }}</router-link>
-                    </li>
                     <li class="nav-item" v-if="menu.includes('impact')">
                       <router-link to="/impact" class="nav-link">{{
                         $t('impact')
-                      }}</router-link>
-                    </li>
-                    <li class="nav-item" v-if="menu.includes('impscons')">
-                      <router-link to="/impscons" class="nav-link">{{
-                        $t('impscons')
                       }}</router-link>
                     </li>
                     <li class="nav-item" v-if="menu.includes('impevent')">
@@ -2967,24 +2450,6 @@
             </div>
           </div>
         </div>
-        <div class="offcanvas-footer border-top p-3 text-center">
-          <div class="row">
-            <div class="col-6">
-              <button
-                type="button"
-                class="btn btn-light w-100"
-                id="reset-layout"
-              >
-                Reset
-              </button>
-            </div>
-            <div class="col-6">
-              <a href="#" target="_blank" class="btn btn-primary w-100"
-                >Buy Now</a
-              >
-            </div>
-          </div>
-        </div>
       </div>
       <q-page-container>
         <router-view />
@@ -2994,11 +2459,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onMounted, ref } from 'vue';
+import { defineComponent, onBeforeMount, onMounted, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import appjs from '../assets/js/app.js';
 import { useRouter } from 'vue-router/dist/vue-router';
+import { useMaintenanceStore } from 'src/stores/maintenance-store';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -3006,11 +2472,15 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const router = useRouter();
+    const store = useMaintenanceStore();
+    let data = computed(() => store.dataEntretienStatus);
+    let docExpire = computed(() => store.docExpire);
     const menu = ref([]);
     let usr = ref('');
     let profile = ref('');
     let ig = ref('');
     let host = ref('');
+    let hts = ref('');
     const getImageUrl = (img: any) => {
       return new URL(`../assets/images/${img}`, import.meta.url);
     };
@@ -3040,8 +2510,15 @@ export default defineComponent({
       });
     };
 
+    const goPlanning = () => {
+      router.push('/entretien').catch(() => {
+        console.log('erreur navigation');
+      });
+    };
+
     const chargeFr = () => {
       icon.value = getImageUrl('france.svg');
+      $q.cookies.set('lang', 'fr');
       locale.value = 'fr';
       return icon;
     };
@@ -3049,6 +2526,7 @@ export default defineComponent({
     const chargeEn = () => {
       icon.value = getImageUrl('en.svg');
       locale.value = 'en-US';
+      $q.cookies.set('lang', 'en-US');
       return icon;
     };
     onBeforeMount(() => {
@@ -3058,6 +2536,7 @@ export default defineComponent({
       locale.value = $q.cookies.get('lang');
       menu.value = $q.cookies.get('mem');
       host.value = $q.cookies.get('ht') + $q.cookies.get('phot');
+      hts.value = $q.cookies.get('ht');
       if (locale.value === 'fr') {
         chargeFr();
       } else {
@@ -3066,6 +2545,8 @@ export default defineComponent({
     });
     onMounted(async () => {
       await appjs();
+      await store.allEntretienStatus();
+      await store.allDocumentsExpire();
     });
     return {
       chargeEn,
@@ -3078,6 +2559,10 @@ export default defineComponent({
       profile,
       ig,
       host,
+      data,
+      goPlanning,
+      hts,
+      docExpire,
     };
   },
 });

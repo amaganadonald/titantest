@@ -214,7 +214,6 @@ export default defineComponent({
         await store.login(user.value, passwd.value);
         //console.log(store.user);
         if (store.status === 200) {
-          console.log(store.user);
           retrouneMenu(store.user.user.profil.menus);
           $q.cookies.set('uidt988', new Date().toISOString());
           $q.cookies.set('nbs', store.user.user.id);

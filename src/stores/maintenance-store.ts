@@ -9,6 +9,9 @@ export const useMaintenanceStore = defineStore('maintenance', {
     dataPanne: [],
     panneNlivre: [],
     dataPanneCode: [],
+    dataEntretien: [],
+    dataEntretienStatus: [],
+    docExpire: [],
   }),
   getters: {
     //doubleCount: (state) => state.counter * 2,
@@ -188,6 +191,89 @@ export const useMaintenanceStore = defineStore('maintenance', {
           console.log(error);
         }
       } /* -----------------End Intervention------------------------ */
+    },
+    async allEntretien() {
+      this.loading = true;
+      try {
+        const req = await api.get('/api/allEntretien', {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        this.dataEntretien = req.data.entretien;
+        console.log(this.dataEntretien);
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async allEntretienStatus() {
+      this.loading = true;
+      try {
+        const req = await api.get('/api/allEntretienStatus', {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        this.dataEntretienStatus = req.data.entretien;
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async manageDataEntretien(data: object, op: string, id: string | number) {
+      if (op === 'add') {
+        try {
+          await api.post('/api/addEntretien', data, {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          });
+          await this.allEntretien();
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (op === 'edit') {
+        try {
+          await api.patch(`/api/updateEntretien/${id}`, data, {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          });
+          await this.allEntretien();
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (op === 'delete') {
+        try {
+          await api.delete(`/api/deleteEntretien/${id}`, {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          });
+          await this.allEntretien();
+        } catch (error) {
+          console.log(error);
+        }
+      } /* -----------------End Intervention------------------------ */
+    },
+    async allDocumentsExpire() {
+      this.loading = true;
+      try {
+        const req = await api.get('/api/allDocumentsExpire', {
+          headers: {
+            Authorization: 'Bearer ' + Cookies.get('tk'),
+          },
+        });
+        this.docExpire = req.data.documents;
+        console.log(this.docExpire);
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
     },
   },
 });

@@ -92,18 +92,13 @@
                   </div>
                 </div>
               </div>
+
               <button
-                v-if="
-                  $t($props.title) === 'conso' || $t($props.title) === 'panne'
-                "
-                @click="openUpload()"
+                v-if="btnadd === 'add'"
+                @click="addItem()"
                 type="button"
-                class="btn btn-secondary"
+                class="btn btn-primary"
               >
-                <q-tooltip>Upload Data</q-tooltip>
-                <i class="fa-solid fa-cloud-arrow-up"></i> Import
-              </button>
-              <button @click="addItem()" type="button" class="btn btn-primary">
                 <q-tooltip>Add data</q-tooltip>
                 <i class="fa-solid fa-circle-plus"></i> Add Data
               </button>
@@ -124,24 +119,6 @@
       <div class="col-xl-12">
         <div class="card">
           <div class="card-body">
-            <q-dialog
-              v-model="upl"
-              position="right"
-              seamless
-              transition-show="fade"
-              transition-hide="slide-down"
-            >
-              <q-card style="width: 600px; max-width: 60vw">
-                <q-card-section>
-                  <UploadData
-                    operation="Import"
-                    :titles="titre"
-                    :tbname="$props.tb"
-                    @closeModalUpl="closeModalUpl"
-                  />
-                </q-card-section>
-              </q-card>
-            </q-dialog>
             <q-dialog
               v-model="seamless"
               position="right"
@@ -492,7 +469,6 @@ import type {
 import ManageDataVue from '../Modals/ManageData.vue';
 import ComplexData from '../Modals/ComplexData.vue';
 import { useSettingStore } from '../../stores/settings-store';
-import UploadData from '../Modals/UploadData.vue';
 import { date, useQuasar } from 'quasar';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
@@ -500,13 +476,12 @@ import { useRouter } from 'vue-router';
 import { api } from 'boot/axios';
 
 export default defineComponent({
-  name: 'TableData',
+  name: 'TablePanne',
   components: {
     ManageDataVue,
     ComplexData,
-    UploadData,
   },
-  props: ['header', 'data', 'title', 'tb', 'cbTable'],
+  props: ['header', 'data', 'title', 'tb', 'cbTable', 'addbtn'],
   emits: ['refreshTable'],
   setup(props, context) {
     const router = useRouter();
@@ -520,7 +495,8 @@ export default defineComponent({
     let operation = ref('');
     const store = useSettingStore();
     let titre = ref('');
-    let upl = ref(false);
+    let btnadd = ref('');
+    // let db = ref(props.data)
     const opeData = ref<object>([]);
     const itemsSelected = ref<Item[]>([]);
     const sortBy: string[] = ['number', 'weight'];
@@ -578,16 +554,13 @@ export default defineComponent({
     const closeModal = () => {
       seamless.value = false;
     };
-    const closeModalUpl = () => {
-      upl.value = false;
-    };
     const refreshTable = () => {
       context.emit('refreshTable');
     };
     onMounted(() => {
       headers.value = props.header;
       items.value = props.data;
-      console.log(api);
+      btnadd.value = props.addbtn;
     });
     const changeDate = (dbs: string | number | Date) => {
       return date.formatDate(dbs, 'DD-MM-YYYY');
@@ -603,9 +576,6 @@ export default defineComponent({
     };
     const goToVehicle = (code: number | string) => {
       router.push(`/parcMateriels/${code}`);
-    };
-    const openUpload = () => {
-      upl.value = true;
     };
     let exportToCSV = () => {
       let csvData = props.data;
@@ -659,9 +629,7 @@ export default defineComponent({
       getImageUrl,
       goToVehicle,
       changeDateTime,
-      openUpload,
-      upl,
-      closeModalUpl,
+      btnadd,
     };
   },
 });

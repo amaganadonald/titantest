@@ -32,13 +32,14 @@ export const appjs = () => {
   let dats = {
     lang: 'en',
     'data-layout': 'vertical',
-    'data-topbar': 'light',
+    'data-topbar': 'dark',
     'data-sidebar': 'dark',
     'data-sidebar-size': 'lg',
     'data-sidebar-image': 'none',
     'data-preloader': 'disable',
   };
   sessionStorage.setItem('data-sidebar', 'dark');
+  sessionStorage.setItem('data-topbar', 'dark');
   sessionStorage.setItem('defaultAttribute', JSON.stringify(dats));
   sessionStorage.setItem('data-layout', 'vertical');
   //-----------------------------------Language------------------------------------------

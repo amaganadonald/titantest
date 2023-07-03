@@ -9,13 +9,13 @@
               <div
                 class="page-title-box d-sm-flex align-items-center justify-content-between"
               >
-                <h4 class="mb-sm-0">RAPPORT PANNES</h4>
+                <h4 class="mb-sm-0">GRAPHE PANNES</h4>
                 <div class="page-title-right">
                   <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
-                      <a href="javascript: void(0);">Rapport</a>
+                      <a href="javascript: void(0);">Graphe</a>
                     </li>
-                    <li class="breadcrumb-item active">Immobilisation</li>
+                    <li class="breadcrumb-item active">pannes</li>
                   </ol>
                 </div>
               </div>
@@ -53,7 +53,7 @@
                             @click="
                               actualReport(
                                 'immoTotal',
-                                'Immobilisation du ',
+                                'Graphe Immobilisation du ',
                                 'select'
                               )
                             "
@@ -132,6 +132,29 @@
                             ></i
                             >Disponibilté Famille
                           </div>
+                          <div
+                            class="external-event fc-event bg-soft-warning text-warning"
+                            data-class="bg-soft-warning"
+                            id="pills-frequance-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#pills-frequance"
+                            type="button"
+                            role="tab"
+                            aria-controls="pills-frequance"
+                            aria-selected="false"
+                            @click="
+                              actualReport(
+                                'frequenceDispo',
+                                'Frequence Intervention du ',
+                                'select'
+                              )
+                            "
+                          >
+                            <i
+                              class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
+                            ></i
+                            >% et Frequence Intervention
+                          </div>
                         </ul>
                       </div>
                     </div>
@@ -150,13 +173,11 @@
                           aria-labelledby="pills-bill-info-tab"
                         >
                           <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="header"
-                              :data="dataPanne"
-                              @refreshTable="refreshTables"
+                            <BarChart
+                              :legendConsoTot="legendImmo"
+                              :dataConso="dataImmo"
                               :title="rpl"
-                              filename="export_immo"
+                              unite="H"
                             />
                           </div>
                         </div>
@@ -167,13 +188,11 @@
                           aria-labelledby="pills-bill-address-tab"
                         >
                           <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="headerQuart"
-                              :data="dataQuart"
-                              @refreshTable="refreshTables"
+                            <BarChartInverse
+                              :legendConsoTot="legendImmoQrt"
+                              :dataConso="dataImmoQrt"
                               :title="rpl"
-                              filename="export_Quart"
+                              unite="H"
                             />
                           </div>
                         </div>
@@ -184,13 +203,11 @@
                           aria-labelledby="pills-payment-tab"
                         >
                           <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="headerDisponibilite"
-                              :data="dataDisponibilite"
-                              @refreshTable="refreshTables"
+                            <BarChartLine
+                              :legendConsoTot="legendDispo"
+                              :dataConso="dataDispo"
                               :title="rpl"
-                              filename="export_sisponibilite"
+                              unite="%"
                             />
                           </div>
                         </div>
@@ -201,13 +218,30 @@
                           aria-labelledby="pills-famille-tab"
                         >
                           <div>
-                            <h5 class="mb-1">{{ rpl }}</h5>
-                            <TableRapport
-                              :header="headerDisponibiliteF"
-                              :data="dataDisponibiliteF"
-                              @refreshTable="refreshTables"
+                            <BarChartLine
+                              :legendConsoTot="legendDispoF"
+                              :dataConso="dataDispoF"
                               :title="rpl"
-                              filename="export_sisponibilite"
+                              unite="%"
+                            />
+                          </div>
+                        </div>
+                        <div
+                          class="tab-pane fade"
+                          id="pills-frequance"
+                          role="tabpanel"
+                          aria-labelledby="pills-frequance-tab"
+                        >
+                          <div>
+                            <PieChartData
+                              :legend="legendePie"
+                              :titre="titlePie"
+                              :dataGraph="dataPieGraph"
+                            />
+                            <PieChart
+                              :legend="legendePieF"
+                              :titre="titlePieF"
+                              :dataGraph="dataPieGraphF"
                             />
                           </div>
                         </div>
@@ -232,7 +266,11 @@
 import { defineComponent, ref, computed, watch } from 'vue';
 import PlageData from '../components/Modals/PlageData.vue';
 import { useRepportStore } from '../stores/repport-store';
-import TableRapport from 'src/components/tables/TableRapport.vue';
+import BarChart from 'src/components/charts/BarChart.vue';
+import BarChartInverse from 'src/components/charts/BarChartInverse.vue';
+import BarChartLine from 'src/components/charts/BarChartLine.vue';
+import PieChart from '../components/charts/PieChart.vue';
+import PieChartData from '../components/charts/PieChartData.vue';
 import {
   useCalculImmoPanne,
   useCalculImmoPanneQuart,
@@ -242,8 +280,15 @@ import {
 import { dataCons } from '../types/dataCons';
 import { dataconsDate } from '../types/dataCons';
 export default defineComponent({
-  name: 'RapIntervention',
-  components: { PlageData, TableRapport },
+  name: 'GrapheIntervention',
+  components: {
+    PlageData,
+    BarChart,
+    BarChartInverse,
+    BarChartLine,
+    PieChart,
+    PieChartData,
+  },
   setup() {
     const consStore = useRepportStore();
     let report = ref('');
@@ -252,6 +297,7 @@ export default defineComponent({
     let dataPanne = ref([]);
     let databaseDispo = computed(() => consStore.dispoData);
     let databaseDispoF = computed(() => consStore.dispoFamille);
+    let databaseImmo = computed(() => consStore.totalImmo);
     let dataTimes = ref([]);
     let dataQuart = ref([]);
     let dataJour = ref<dataconsDate[]>([]);
@@ -267,193 +313,20 @@ export default defineComponent({
     let dataDisponibiliteF = ref([]);
     let titleReport = ref<string>('');
     let plage = ref<string>('');
-    const header = [
-      {
-        text: 'Code',
-        value: 'code',
-        sortable: true,
-        type: 'string',
-        title: 'Code',
-        dataKey: 'code',
-      },
-      {
-        text: 'Immat',
-        value: 'Immat',
-        sortable: true,
-        type: 'string',
-        title: 'Immat',
-        dataKey: 'Immat',
-      },
-      {
-        text: 'Famille',
-        value: 'famille',
-        sortable: true,
-        type: 'string',
-        title: 'Famille',
-        dataKey: 'famille',
-      },
-      {
-        text: 'Type',
-        value: 'typeVeh',
-        sortable: true,
-        type: 'string',
-        title: 'Type',
-        dataKey: 'typeVeh',
-      },
-      {
-        text: 'Temps panne',
-        value: 'tpsimmo',
-        sortable: true,
-        type: 'number',
-        title: 'Temps en panne',
-        dataKey: 'tpsimmo',
-      },
-    ];
-    const headerQuart = [
-      {
-        text: 'Code',
-        value: 'code',
-        sortable: true,
-        type: 'string',
-        title: 'Code',
-        dataKey: 'code',
-      },
-      {
-        text: 'Immat',
-        value: 'Immat',
-        sortable: true,
-        type: 'string',
-        title: 'Immat',
-        dataKey: 'Immat',
-      },
-      {
-        text: 'Famille',
-        value: 'famille',
-        sortable: true,
-        type: 'string',
-        title: 'Famille',
-        dataKey: 'famille',
-      },
-      {
-        text: 'Type',
-        value: 'typeVeh',
-        sortable: true,
-        type: 'string',
-        title: 'Type',
-        dataKey: 'typeVeh',
-      },
-      {
-        text: 'Quart I',
-        value: 'quart1',
-        sortable: true,
-        type: 'number',
-        title: 'Quart I',
-        dataKey: 'quart1',
-      },
-      {
-        text: 'Quart II',
-        value: 'quart2',
-        sortable: true,
-        type: 'number',
-        title: 'Quart II',
-        dataKey: 'quart2',
-      },
-      {
-        text: 'Quart III',
-        value: 'quart3',
-        sortable: true,
-        type: 'number',
-        title: 'Quart III',
-        dataKey: 'quart3',
-      },
-      {
-        text: 'Total',
-        value: 'total',
-        sortable: true,
-        type: 'number',
-        title: 'Total Immo',
-        dataKey: 'total',
-      },
-    ];
-
-    const headerDisponibilite = [
-      {
-        text: 'Code',
-        value: 'code',
-        sortable: true,
-        type: 'string',
-        title: 'Code',
-        dataKey: 'code',
-      },
-      {
-        text: 'Immat',
-        value: 'Immat',
-        sortable: true,
-        type: 'string',
-        title: 'Immat',
-        dataKey: 'Immat',
-      },
-      {
-        text: 'Famille',
-        value: 'famille',
-        sortable: true,
-        type: 'string',
-        title: 'Famille',
-        dataKey: 'famille',
-      },
-      {
-        text: 'Type',
-        value: 'typeVeh',
-        sortable: true,
-        type: 'string',
-        title: 'Type',
-        dataKey: 'typeVeh',
-      },
-      {
-        text: '% disponibilte',
-        value: 'tpsdispo',
-        sortable: true,
-        type: 'number',
-        title: '% disponibilte',
-        dataKey: 'tpsdispo',
-      },
-      {
-        text: '% panne',
-        value: 'tpspanne',
-        sortable: true,
-        type: 'number',
-        title: '% panne',
-        dataKey: 'tpspanne',
-      },
-    ];
-
-    const headerDisponibiliteF = [
-      {
-        text: 'Famille',
-        value: 'famille',
-        sortable: true,
-        type: 'string',
-        title: 'Famille',
-        dataKey: 'famille',
-      },
-      {
-        text: '% disponibilte',
-        value: 'tpsdispo',
-        sortable: true,
-        type: 'number',
-        title: '% disponibilte',
-        dataKey: 'tpsdispo',
-      },
-      {
-        text: '% panne',
-        value: 'tpspanne',
-        sortable: true,
-        type: 'number',
-        title: '% panne',
-        dataKey: 'tpspanne',
-      },
-    ];
-
+    let legendImmo = ref([]);
+    let dataImmo = ref([]);
+    let legendImmoQrt = ref([]);
+    let dataImmoQrt = ref([]);
+    let legendDispo = ref([]);
+    let dataDispo = ref([]);
+    let legendDispoF = ref([]);
+    let dataDispoF = ref([]);
+    let titlePie = ref('Frequence Type de panne');
+    let legendePie = ref([]);
+    let dataPieGraph = ref([]);
+    let titlePieF = ref('Pourcentage Type de panne');
+    let legendePieF = ref([]);
+    let dataPieGraphF = ref([]);
     const acquireDate = (
       deb: Date,
       fin: Date,
@@ -497,6 +370,8 @@ export default defineComponent({
     };
 
     watch(dataBasePanne, (val) => {
+      legendImmo.value = [];
+      dataImmo.value = [];
       dataPanne.value = useCalculImmoPanne(
         dataBasePanne.value,
         debut.value,
@@ -504,9 +379,14 @@ export default defineComponent({
         tdebut.value,
         tfini.value
       );
+      dataPanne.value.forEach((dt) => {
+        legendImmo.value.push(dt.code);
+        dataImmo.value.push(((dt.immo / 86400) * 24).toFixed(2));
+      });
     });
     watch(dataBasePanneQuart, (val) => {
-      console.log(dataBasePanneQuart.value);
+      legendImmoQrt.value = [];
+      dataImmoQrt.value = [];
       dataQuart.value = useCalculImmoPanneQuart(
         dataBasePanneQuart.value,
         debut.value,
@@ -514,6 +394,60 @@ export default defineComponent({
         tdebut.value,
         tfini.value
       );
+      let quart1 = [];
+      let quart2 = [];
+      let quart3 = [];
+      dataQuart.value.forEach((ds) => {
+        for (let r of Object.keys(ds)) {
+          if (r === 'immoQuart1') {
+            legendImmoQrt.value.push(ds.code);
+            quart1.push(((ds.immoQuart1 / 86400) * 24).toFixed(2));
+          } else if (r === 'immoQuart2') {
+            legendImmoQrt.value.push(ds.code);
+            quart2.push(((ds.immoQuart2 / 86400) * 24).toFixed(2));
+          } else if (r === 'immoQuart3') {
+            legendImmoQrt.value.push(ds.code);
+            quart3.push(((ds.immoQuart3 / 86400) * 24).toFixed(2));
+          }
+        }
+      });
+      legendImmoQrt.value = [...new Set(legendImmoQrt.value)];
+      dataImmoQrt.value.push({
+        name: 'Quart 1',
+        type: 'bar',
+        data: quart1,
+        label: {
+          show: true,
+          formatter: '{c} H',
+          position: 'right',
+          distance: 0,
+        },
+      });
+      dataImmoQrt.value.push({
+        name: 'Quart 2',
+        type: 'bar',
+        data: quart2,
+        label: {
+          show: true,
+          formatter: '{c} H',
+          position: 'right',
+          distance: 0,
+        },
+      });
+      dataImmoQrt.value.push({
+        name: 'Quart 3',
+        type: 'bar',
+        data: quart3,
+        itemStyle: {
+          color: '#a90000',
+        },
+        label: {
+          show: true,
+          formatter: '{c} H',
+          position: 'right',
+          distance: 0,
+        },
+      });
     });
 
     watch(databaseDispo, (val) => {
@@ -524,6 +458,11 @@ export default defineComponent({
         tdebut.value,
         tfini.value
       );
+      //console.log(dataDisponibilite.value);
+      dataDisponibilite.value.forEach((dt) => {
+        legendDispo.value.push(dt.code);
+        dataDispo.value.push(Number(dt.tpsdispo));
+      });
     });
 
     watch(databaseDispoF, (val) => {
@@ -536,12 +475,30 @@ export default defineComponent({
         tfini.value,
         vehs.value
       );
+      dataDisponibiliteF.value.forEach((dt) => {
+        legendDispoF.value.push(dt.famille);
+        dataDispoF.value.push(Number(dt.tpsdispo));
+      });
+    });
+    watch(databaseImmo, (val) => {
+      databaseImmo.value.forEach((dt) => {
+        console.log(dt);
+        dataPieGraph.value.push({
+          value: dt.totalpanne,
+          name: dt.type_panne.libelle,
+        });
+        legendePie.value.push(dt.type_panne.libelle);
+        dataPieGraphF.value.push({
+          value: ((dt.totalpanne / databaseImmo.value.length) * 100).toFixed(2),
+          name: dt.type_panne.libelle,
+        });
+        legendePie.value.push(dt.type_panne.libelle);
+      });
     });
 
     return {
       actualReport,
       report,
-      header,
       data,
       acquireDate,
       rpl,
@@ -550,18 +507,29 @@ export default defineComponent({
       fini,
       tdebut,
       tfini,
-      headerQuart,
       dataJour,
       dataPanne,
       dataTimes,
       dataQuart,
       dataBasePanne,
-      headerDisponibilite,
       dataDisponibilite,
-      headerDisponibiliteF,
       dataDisponibiliteF,
       titleReport,
       plage,
+      legendImmo,
+      dataImmo,
+      legendImmoQrt,
+      dataImmoQrt,
+      legendDispo,
+      dataDispo,
+      legendDispoF,
+      dataDispoF,
+      titlePie,
+      legendePie,
+      dataPieGraph,
+      titlePieF,
+      legendePieF,
+      dataPieGraphF,
     };
   },
 });

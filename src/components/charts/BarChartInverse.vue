@@ -1,19 +1,22 @@
 <template>
   <div>
     <v-chart
-      ondblclick="openSubGraph()"
       class="chart"
       :option="barOption"
-      style="width: 900px; height: 400px"
+      style="width: 800px; height: 400px"
+      ref="chart"
+      @click="selectBar"
+      @zr:click="outsideBarClick"
     />
   </div>
 </template>
+
 <script>
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent, ref, computed, watch } from 'vue';
 
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
-import { BarChart } from 'echarts/charts';
+import { BarChart, LineChart } from 'echarts/charts';
 import {
   TitleComponent,
   TooltipComponent,
@@ -31,44 +34,38 @@ use([
   LegendComponent,
   GridComponent,
   ToolboxComponent,
+  LineChart,
 ]);
 export default defineComponent({
-  name: 'MultipleBarChart',
-  props: [
-    'legend',
-    'codeBar',
-    'title',
-    'dataConso',
-    'legendConsoDatJr',
-    'unite',
-  ],
+  name: 'BarChartInverse',
   components: {
     VChart,
   },
   provide: {
-    [THEME_KEY]: 'blue', //dark, light
+    [THEME_KEY]: 'blue', //dark, light, blue
   },
+  props: ['legendConsoTot', 'dataConso', 'title', 'unite'],
 
-  setup(props, context) {
-    let titres = ref(props.title);
+  setup(props) {
+    const dataLegend = computed(() => props.legendConsoTot);
+    const dataConsos = computed(() => props.dataConso);
+    const titles = computed(() => props.title);
     const barOption = ref({
       textStyle: {
         fontFamily: 'Inter, "Helvetica Neue", Arial, sans-serif',
       },
       title: {
-        text: titres.value + '\n' + 'vehicules',
+        text: titles,
         left: 'center',
-        subtext: 'vehicle',
       },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
           type: 'shadow',
         },
-        formatter: '{a} <br/>{b} : {c} L',
+        formatter: '{a} <br/>{b} : {c} ' + props.unite,
       },
       legend: {
-        data: props.legend,
         orient: 'vertical',
         bottom: 'bottom',
       },
@@ -93,54 +90,58 @@ export default defineComponent({
       },
       xAxis: [
         {
-          type: 'category',
-          axisTick: { show: false },
-          data: props.legendConsoDatJr,
+          type: 'value',
+          axisLine: {
+            show: false,
+          },
+          axisTick: {
+            show: true,
+          },
+          axisLabel: {
+            color: '#999',
+          },
         },
       ],
       yAxis: [
         {
-          type: 'value',
+          type: 'category',
+          data: dataLegend.value,
+          axisTick: {
+            alignWithLabel: true,
+          },
         },
       ],
-      series: props.dataConso,
-    });
-
-    watch(props, (value) => {
-      console.log(value);
-      barOption.value.legend.data = value.legendConsoDatJr;
-      barOption.value.xAxis[0].data = value.legend;
-      barOption.value.title.text = value.title;
-      let dataFinal = [];
-      value.dataConso.forEach((dtc) => {
-        dataFinal.push({
-          name: dtc.date,
+      series: [
+        /* {
+          name: 'Immo',
           type: 'bar',
-          barWidth: '30%',
-          barGap: 0,
-          emphasis: {
-            focus: 'series',
+          barWidth: '10%',
+          data: dataConsos.value,
+          showBackground: true,
+          backgroundStyle: {
+            color: 'rgba(180, 180, 180, 0.4)',
           },
-          data: dtc.data,
           label: {
             show: true,
             formatter: '{c} ' + props.unite,
             position: 'top',
             distance: 0,
           },
-        });
-      });
-      barOption.value.series = dataFinal;
+        },*/
+      ],
     });
-
-    const openSubGraph = (event) => {
+    const outsideBarClick = (event) => {
       console.log(event);
     };
+    watch(props, (value) => {
+      barOption.value.yAxis[0].data = dataLegend.value;
+      barOption.value.series = dataConsos.value;
+    });
 
     return {
       barOption,
-      titres,
-      openSubGraph,
+      dataLegend,
+      outsideBarClick,
     };
   },
 });

@@ -49,7 +49,6 @@ const useCalcul_immo_panne_active = (tab: [], datedeb: Date, datefin: Date) => {
 const calculImmo = (data: object, debutRange: Date, finRange: Date) => {
   let deb = debutRange;
   let fin = finRange;
-  console.log(data);
   if (moment(new Date(data.DateImmo)).isAfter(moment(deb))) {
     deb = data.DateImmo;
   }
@@ -171,7 +170,7 @@ const useCalculImmoPanneQuart = (
         }
       });
     }
-    console.log(veh);
+    // console.log(veh);
     tabFinal.push({
       code: veh.vehicule.code,
       panneId: veh.idpanne,
@@ -223,7 +222,7 @@ const useCalculImmoPanne = (
       });
     }
   });
-  console.log(tabFinal);
+  //console.log(tabFinal);
   return tabFinal;
 };
 
@@ -384,6 +383,7 @@ const useCalculHoraireQuart = (
   tdeb,
   tfin
 ) => {
+  console.log(tab);
   const dataFinal = [];
   const debutQuart1 = datedeb + ' ' + '05:00';
   const finQuart1 = datedeb + ' ' + '13:00';

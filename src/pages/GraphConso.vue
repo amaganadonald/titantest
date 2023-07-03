@@ -35,6 +35,8 @@
                       <PlageData
                         :typeReport="report"
                         @acquireDats="acquireDate"
+                        :titleReport="titleReport"
+                        :plage="plage"
                       />
                       <div class="step-arrow-nav mt-n3 mx-n3 mb-3">
                         <br />
@@ -52,7 +54,13 @@
                             role="tab"
                             aria-controls="pills-bill-info"
                             aria-selected="false"
-                            @click="actualReport('consoTotal')"
+                            @click="
+                              actualReport(
+                                'consoTotal',
+                                'Conso Totale du ',
+                                'select'
+                              )
+                            "
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
@@ -69,7 +77,13 @@
                             role="tab"
                             aria-controls="pills-bill-address"
                             aria-selected="false"
-                            @click="actualReport('consoMois')"
+                            @click="
+                              actualReport(
+                                'consoMois',
+                                'Conso Journalière du ',
+                                'select'
+                              )
+                            "
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
@@ -86,7 +100,13 @@
                             role="tab"
                             aria-controls="pills-payment"
                             aria-selected="false"
-                            @click="actualReport('consoAn')"
+                            @click="
+                              actualReport(
+                                'consoAn',
+                                'Conso Journalière du ',
+                                'mois'
+                              )
+                            "
                           >
                             <i
                               class="mdi mdi-checkbox-blank-circle font-size-11 me-2"
@@ -131,6 +151,7 @@
                               :legendConsoTot="legendConsoTots"
                               :dataConso="dataCons"
                               :title="rpl"
+                              unite="L"
                             />
                           </div>
                         </div>
@@ -146,6 +167,7 @@
                               :dataConso="dataConsoJour"
                               :legendConsoDatJr="legendConsoDatJr"
                               :title="rpl"
+                              unite="L"
                             />
                           </div>
                         </div>
@@ -241,6 +263,8 @@ export default defineComponent({
     let dataConsoMois = ref([]);
     let codeBar = ref('');
     let choix = ref('');
+    let titleReport = ref<string>('');
+    let plage = ref<string>('');
     const changeDate = (dbs) => {
       return date.formatDate(dbs, 'DD-MM-YYYY');
     };
@@ -270,8 +294,11 @@ export default defineComponent({
         tfini.value
       );
     };
-    const actualReport = (txt: string) => {
+    const actualReport = (txt: string, title: string, plages: string) => {
+      rpl.value = title + ' ' + debut.value;
       report.value = txt;
+      titleReport.value = title;
+      plage.value = plages;
     };
     watch(rapConso, (valeur) => {
       legendConsoTots.value = [];
@@ -359,6 +386,8 @@ export default defineComponent({
       legendConsoMois,
       dataConsoMois,
       choix,
+      titleReport,
+      plage,
     };
   },
 });

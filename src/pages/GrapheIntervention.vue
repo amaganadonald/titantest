@@ -238,6 +238,7 @@
                               :titre="titlePie"
                               :dataGraph="dataPieGraph"
                             />
+                            <br /><br />
                             <PieChart
                               :legend="legendePieF"
                               :titre="titlePieF"

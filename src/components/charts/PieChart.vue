@@ -73,7 +73,7 @@ export default defineComponent({
             fontWeight: 'bold',
             formatter: '{b} : ({d}%)',
             show: true,
-            position: 'bottom',
+            position: 'outer',
             textStyle: {
               fontSize: 10,
             },

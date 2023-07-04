@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, watch } from 'vue';
+import { defineComponent, ref, onMounted, watch, computed } from 'vue';
 
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -52,6 +52,7 @@ export default defineComponent({
 
   setup(props) {
     let dataBase = ref([]);
+    const titles = computed(() => props.title);
     const barOption = ref({
       tooltip: {
         trigger: 'axis',
@@ -60,7 +61,15 @@ export default defineComponent({
           type: 'shadow', // 'shadow' as default; can also be 'line' or 'shadow'
         },
       },
-      legend: {},
+      legend: {
+        orient: 'vertical',
+        bottom: 'bottom',
+      },
+      title: {
+        text: titles,
+        left: 'center',
+        top: 3,
+      },
       grid: {
         left: '3%',
         right: '4%',

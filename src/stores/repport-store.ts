@@ -44,6 +44,7 @@ export const useRepportStore = defineStore('rapport', {
     graphHoraire: [],
     graphHoraireQuart: [],
     totalImmo: [],
+    gEfficience: [],
   }),
   getters: {
     updateDatabase: (state) => state.databases,
@@ -586,9 +587,11 @@ export const useRepportStore = defineStore('rapport', {
             Authorization: 'Bearer ' + Cookies.get('tk'),
           },
         });
-        console.log(req.data.panneHoraire);
         if (report === 'efficience') {
           this.efficience = req.data.panneHoraire;
+        } else if (report === 'graphEfficience') {
+          console.log(req.data.panneHoraire);
+          this.gEfficience = req.data.panneHoraire;
         }
         this.loading = false;
       } catch (error) {

@@ -169,6 +169,10 @@ const routes: RouteRecordRaw[] = [
         path: '/graphefrequence',
         component: () => import('pages/GrapheIntervention.vue'),
       },
+      {
+        path: '/graphefficience',
+        component: () => import('pages/GrapheEfficience.vue'),
+      },
     ],
   },
 

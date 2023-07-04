@@ -477,7 +477,10 @@ export default defineComponent({
             tfin.value,
             report.value
           );
-        } else if (report.value === 'efficience') {
+        } else if (
+          report.value === 'efficience' ||
+          report.value === 'graphEfficience'
+        ) {
           await consStore.analyseEfficience(
             vehi,
             deb.value,

@@ -36,13 +36,13 @@ export default defineComponent({
     VChart,
   },
   provide: {
-    //[THEME_KEY]: 'light'
+    [THEME_KEY]: 'light',
   },
 
   setup(props, context) {
     const option = ref({
       legend: {
-        top: 'top',
+        top: 'bottom',
       },
       toolbox: {
         show: true,
@@ -63,7 +63,7 @@ export default defineComponent({
             fontWeight: 'bold',
             formatter: '{b} : ({d})',
             show: true,
-            position: 'bottom',
+            position: 'inside',
             textStyle: {
               fontSize: 10,
             },

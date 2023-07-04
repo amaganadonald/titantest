@@ -616,7 +616,7 @@ const useCalculDispoFamille = (
     new Date(datefin + ' ' + tdatefin),
     new Date(datedeb + ' ' + tdatedeb)
   );
-  console.log(tab);
+  //console.log(tab);
   tab.forEach((panne: object[]) => {
     allImmo = 0;
     veh = {};
@@ -640,7 +640,7 @@ const useCalculDispoFamille = (
       });
     }
   });
-  console.log(tbFam);
+  //console.log(tbFam);
   famille.forEach((fm) => {
     let totDispo = 0;
     let totPanne = 0;
@@ -679,7 +679,7 @@ const useCalculDispoFamille = (
       });
     }
   });
-  console.log(tabFinal);
+  //console.log(tabFinal);
   return tabFinal;
 };
 const CalculHoraire = (
@@ -695,11 +695,11 @@ const CalculHoraire = (
       db.event === 'Début durée inactivité' ||
       db.event === 'Fin période inactivité'
   );
-  console.log(tbImmo);
+  //console.log(tbImmo);
   const tbWork = tab.filter(
     (db) => db.event === 'Début conduite' || db.event === 'Fin conduite'
   );
-  console.log(tbWork);
+  //console.log(tbWork);
   const tkilo = tab.filter(
     (db) =>
       new Date(db.date) < new Date(datefin + ' ' + tfin) &&
@@ -726,43 +726,42 @@ const useCalculEfficience = (
   tab: [],
   datedeb: Date,
   datefin: Date,
-  tdatedeb,
-  tdatefin,
+  tdatedeb: string,
+  tdatefin: string,
   vehicules: []
 ) => {
-  let dataPannes = [];
-  let dataHoraires = [];
-  if (tab[0] != null) {
-    dataPannes = tab[0];
-  }
-  if (tab[1] != null) {
-    dataHoraires = tab[1];
-  }
-  vehicules.forEach((veh) => {
-    let vehDataP = [];
-    let vehDataH = [];
-    let tpCond = [];
-    let immoVeh = 0;
-    if (dataPannes.length > 0) {
-      vehDataP = dataPannes.filter((dp) => dp.vehicule.code === veh.code);
+  //console.log(tab);
+  const deb = new Date(datedeb + ' ' + tdatedeb);
+  const fin = new Date(datefin + ' ' + tdatefin);
+  const eff = [];
+  tab.forEach((tb) => {
+    let allImmo = 0;
+    let datahorair = [];
+    if (tb.panne.length === 0) {
+      allImmo = 0;
+    } else {
+      tb.panne.forEach((pb) => {
+        allImmo = allImmo + calculImmo(pb, deb, fin);
+      });
     }
-    if (dataHoraires.length > 0) {
-      vehDataH = dataHoraires.filter((dps) => dps.code === veh.code);
+    if (tb.horaire.length === 0) {
+      datahorair = [];
+    } else {
+      datahorair = CalculHoraire(
+        tb.horaire,
+        datedeb,
+        datefin,
+        tdatedeb,
+        tdatefin
+      );
     }
-    vehDataP.forEach((pan) => {
-      immoVeh =
-        immoVeh +
-        calculImmo(
-          pan,
-          new Date(datedeb + ' ' + tdatedeb),
-          new Date(datefin + ' ' + tdatefin)
-        );
+    eff.push({
+      code: tb.code,
+      panne: allImmo,
+      horaire: datahorair,
     });
-    tpCond = CalculHoraire(vehDataH, datedeb, datefin, tdatedeb, tdatefin);
-    console.log(veh);
-    console.log(tpCond);
-    console.log(immoVeh);
   });
+  return eff;
 };
 
 export {
@@ -776,4 +775,5 @@ export {
   useCalculDispo,
   useCalculDispoFamille,
   useCalculEfficience,
+  secToTime,
 };

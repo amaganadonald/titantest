@@ -93,7 +93,7 @@ export default {
   french: 'French',
   anglais: 'Anglais',
   welcome: 'Welcome Back',
-  sgtitan: 'Sign in to continue to TITAN v8',
+  sgtitan: 'Sign in to continue to TITAN v23',
   entUser: 'Enter username',
   entPass: 'Enter password',
   submitted: 'Authentification successfuly',

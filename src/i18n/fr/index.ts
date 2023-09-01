@@ -92,7 +92,7 @@ export default {
   french: 'Français',
   anglais: 'Anglais',
   welcome: 'Bon retour',
-  sgtitan: 'Connectez-vous à TITAN v8',
+  sgtitan: 'Connectez-vous à TITAN v23',
   entUser: "Entrer votre nom d'utilisateur",
   entPass: 'Entrer votre mot de passe',
   submitted: 'Connexion réussie',

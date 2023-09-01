@@ -32,6 +32,9 @@ export const useSettingStore = defineStore('settings', {
     document: [],
     documentVeh: [],
     chauffeur: [],
+    userLogin: [],
+    eventSensible: [],
+    svgDb: [],
   }),
   getters: {
     //doubleCount: (state) => state.counter * 2,
@@ -49,6 +52,64 @@ export const useSettingStore = defineStore('settings', {
           this.status = response.status;
         });
         //this.user = req.data.user
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    /*--------------------User connect src / stores / settings - store.ts;------------------*/
+    async allUserLogin() {
+      this.loading = true;
+      try {
+        await api
+          .get('/api/allUserLogin', {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          })
+          .then((response) => {
+            this.userLogin = response.data.userLogin;
+          });
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    /*--------------------User connect src / stores / settings - store.ts;------------------*/
+    async allEventSensible() {
+      this.loading = true;
+      try {
+        await api
+          .get('/api/allEventSensible', {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          })
+          .then((response) => {
+            this.eventSensible = response.data.eventSensible;
+          });
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    async allSvgDb() {
+      this.loading = true;
+      try {
+        await api
+          .get('/api/allSvgDb', {
+            headers: {
+              Authorization: 'Bearer ' + Cookies.get('tk'),
+            },
+          })
+          .then((response) => {
+            this.svgDb = response.data.svgDb;
+          });
         this.loading = false;
       } catch (error) {
         console.log(error);

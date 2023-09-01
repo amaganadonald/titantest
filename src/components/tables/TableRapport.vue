@@ -82,6 +82,12 @@
                   <template #item-datefin="{ datefin }">
                     {{ changeDateTime(datefin) }}
                   </template>
+                  <template #item-dateconnect="{ dateconnect }">
+                    {{ changeDateTime(dateconnect) }}
+                  </template>
+                  <template #item-datedeconnect="{ datedeconnect }">
+                    {{ changeDateTime(datedeconnect) }}
+                  </template>
                 </EasyDataTable>
               </div>
             </div>

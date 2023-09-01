@@ -202,7 +202,7 @@ export default defineComponent({
       }
     };
     const logIn = async () => {
-      if (new Date() > new Date('2023-09-01')) {
+      if (new Date() > new Date('2023-10-01')) {
         $q.notify({
           color: 'red-10',
           position: 'top-right',

@@ -733,7 +733,7 @@
         </div>
       </header>
 
-      <!-- ========== App Menu ========== -->
+      <!-- ========== App Menu ========= -->
       <div class="app-menu navbar-menu">
         <!-- LOGO -->
         <div class="navbar-brand-box">

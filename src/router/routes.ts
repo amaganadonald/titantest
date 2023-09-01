@@ -173,6 +173,26 @@ const routes: RouteRecordRaw[] = [
         path: '/graphefficience',
         component: () => import('pages/GrapheEfficience.vue'),
       },
+      {
+        path: '/taskbar',
+        component: () => import('pages/EntretienParc.vue'),
+      },
+      {
+        path: '/fags',
+        component: () => import('pages/FaqParc.vue'),
+      },
+      {
+        path: '/connex',
+        component: () => import('pages/UserConnect.vue'),
+      },
+      {
+        path: '/eventSensible',
+        component: () => import('pages/EventSensible.vue'),
+      },
+       {
+        path: '/svgDb',
+        component: () => import('pages/saveDatabase.vue'),
+      },
     ],
   },
 
